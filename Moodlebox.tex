@@ -48,6 +48,7 @@ frametitlebackgroundcolor=yellow!50!white
 \lstset{%
   basicstyle=\footnotesize\ttfamily,breaklines=true,
   showstringspaces=false,
+  aboveskip=2\parskip,
   commentstyle=\color{darkgray},
   keywordstyle=\color[HTML]{000000},
   backgroundcolor=\color[HTML]{dddddd},
@@ -223,7 +224,7 @@ $ sudo raspi-config
 
 With \emph{raspi-config}, configure following settings:
 \begin{itemize}
-\item Expand Filesystem;
+\item Expand Filesystem.
 \item Change password for the \lstinline{pi} user. As the disk image being produced is intended to be openly distributed, we choose MoodleBox default password \emph{Moodlebox4\$}.
 \item Install following \emph{locales}:
 \begin{itemize}
@@ -234,8 +235,8 @@ With \emph{raspi-config}, configure following settings:
 \item \lstinline{fr_FR.UTF-8}
 \item \lstinline{it_IT.UTF-8}
 \end{itemize}
-and set \lstinline{en_GB.UTF-8} as default \emph{locale};
-\item Set time zone and WLAN country. MoodleBox default settings are respectively \lstinline{Europe/Zurich} and \lstinline{CH};
+and set \lstinline{en_GB.UTF-8} as default \emph{locale}.
+\item Set time zone and WLAN country. This will also unblock wireless use. MoodleBox default settings are respectively \lstinline{Europe/Zurich} and \lstinline{CH}.
 \item Set the hostname to \emph{moodlebox}.
 \end{itemize}
 
@@ -349,31 +350,71 @@ Insert following line after line beginning with \lstinline{# Additional overlays
 dtoverlay=gpio-shutdown
 \end{lstlisting}
 
-\section{Wireless access point feature}
-%\footnote{This section and the next one are based on \url{https://frillip.com/using-your-raspberry-pi-3-as-a-wifi-access-point-with-hostapd/}.}} %% Link is dead
+\section{Wireless access point (AP) feature}
 
-\subsection{Network interfaces configuration}
+\subsection{Enable wireless interface for access point mode}
 
-MoodleBox gets dynamically its IP address on the ethernet interface \lstinline{eth0} via DHCP.
-With its access point feature, it will also act as a DHCP provider on its wireless interface \lstinline{wlan0}.
-We force then a static IP address \lstinline{10.0.0.1} on \lstinline{wlan0} interface.
+We want to be able to use standard wireless interface \lstinline{wlan0} to optionally connect to a wireless LAN, so we need another interface for our AP.
 
-To this end, we add at the very end of file\footnote{These lines should however be inserted \textbf{before} any \emph{interface} line added in the file.} \lstinline{/etc/dhcpcd.conf} the lines
+We use a \textsl{udev} rule for this purpose, creating a new file named \lstinline{90-wireless.rules} in folder \lstinline{/etc/udev/rules.d/}.
+
+Here's the content of \lstinline{/etc/udev/rules.d/90-wireless.rules} on the MoodleBox:
+\lstinputlisting{files/90-wireless.rules}
+
+\subsection{Switch to alternative wireless chip firmware}
+%:TODO: Move this subsection to the adequate place
+
+Standard Raspberry Pi wireless firmware has several additional features that are not very useful for a MoodleBox. However, SRAM on the wireless chip is used both for data storage whilst in use, but also for additional features and bug fixes. Each time a feature is added or a bug fix made, the amount of SRAM available for runtime variables decreases, and so the number of clients in AP mode.
+
+An alternative firmware is now available that has been tuned to maximise the number of clients in AP mode while still supporting STA mode.
+This is the firmware we choose to use in MoodleBox.
+Following commands switch the firmware to the alternative one.
+
 \begin{lstlisting}[language=bash]
-interface wlan0
-static ip_address=10.0.0.1/24
-nohook wpa_supplicant
+$ cd /lib/firmware/brcm/
+$ sudo ln -sf ../cypress/cyfmac43455-sdio-minimal.bin \
+    brcmfmac43455-sdio.bin
 \end{lstlisting}
+
+%:TODO: disable unused wpa_supplicant service?
+
+\subsection{Wireless connection as a client (optional)}
+
+If MoodleBox is intended to be used as a client (STA mode) as well as an access point, a valid configuration file named \lstinline{wpa_supplicant.conf} should be provided to \lstinline{wpa_supplicant} service, in folder \lstinline{/etc/wpa_supplicant/}.
+
+Following listing shows an example of such file:
+\lstinputlisting{files/wpa_supplicant.conf}
+
+Don't forget to edit the file and put the SSID and password of your wireless network.
 
 \subsection{Install required packages for access point feature}
 
 Access point feature requires packages \lstinline{hostapd} and \lstinline{dnsmasq}.
-Install them.
+Let's install them.
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y hostapd dnsmasq
 \end{lstlisting}
 
-\subsection{Access point configuration (\lstinline{hostapd})}
+\subsection{Static IP address configuration}
+
+MoodleBox gets dynamically via DHCP its IP address on the ethernet interface \lstinline{eth0} or as a wireless client on the \lstinline{wlan0} interface.
+
+With its access point feature, it will also act as a DHCP provider on its wireless interface \lstinline{uap0}.
+We force then a static IP address \lstinline{10.0.0.1} on \lstinline{wlan0} interface.
+Any other private IP address can alternatively be used.
+
+To this end, we add at the very end of file \lstinline{/etc/dhcpcd.conf} the lines
+\begin{lstlisting}[language=bash]
+interface wlan0
+# Uncomment following line to disable AP+STA mode
+# nohook wpa_supplicant
+
+interface uap0
+static ip_address=10.0.0.1/24
+nohook wpa_supplicant
+\end{lstlisting}
+
+\subsection{Access point configuration}
 
 To configure the access point, we edit \lstinline{hostapd.conf}.
 This is where the access point SSID and password are set, as well as other options, such as the broadcast channel and regulatory country.
@@ -390,13 +431,12 @@ Start \lstinline{hostapd}:
 $ sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf
 \end{lstlisting}
 
-We get an error message (expected as the configuration is not finished yet); this message should end with \lstinline{wlan0: AP-ENABLED}.
+We get an error message (expected as the configuration is not finished yet); this message should end with \lstinline{uap0: AP-ENABLED}.
 Wireless clients should detect \emph{MoodleBox} SSID, even if they cannot to it.
 \end{verification}
 \fi
 
 %:TODO: This has changed as of Bullseye. See /usr/share/doc/hostapd/README.Debian.
-TODO: This has changed as of Bullseye. Change and document if needed.
 
 We now need to define where \lstinline{hostapd} gets its configuration.
 This is set in file \lstinline{/etc/default/hostapd}.
@@ -409,21 +449,21 @@ Here's the content of \lstinline{/etc/default/hostapd} after the substitution:
 
 Finally, we enable \lstinline{hostapd} service:
 \begin{lstlisting}[language=bash]
-sudo systemctl unmask hostapd
-sudo systemctl enable hostapd
+$ sudo systemctl unmask hostapd
+$ sudo systemctl enable hostapd
 \end{lstlisting}
 
-\subsection{DHCP and DNS server configuration (\lstinline{dnsmasq})}
+\subsection{DHCP and DNS server configuration}
 
-DHCP and DNS server configuration on \lstinline{wlan0} interface are provided through \lstinline{dnsmasq}\footnote{DNS configuration is based on \url{https://www.linux.com/learn/dnsmasq-easy-lan-name-services}.}. We edit  \lstinline{/etc/dnsmasq.conf} to have this content:
+DHCP and DNS server configuration on \lstinline{uap0} interface are provided through \lstinline{dnsmasq}\footnote{DNS configuration is based on \url{https://www.linux.com/learn/dnsmasq-easy-lan-name-services}.}. We edit  \lstinline{/etc/dnsmasq.conf} to have this content:
 
 \lstinputlisting[language=bash]{files/dnsmasq.conf}
 
-On modifie ensuite le fichier \lstinline{/etc/hosts}, en remplaçant la ligne finale, qui commence par \lstinline{127.0.1.1}, par le contenu suivant:
+We edit now the file \lstinline{/etc/hosts}, replacing last line, beginning with \lstinline{127.0.1.1}, by this line:
 \begin{lstlisting}[language=bash]
 10.0.0.1	moodlebox
 \end{lstlisting}
-Cette configuration permettra à n'importe quel type d'appareil, même ceux qui ne respectent pas la technologie \emph{zeroconf}\footnote{\url{https://fr.wikipedia.org/wiki/Zeroconf}}, d'accéder à la MoodleBox au moyen de l'adresse \url{http://moodlebox.home/}.
+This configuration enables any device to access the MoodleBox via its URL \url{http://moodlebox.home/}, even those which do not implement \emph{zeroconf}\footnote{\url{https://en.wikipedia.org/wiki/Zero-configuration_networking}} standard protocol.
 
 Finally, we fix a race condition between \lstinline{dhcpcd} and \lstinline{dnsmasq} by editing \lstinline{dnsmasq} service file \lstinline{/lib/systemd/system/dnsmasq.service}.
 We add following lines just before \lstinline{[Install]}:
@@ -432,6 +472,12 @@ RestartSec=5
 Restart=on-failure
 \end{lstlisting}
 
+\subsection{mDNS services publication}
+
+%:TODO --> <--
+
+Afin de rendre visible sur le réseau les services fournis par la MoodleBox, on crée le fichier \lstinline{/etc/avahi/services/moodlebox.service}, avec le contenu ci-dessous.
+\lstinputlisting[language=bash]{files/moodlebox.service.xml}
 
 \subsection{Routing configuration}
 
@@ -471,11 +517,6 @@ Au terme du démarrage, un client doit pouvoir surfer sur Internet après s'êtr
 \subsection{Captive portal}
 %:TODO: Document captive portal installation and configuration
 Document captive portal installation and configuration
-
-\subsection{Publication des services mDNS}
-
-Afin de rendre visible sur le réseau les services fournis par la MoodleBox, on crée le fichier \lstinline{/etc/avahi/services/moodlebox.service}, avec le contenu ci-dessous.
-\lstinputlisting[language=bash]{files/moodlebox.service.xml}
 
 \section{Installation du serveur web}
 
