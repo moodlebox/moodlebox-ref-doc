@@ -376,7 +376,7 @@ $ sudo ln -sf ../cypress/cyfmac43455-sdio-minimal.bin \
     brcmfmac43455-sdio.bin
 \end{lstlisting}
 
-%:TODO: disable unused wpa_supplicant service?
+%:TODO: Disable unused wpa_supplicant service?
 
 \subsection{Wireless connection as a client (optional)}
 
@@ -436,7 +436,7 @@ Wireless clients should detect \emph{MoodleBox} SSID, even if they cannot to it.
 \end{verification}
 \fi
 
-%:TODO: This has changed as of Bullseye. See /usr/share/doc/hostapd/README.Debian.
+%:TODO: This has changed as of Bullseye and could be enhanced. See /usr/share/doc/hostapd/README.Debian.
 
 We now need to define where \lstinline{hostapd} gets its configuration.
 This is set in file \lstinline{/etc/default/hostapd}.
@@ -474,56 +474,80 @@ Restart=on-failure
 
 \subsection{mDNS services publication}
 
-%:TODO --> <--
-
-Afin de rendre visible sur le réseau les services fournis par la MoodleBox, on crée le fichier \lstinline{/etc/avahi/services/moodlebox.service}, avec le contenu ci-dessous.
-\lstinputlisting[language=bash]{files/moodlebox.service.xml}
+In order to make MoodleBox services visible on the network, we create the file \lstinline{/etc/avahi/services/moodlebox.service}, with following content.
+\lstinputlisting[language=xml]{files/moodlebox.service.xml}
 
 \subsection{Routing configuration}
 
-We configure routing so that wireless clients can browse the Internet when MoodleBox is connected via ethernet to an Internet router.
+We configure routing so that wireless clients can browse the Internet when MoodleBox is connected via ethernet or wireless to an Internet router.
 
-On modifie le fichier fichier \lstinline{/etc/sysctl.conf} en dé-commentant (ou en ajoutant) la ligne
+We edit the file \lstinline{/etc/sysctl.conf}, uncommenting or adding line
 \begin{lstlisting}[language=bash]
 net.ipv4.ip_forward=1
 \end{lstlisting}
 
-Installation of package \lstinline{iptables-persistent} enables routing rules to survive MoodleBox shutdown and reboot.
+Installation of package \lstinline{iptables-persistent} enables routing rules to survive MoodleBox reboot or shutdown.
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y iptables-persistent
 \end{lstlisting}
 
-On saisit ensuite les lignes suivantes dans l'interface.
+We can now define the routing rules:
 \begin{lstlisting}[language=bash]
 $ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-$ sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-$ sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+$ sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+$ sudo iptables -A FORWARD -i eth0 -o uap0 \ 
+    -m state --state RELATED,ESTABLISHED -j ACCEPT
+$ sudo iptables -A FORWARD -i wlan0 -o uap0 \ 
+    -m state --state RELATED,ESTABLISHED -j ACCEPT
+$ sudo iptables -A FORWARD -i uap0 -o eth0 -j ACCEPT
+$ sudo iptables -A FORWARD -i uap0 -o wlan0 -j ACCEPT
 \end{lstlisting}
 
-Pour terminer, on redémarre la Raspberry.
-
+And we reboot.
 \begin{lstlisting}[language=bash]
 $ sudo reboot
 \end{lstlisting}
 
 \iffalse
-\subsection{Test du point d'accès sans fil}
+\subsection{Wireless access point testing}
 
 \begin{verification}
-Au terme du démarrage, un client doit pouvoir surfer sur Internet après s'être connecté au réseau Wi-Fi \emph{MoodleBox} au moyen du mot de passe \emph{moodlebox}.
+After rebooting, a client device should be able to browse Internet after connecting to the \emph{MoodleBox} Wi-Fi network with password \emph{moodlebox}.
 \end{verification}
 \fi
 
 \subsection{Captive portal}
 %:TODO: Document captive portal installation and configuration
-Document captive portal installation and configuration
 
-\section{Installation du serveur web}
+We can now install the captive portal, based on free software Nodogsplash\footnote{https://nodogsplashdocs.readthedocs.io/}.
+Nodogsplash needs first to be compiled for the Raspberry Pi platform.
+Its compilation is not covered in this document.
+Refer to \href{https://nodogsplashdocs.readthedocs.io/en/stable/compile.html}{Nodogsplash documentation} for any support about its compilation.
 
-On va installer le serveur web nginx avec PHP et MariaDB.
+Let's install the Nodogsplash package we got after compilation:
+\begin{lstlisting}[language=bash]
+$ sudo dpkg –i nodogsplash_5.0.0-1_armhf.deb
+\end{lstlisting}
+Nodogsplash configuration file \lstinline{/etc/nodogsplash/nodogsplash.conf} should read
+\lstinputlisting[language=bash]{files/nodogsplash.conf}
 
-\subsection{Installation et configuration de nginx et PHP}
+We can now edit Nodogsplash splash page at our convenience. The files to edit are located in folder \lstinline{/etc/nodogsplash/htdocs/}.
 
+In the official MoodleBox image, Nodogsplash captive portal is not enabled. If we want to disable it too, we type following commands in our shell: 
+\begin{lstlisting}[language=bash]
+$ sudo systemctl stop nodogsplash.service
+$ sudo systemctl disable nodogsplash.service
+\end{lstlisting}
+
+\section{Web server and database installation (LEMP stack)}
+
+The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications.
+The term LEMP is an acronym that represents a Linux operating system with an Nginx (pronounced engine-x, hence the E in the acronym) web server.
+The backend data stored in a MariaDB database and the dynamic processing is handled by PHP.
+
+\subsection{Nginx and PHP installation et configuration}
+
+%:TODO: --> <--
 On met à jour ensuite la liste des paquetages, puis installe ceux qui sont nécessaires.
 
 \begin{lstlisting}[language=bash]
