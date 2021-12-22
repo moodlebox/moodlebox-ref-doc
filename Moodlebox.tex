@@ -5,16 +5,16 @@
 %% Versioning info
 %\usepackage[draft]{gitinfo2}
 %% Polices OTF
-\usepackage{fontspec,xltxtra,xunicode}
+\usepackage[libertine,libaltvw,liby,vvarbb]{newtxmath}
 \usepackage{libertine}
 %\setmainfont{Lucida Grande}
 %% Gestion des langues
-\usepackage{csquotes}
 \usepackage{polyglossia}
 \setdefaultlanguage{english}
+\usepackage[autostyle]{csquotes}
+\MakeOuterQuote{"}
 %% URLs and hyperlinks
 \usepackage{xcolor}
-\usepackage[hyphens]{url}
 \usepackage[unicode,bookmarks,colorlinks,breaklinks]{hyperref}
 \hypersetup{linkcolor=blue,citecolor=blue,filecolor=blue,urlcolor=blue}
 \urlstyle{same}
@@ -26,9 +26,9 @@
 %% Framed boxes
 \usepackage[framemethod=tikz]{mdframed}
 \global\mdfdefinestyle{verif}{%
-%linecolor=blue,middlelinewidth=2pt,
-roundcorner=5pt,
-frametitlebackgroundcolor=yellow!50!white
+  %linecolor=blue,middlelinewidth=2pt,
+  roundcorner=5pt,
+  frametitlebackgroundcolor=yellow!50!white,
 }
 \newmdenv[style=verif,frametitle=Check]{verification}
 %% Format de page
@@ -70,7 +70,7 @@ frametitlebackgroundcolor=yellow!50!white
 
 \title{MoodleBox building reference\footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}\\
 Version 1.9.3}
-\date{Decembre 11, 2021} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
+\date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
 \author{Nicolas Martignoni}
 \maketitle
 
@@ -495,9 +495,9 @@ We can now define the routing rules:
 \begin{lstlisting}[language=bash]
 $ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 $ sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
-$ sudo iptables -A FORWARD -i eth0 -o uap0 \ 
+$ sudo iptables -A FORWARD -i eth0 -o uap0 \
     -m state --state RELATED,ESTABLISHED -j ACCEPT
-$ sudo iptables -A FORWARD -i wlan0 -o uap0 \ 
+$ sudo iptables -A FORWARD -i wlan0 -o uap0 \
     -m state --state RELATED,ESTABLISHED -j ACCEPT
 $ sudo iptables -A FORWARD -i uap0 -o eth0 -j ACCEPT
 $ sudo iptables -A FORWARD -i uap0 -o wlan0 -j ACCEPT
@@ -521,7 +521,7 @@ After rebooting, a client device should be able to browse Internet after connect
 
 We can now install the captive portal, based on free software Nodogsplash\footnote{https://nodogsplashdocs.readthedocs.io/}.
 Nodogsplash needs first to be compiled for the Raspberry Pi platform.
-Its compilation is not covered in this document.
+Its compilation is not covered in this guide.
 Refer to \href{https://nodogsplashdocs.readthedocs.io/en/stable/compile.html}{Nodogsplash documentation} for any support about its compilation.
 
 Let's install the Nodogsplash package we got after compilation:
@@ -533,7 +533,7 @@ Nodogsplash configuration file \lstinline{/etc/nodogsplash/nodogsplash.conf} sho
 
 We can now edit Nodogsplash splash page at our convenience. The files to edit are located in folder \lstinline{/etc/nodogsplash/htdocs/}.
 
-In the official MoodleBox image, Nodogsplash captive portal is not enabled. If we want to disable it too, we type following commands in our shell: 
+In the official MoodleBox image, Nodogsplash captive portal is not enabled. If we want to disable it too, we type following commands in our shell:
 \begin{lstlisting}[language=bash]
 $ sudo systemctl stop nodogsplash.service
 $ sudo systemctl disable nodogsplash.service
@@ -542,66 +542,74 @@ $ sudo systemctl disable nodogsplash.service
 \section{Web server and database installation (LEMP stack)}
 
 The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications.
-The term LEMP is an acronym that represents a Linux operating system with an Nginx (pronounced engine-x, hence the E in the acronym) web server.
+The term LEMP is an acronym that represents a Linux operating system with an Nginx (pronounced "engine-x", hence the E in the acronym) web server.
 The backend data stored in a MariaDB database and the dynamic processing is handled by PHP.
 
-\subsection{Nginx and PHP installation et configuration}
+\subsection{Nginx and PHP installation et configuration}\label{ssec-nginx-php-installation}
 
-%:TODO: --> <--
-On met à jour ensuite la liste des paquetages, puis installe ceux qui sont nécessaires.
+We install first Nginx and all needed PHP packages, notably those required by Moodle.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y nginx php7.4-fpm php7.4-cli php7.4-common php7.4-json php7.4-mbstring php7.4-opcache php7.4-readline php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-intl php7.4-soap php7.4-mysql php7.4-xml php7.4-zip php7.4 php-apcu
+$ sudo apt-get install -y nginx php7.4-fpm php7.4-cli php7.4-common \
+    php7.4-json php7.4-mbstring php7.4-opcache php7.4-readline \
+    php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-intl php7.4-soap \
+    php7.4-mysql php7.4-xml php7.4-zip php7.4 php-apcu
 \end{lstlisting}
 
 \iffalse
 \begin{verification}
-Depuis un ordinateur connecté sur la MoodleBox via Wi-Fi, charger dans un navigateur l'URL \url{http://moodlebox.home/}. Une page web "Welcome to nginx on Debian!" doit s'afficher.
+With a computer connected to the MoodleBox wireless network, load URL \url{http://moodlebox.home/} in your favorite web browser. The web page "Welcome to nginx on Debian!" Should be displayed.
 \end{verification}
 \fi
 
-%:TODO: Ajouter les certificats SSL pour nginx
-TODO: Ajouter les certificats SSL pour nginx
+\subsection{SSL certificate and key}
 
-Configurer le serveur web en modifiant le fichier \lstinline{/etc/nginx/sites-available/default}.
-%\begin{lstlisting}[language=bash]
-%$ sudo nano /etc/nginx/sites-available/default
-%\end{lstlisting}
-Son contenu sera le suivant.
+We can now copy the SSL certificate \lstinline{moodlebox.pem} and its key \lstinline{moodlebox.key} to the folder \lstinline{/etc/nginx/}.
 
+SSL certificate generation is not covered in this guide.
+Refer to adequate documentation on SSL certificate generation, e.g. on \url{https://stackoverflow.com/a/10176685}.
+
+\subsection{Web server configuration}
+
+Nginx web server configuration is done in file \lstinline{/etc/nginx/sites-available/default}, which content should be like below.
 \lstinputlisting[language=bash]{files/default}
 
-La dernière ligne \lstinline{fastcgi_param} et la ligne \lstinline{client_max_body_size} permettent d'augmenter à 50~Mo la taille maximale autorisée pour les dépôts de fichiers, ainsi que la durée maximale d'exécution des scripts à 300~s.
+Last \lstinline{fastcgi_param} line, with line \lstinline{client_max_body_size}, increases to 50~MB the max upload file size, as well as script maximum execution time to~300~s. It also sets \lstinline{max_input_vars} to~5000.
 
-Relancer le serveur web
+We then relaunch the web server:
 \begin{lstlisting}[language=bash]
 $ sudo systemctl restart nginx php7.4-fpm
 \end{lstlisting}
 
 \iffalse
 \begin{verification}
-Taper la commande
+Type the command
 \begin{lstlisting}[language=bash]
 $ echo '<?php phpinfo(); ?>' | sudo tee -a /var/www/html/info.php
 \end{lstlisting}
-puis lancer dans un navigateur l'URL \url{http://moodlebox.home/info.php}. La longue page des réglages PHP doit s'afficher, avec les variables \lstinline{upload_max_filesize} et \lstinline{post_max_size} sont fixées à 50~Mo.
+then open URL \url{http://moodlebox.home/info.php} in your browser. The long PHP settings page should appear, with the \lstinline{upload_max_filesize}, \lstinline{post_max_size} and \lstinline{max_input_vars} variables correctly set.
 \end{verification}
 \fi
 
+%:TODO: --> <--
 %:TODO: Set umask for nginx and php-fpm services, tweak php-fpm settings, see packageconfig ansible role
-Set umask for nginx and php-fpm services, tweak php-fpm settings, see packageconfig ansible role
+TODO: Set umask for nginx and php-fpm services, tweak php-fpm settings, see packageconfig ansible role
+
+We set
+
 
 \subsubsection{MariaDB installation}
 
+We install now MariaDB package. PHP MariaDB support was already installed with PHP (see section~\ref{ssec-nginx-php-installation}).
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y mariadb-server php7.4-mysql
+$ sudo apt-get install -y mariadb-server
 \end{lstlisting}
 
-Au cours de l'installation, on définit le mot de passe de l'utilisateur principal de la base de données \emph{moodlebox}. Comme plus haut,  on définira un mot de passe fort. Pour cette installation, le mot de passe est défini à \emph{Moodlebox4\$}.
+During the installation, we define the password of the main user \emph{moodlebox} of the database. For this installation, we set the password to \emph{Moodlebox4\$}.
 
 \iffalse
 \begin{verification}
-Recharger l'URL \url{http://moodlebox.home/info.php}. Une section \emph{MySQL} supplémentaire doit apparaître dans la page.
+Reload URL \url{http://moodlebox.home/info.php}. A new section \emph{MySQL} should appear in the page.
 \end{verification}
 \fi
 
@@ -620,9 +628,9 @@ $ sudo mysql
 \subsubsection{Configuration de MariaDB}
 
 %:TODO: Check this
-TODO: Check this
+TODO: Check this!
 
-Depuis la version 3.1.2+\footnote{Version du début du mois de mars 2017.} de Moodle, avec l'encodage de MariaDB \lstinline{utf8mb4} est nécessaire, afin de corriger un bogue\footnote{Voir \url{https://tracker.moodle.org/browse/MDL-48228}.}. La version de MariaDB installée ici est déjà configurée correctement. Il s'agit cependant d'effectuer d'autres paramétrages. On ajoute à cet effet quelques lignes au fichier \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}. Dans la section \lstinline{[mysqld]}, on ajoute:
+La version de MariaDB installée ici est déjà configurée correctement. Il s'agit cependant d'effectuer d'autres paramétrages. On ajoute à cet effet quelques lignes au fichier \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}. Dans la section \lstinline{[mysqld]}, on ajoute:
 \begin{lstlisting}[language=bash]
 innodb_file_format = Barracuda
 innodb_file_per_table = 1
@@ -805,7 +813,7 @@ $ cd /var/www/moodle/admin/tool/
 $ sudo git clone https://github.com/martignoni/moodlebox-plugin.git moodlebox
 \end{lstlisting}
 
-On termine dans ce cas l'installation du plugin en visitant la page \url{http://moodlebox.home/admin}. 
+On termine dans ce cas l'installation du plugin en visitant la page \url{http://moodlebox.home/admin}.
 
 Pour finaliser l'installation du plugin, il est nécessaire de créer quelques fichiers et d'en régler les autorisations.
 \begin{lstlisting}[language=bash]
