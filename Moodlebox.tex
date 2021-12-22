@@ -609,9 +609,9 @@ group = moodlebox
 ...
 \end{lstlisting}
 If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains.
+%:TODO: Indicate the default tweaks in MoodleBox image?
 
-%:TODO: --> <--
-\subsubsection{MariaDB installation}
+\subsection{MariaDB installation and configuration}
 
 We install now MariaDB package. PHP MariaDB support was already installed with PHP (see section~\ref{ssec-nginx-php-installation}).
 \begin{lstlisting}[language=bash]
@@ -626,9 +626,7 @@ Reload URL \url{http://moodlebox.home/info.php}. A new section \emph{MySQL} shou
 \end{verification}
 \fi
 
-\subsubsection{Ajout d'un utilisateur de MariaDB}
-
-Afin de permettre un accès flexible aux bases de données, on crée un nouvel utilisateur de base de données dans MariaDB.
+In order to allow flexible access to the databases, a new database user is created in MariaDB.
 
 \begin{lstlisting}[language=bash]
 $ sudo mysql
@@ -638,32 +636,18 @@ $ sudo mysql
     > QUIT;
 \end{lstlisting}
 
-\subsubsection{Configuration de MariaDB}
-
-%:TODO: Check this
-TODO: Check this!
-
-La version de MariaDB installée ici est déjà configurée correctement. Il s'agit cependant d'effectuer d'autres paramétrages. On ajoute à cet effet quelques lignes au fichier \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}. Dans la section \lstinline{[mysqld]}, on ajoute:
-\begin{lstlisting}[language=bash]
-innodb_file_format = Barracuda
-innodb_file_per_table = 1
-innodb_large_prefix
-innodb_log_file_size = 64M
-innodb_buffer_pool_instances = 1
-innodb_buffer_pool_size = 128M
-character-set-client-handshake = FALSE
-\end{lstlisting}
-
-On relance ensuite le serveur MariaDB.
-\begin{lstlisting}[language=bash]
-$ sudo systemctl restart mysql.service
-\end{lstlisting}
+If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains.
+%:TODO: Indicate the default tweaks in MoodleBox image?
+% key_buffer_size         = 16M
+% max_allowed_packet      = 16M
+% query_cache_size        = 2M
+% log_error = /var/log/mysql/error.log
 
 \section{Moodle installation}
 
 \subsubsection{Moodle database creation}
 
-On peut maintenant créer la base de données que Moodle utilisera.
+We first create the database which Moodle will use.
 \begin{lstlisting}[language=bash]
 $ sudo mysql
     > CREATE DATABASE moodle;
@@ -672,30 +656,35 @@ $ sudo mysql
 
 \subsubsection{Moodle download}
 
-Moodle is installed with Git to facilitate future updates. We first install Git.
+We can now download Moodle; we do this with Git in order to facilitate future updates. We first install Git.
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y git
 \end{lstlisting}
 
 We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle:
 \begin{lstlisting}[language=bash]
-$ sudo git clone --depth=1 -b MOODLE_311_STABLE git://git.moodle.org/moodle.git /var/www/moodle
+$ sudo git clone --depth=1 -b MOODLE_311_STABLE \
+    git://git.moodle.org/moodle.git /var/www/moodle
 \end{lstlisting}
 
 \subsubsection{Moodle configuration}
 
-On crée le dossier de données de Moodle et règle adéquatement les permissions.
+Moodle data and several cache directories are now created, with adequate permissions. We also set the correct permissions to Moodle source directory and set SGID permission on Moodle data directory:
 \begin{lstlisting}[language=bash]
-$ sudo mkdir /var/www/moodledata
-$ sudo chown -R www-data:moodlebox /var/www/moodle /var/www/moodledata/
-$ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/
+$ sudo mkdir -p /var/www/moodledata/repository /var/www/moodledata/temp \
+    /var/www/moodledata/backup /var/cache/moodle /var/cache/moodle-cache-backup
+$ sudo chown -R www-data:moodlebox /var/www/moodle /var/www/moodledata/ \
+    /var/cache/moodle /var/cache/moodle-cache-backup
+$ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/ \
+    /var/cache/moodle /var/cache/moodle-cache-backup
 $ sudo chmod -R g+s /var/www/moodledata/
 \end{lstlisting}
 
-Pour terminer l'installation de Moodle, on lance dans un navigateur l'URL \url{http://moodlebox.home/} et l'on suit les indications données à l'écran. Cette phase dure plus de 10 minutes. Patience donc !
+We can now launch Moodle installation, either by loading URL \url{http://moodlebox.home/} in your browser and follow the instructions on screen, or by using Moodle command line interface\footnote{See \url{https://docs.moodle.org/311/en/Installing_Moodle\#Command_line_installer}.}. For MoodleBox, the administrator account is defined with \emph{moodlebox} as username and the password \emph{Moodlebox4\$}.
 
-Pour cette installation, le compte administrateur a été défini avec le nom d'utilisateur \emph{moodlebox} et le mot de passe \emph{Moodlebox4\$}.
+The installation takes more than 10 minutes. So be patient!
 
+%:TODO: --> <--
 \subsubsection{Utilisation de \emph{X-Sendfile}}
 
 L'utilisation de \emph{X-Sendfile} permet d'accélérer l'envoi par le serveur web des fichiers du dossier de données de Moodle.
