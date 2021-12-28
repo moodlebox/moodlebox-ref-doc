@@ -84,7 +84,8 @@ Version 1.9.3}
 This article documents how to build a MoodleBox.
 It is intended for developers or system administrators to provide background information on how a MoodleBox is built.
 
-This is not meant to be an end-user documentation. For end-user documentation, please consult \href{https://moodlebox.net/}{MoodleBox website}.
+This is not meant to be an end-user documentation.
+For end-user documentation, please consult \href{https://moodlebox.net/}{MoodleBox website}.
 
 The actual building of MoodleBox is now done using \href{https://www.ansible.com/}{Ansible}.
 Using Ansible enables most of the build to be automated, as well as ensuring that it is reproducible.
@@ -97,7 +98,8 @@ Though complete, the instructions in this document should not be understood as a
 \begin{itemize}
 \item Configurable wireless access point with SSID: \emph{MoodleBox} and password: \emph{moodlebox}.
 \item DHCP server for wireless clients.
-\item Moodle server (\url{http://moodlebox.home/}). This is a totally standard Moodle installation.
+\item Moodle server (\url{http://moodlebox.home/}).
+This is a totally standard Moodle installation.
 \item MoodleBox Moodle administration plugin\footnote{\url{https://github.com/moodlebox/moodle-tool_moodlebox}.} providing a GUI to manage most aspects of the MoodleBox.
 \item Internet access: If MoodleBox is connected via ethernet or wireless LAN to an Internet-connected network, it acts as a router and gives its wireless clients access to the Internet.
 \end{itemize}
@@ -106,7 +108,7 @@ Though complete, the instructions in this document should not be understood as a
 \begin{itemize}
 \item Moodle version 3.11.x in its basic configuration, with no content (no courses).
 The only Moodle user account is an administrator account (username: \emph{moodlebox}, password: \emph{Moodlebox4\$}).
-The server is configured to accept clients from the official Moodle app\footnote{\url{https://download.moodle.org/mobile/}.}. \textsl{cron} service is launched every minute.
+The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.} \textsl{cron} service is launched every minute.
 \item When a USB stick is inserted into the MoodleBox, its files are available to users in Moodle's \textsl{File system} repository.
 \item Ability to upload files via SFTP directly to the MoodleBox (username: \emph{moodlebox}, password: \emph{Moodlebox4\$}); these files are then available to users in Moodle's \textsl{File system} repository.
 \item Adminer, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
@@ -125,14 +127,14 @@ Although MoodleBox works fine on other models, a Raspberry Pi Model 3B, 3B+ or 4
 
 \subsection{Copy last version of Raspberry Pi OS Lite on a microSD card}
 
-Download last version of \emph{Raspberry Pi OS Lite} from Raspberry Pi web site\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.}, copy it on your (good quality!) microSD card.
-Complete description of the process is available on Raspberry Pi web site\footnote{\url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}.
+Download last version of \emph{Raspberry Pi OS Lite} from Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} copy it on your (good quality!) microSD card.
+Complete description of the process is available on Raspberry Pi web site.\footnote{\url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
 \subsection{Enable SSH access}
 
-For security reasons, SSH access isn't enabled by default\footnote{Voir \url{https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/}}.
-To enabling, copy a file called \lstinline{ssh} in the \lstinline{boot} directory (root of \lstinline{boot} partition of microSD card).
-The contents of the file don't matter.
+For security reasons, SSH access isn't enabled by default.\footnote{See \url{https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/}}
+To enable it, we copy a file with name \lstinline{ssh} in the \lstinline{boot} directory (root of \lstinline{boot} partition of microSD card).
+The content of the file doesn't matter.
 The following commands will do.
 
 \begin{lstlisting}[language=bash]
@@ -144,7 +146,9 @@ Eject the microSD card and insert it into the Raspberry Pi.
 
 Connect the power supply of the Raspberry Pi.
 Plug the Raspberry Pi with an Ethernet cable into a network with a DHCP server and wait 20-30 seconds.
-Your Raspberry Pi is now reachable on the network using the address \lstinline{raspberrypi.local}\footnote{This network address is provided by the \emph{zeroconf} standard protocol. Some older Android and Windows devices do not understand this protocol. With such devices, it is necessary to get access to the Raspberry Pi via its numerical IP address, which must be discovered manually.}.
+Your Raspberry Pi is now reachable on the network using the address \lstinline{raspberrypi.local}.\footnote{This network address is provided by the \emph{zeroconf} standard protocol.
+Some older Android and Windows devices do not understand this protocol.
+With such devices, it is necessary to get access to the Raspberry Pi via its numerical IP address, which must be discovered manually.}
 
 \iffalse
 \begin{verification}
@@ -225,7 +229,8 @@ $ sudo raspi-config
 With \emph{raspi-config}, configure following settings:
 \begin{itemize}
 \item Expand Filesystem.
-\item Change password for the \lstinline{pi} user. As the disk image being produced is intended to be openly distributed, we choose MoodleBox default password \emph{Moodlebox4\$}.
+\item Change password for the \lstinline{pi} user.
+As the disk image being produced is intended to be openly distributed, we choose MoodleBox default password \emph{Moodlebox4\$}.
 \item Install following \emph{locales}:
 \begin{itemize}
 \item \lstinline{de_DE.UTF-8}
@@ -236,7 +241,9 @@ With \emph{raspi-config}, configure following settings:
 \item \lstinline{it_IT.UTF-8}
 \end{itemize}
 and set \lstinline{en_GB.UTF-8} as default \emph{locale}.
-\item Set time zone and WLAN country. This will also unblock wireless use. MoodleBox default settings are respectively \lstinline{Europe/Zurich} and \lstinline{CH}.
+\item Set time zone and WLAN country.
+This will also unblock wireless use.
+MoodleBox default settings are respectively \lstinline{Europe/Zurich} and \lstinline{CH}.
 \item Set the hostname to \emph{moodlebox}.
 \end{itemize}
 
@@ -338,8 +345,10 @@ We do this by adding the following line at the end of the file \lstinline{/boot/
 \begin{lstlisting}[language=bash]
 gpu_mem=16
 \end{lstlisting}
-%We disable screenblanking, since no monitor is connected to a MoodleBox. Add parameter \lstinline{consoleblank=0} to the only line of file \lstinline{/boot/cmdline.txt}.
-%If needed, we disable predictable network interface names. Add parameter \lstinline{net.ifnames=0} to this same line of file \lstinline{/boot/cmdline.txt}.
+%We disable screenblanking, since no monitor is connected to a MoodleBox.
+%Add parameter \lstinline{consoleblank=0} to the only line of file \lstinline{/boot/cmdline.txt}.
+%If needed, we disable predictable network interface names.
+%Add parameter \lstinline{net.ifnames=0} to this same line of file \lstinline{/boot/cmdline.txt}.
 
 \subsection{Enable shutdown/startup hardware button}
 
@@ -364,7 +373,9 @@ Here's the content of \lstinline{/etc/udev/rules.d/90-wireless.rules} on the Moo
 \subsection{Switch to alternative wireless chip firmware}
 %:TODO: Move this subsection to the adequate place
 
-Standard Raspberry Pi wireless firmware has several additional features that are not very useful for a MoodleBox. However, SRAM on the wireless chip is used both for data storage whilst in use, but also for additional features and bug fixes. Each time a feature is added or a bug fix made, the amount of SRAM available for runtime variables decreases, and so the number of clients in AP mode.
+Standard Raspberry Pi wireless firmware has several additional features that are not very useful for a MoodleBox.
+However, SRAM on the wireless chip is used both for data storage whilst in use, but also for additional features and bug fixes.
+Each time a feature is added or a bug fix made, the amount of SRAM available for runtime variables decreases, and so the number of clients in AP mode.
 
 An alternative firmware is now available that has been tuned to maximise the number of clients in AP mode while still supporting STA mode.
 This is the firmware we choose to use in MoodleBox.
@@ -455,11 +466,12 @@ $ sudo systemctl enable hostapd
 
 \subsection{DHCP and DNS server configuration}
 
-DHCP and DNS server configuration on \lstinline{uap0} interface are provided through \lstinline{dnsmasq}\footnote{DNS configuration is based on \url{https://www.linux.com/learn/dnsmasq-easy-lan-name-services}.}. We edit  \lstinline{/etc/dnsmasq.conf} to have this content:
+DHCP and DNS server configuration on \lstinline{uap0} interface are provided through \lstinline{dnsmasq}.\footnote{DNS configuration is based on \url{https://www.linux.com/learn/dnsmasq-easy-lan-name-services}.}
+We edit  \lstinline{/etc/dnsmasq.conf} to have this content:
 
 \lstinputlisting[language=bash]{files/dnsmasq.conf}
 
-We edit now the file \lstinline{/etc/hosts}, replacing last line, beginning with \lstinline{127.0.1.1}, by this line:
+We edit now the file \lstinline{/etc/hosts}, replacing last line, beginning with \lstinline{127.0.1.1}, with this line:
 \begin{lstlisting}[language=bash]
 10.0.0.1	moodlebox
 \end{lstlisting}
@@ -519,7 +531,7 @@ After rebooting, a client device should be able to browse Internet after connect
 \subsection{Captive portal}
 %:TODO: Document captive portal installation and configuration
 
-We can now install the captive portal, based on free software Nodogsplash\footnote{https://nodogsplashdocs.readthedocs.io/}.
+We can now install the captive portal, based on free software Nodogsplash.\footnote{\url{https://nodogsplashdocs.readthedocs.io/}.}
 Nodogsplash needs first to be compiled for the Raspberry Pi platform.
 Its compilation is not covered in this guide.
 Refer to \href{https://nodogsplashdocs.readthedocs.io/en/stable/compile.html}{Nodogsplash documentation} for any support about its compilation.
@@ -531,9 +543,11 @@ $ sudo dpkg –i nodogsplash_5.0.0-1_armhf.deb
 Nodogsplash configuration file \lstinline{/etc/nodogsplash/nodogsplash.conf} should read
 \lstinputlisting[language=bash]{files/nodogsplash.conf}
 
-We can now edit Nodogsplash splash page at our convenience. The files to edit are located in folder \lstinline{/etc/nodogsplash/htdocs/}.
+We can now edit Nodogsplash splash page at our convenience.
+The files to edit are located in folder \lstinline{/etc/nodogsplash/htdocs/}.
 
-In the official MoodleBox image, Nodogsplash captive portal is not enabled. If we want to disable it too, we type following commands in our shell:
+In the official MoodleBox image, Nodogsplash captive portal is not enabled.
+If we want to disable it too, we type following commands in our shell:
 \begin{lstlisting}[language=bash]
 $ sudo systemctl stop nodogsplash.service
 $ sudo systemctl disable nodogsplash.service
@@ -558,7 +572,8 @@ $ sudo apt-get install -y nginx php7.4-fpm php7.4-cli php7.4-common \
 
 \iffalse
 \begin{verification}
-With a computer connected to the MoodleBox wireless network, load URL \url{http://moodlebox.home/} in your favorite web browser. The web page "Welcome to nginx on Debian!" Should be displayed.
+With a computer connected to the MoodleBox wireless network, load URL \url{http://moodlebox.home/} in your favorite web browser.
+The web page "Welcome to nginx on Debian!" Should be displayed.
 \end{verification}
 \fi
 
@@ -574,7 +589,8 @@ Refer to adequate documentation on SSL certificate generation, e.g. on \url{http
 Nginx web server configuration is done in file \lstinline{/etc/nginx/sites-available/default}, which content should be like below.
 \lstinputlisting[language=bash]{files/default}
 
-Last \lstinline{fastcgi_param} line, with line \lstinline{client_max_body_size}, increases to 50~MB the max upload file size, as well as script maximum execution time to~300~s. It also sets \lstinline{max_input_vars} to~5000.
+Last \lstinline{fastcgi_param} line, with line \lstinline{client_max_body_size}, increases to 50~MB the max upload file size, as well as script maximum execution time to~300~s.
+It also sets \lstinline{max_input_vars} to~5000.
 
 We then relaunch the web server:
 \begin{lstlisting}[language=bash]
@@ -587,7 +603,8 @@ Type the command
 \begin{lstlisting}[language=bash]
 $ echo '<?php phpinfo(); ?>' | sudo tee -a /var/www/html/info.php
 \end{lstlisting}
-then open URL \url{http://moodlebox.home/info.php} in your browser. The long PHP settings page should appear, with the \lstinline{upload_max_filesize}, \lstinline{post_max_size} and \lstinline{max_input_vars} variables correctly set.
+then open URL \url{http://moodlebox.home/info.php} in your browser.
+The long PHP settings page should appear, with the \lstinline{upload_max_filesize}, \lstinline{post_max_size} and \lstinline{max_input_vars} variables correctly set.
 \end{verification}
 \fi
 
@@ -613,16 +630,19 @@ If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be twea
 
 \subsection{MariaDB installation and configuration}
 
-We install now MariaDB package. PHP MariaDB support was already installed with PHP (see section~\ref{ssec-nginx-php-installation}).
+We install now MariaDB package.
+PHP MariaDB support was already installed with PHP (see section~\ref{ssec-nginx-php-installation}).
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y mariadb-server
 \end{lstlisting}
 
-During the installation, we define the password of the main user \emph{moodlebox} of the database. For this installation, we set the password to \emph{Moodlebox4\$}.
+During the installation, we define the password of the main user \emph{moodlebox} of the database.
+For this installation, we set the password to \emph{Moodlebox4\$}.
 
 \iffalse
 \begin{verification}
-Reload URL \url{http://moodlebox.home/info.php}. A new section \emph{MySQL} should appear in the page.
+Reload URL \url{http://moodlebox.home/info.php}.
+A new section \emph{MySQL} should appear in the page.
 \end{verification}
 \fi
 
@@ -643,9 +663,9 @@ If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can 
 % query_cache_size        = 2M
 % log_error = /var/log/mysql/error.log
 
-\section{Moodle installation}
+\section{Moodle installation and configuration}
 
-\subsubsection{Moodle database creation}
+\subsection{Moodle database creation}
 
 We first create the database which Moodle will use.
 \begin{lstlisting}[language=bash]
@@ -654,25 +674,32 @@ $ sudo mysql
     > QUIT;
 \end{lstlisting}
 
-\subsubsection{Moodle download}
+\subsection{Moodle download}
 
-We can now download Moodle; we do this with Git in order to facilitate future updates. We first install Git.
+We can now download Moodle; we do this with Git in order to facilitate future updates.
+We first install Git.
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y git
 \end{lstlisting}
 
-We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle:
+We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle.
+A shallow clone is used to save space on the image.
 \begin{lstlisting}[language=bash]
 $ sudo git clone --depth=1 -b MOODLE_311_STABLE \
     git://git.moodle.org/moodle.git /var/www/moodle
 \end{lstlisting}
 
-\subsubsection{Moodle configuration}
+%\subsection{Moodle configuration}
+\subsection{Creation of Moodle data directories}
 
-Moodle data and several cache directories are now created, with adequate permissions. We also set the correct permissions to Moodle source directory and set SGID permission on Moodle data directory:
+Moodle data and several other directories are now created.
 \begin{lstlisting}[language=bash]
 $ sudo mkdir -p /var/www/moodledata/repository /var/www/moodledata/temp \
     /var/www/moodledata/backup /var/cache/moodle /var/cache/moodle-cache-backup
+\end{lstlisting}
+Adequate permissions and ownership are set on these directories, including SGID permission on Moodle data directory.
+We also set the correct permissions to Moodle source directory:
+\begin{lstlisting}[language=bash]
 $ sudo chown -R www-data:moodlebox /var/www/moodle /var/www/moodledata/ \
     /var/cache/moodle /var/cache/moodle-cache-backup
 $ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/ \
@@ -680,33 +707,30 @@ $ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/ \
 $ sudo chmod -R g+s /var/www/moodledata/
 \end{lstlisting}
 
-We can now launch Moodle installation, either by loading URL \url{http://moodlebox.home/} in your browser and follow the instructions on screen, or by using Moodle command line interface\footnote{See \url{https://docs.moodle.org/311/en/Installing_Moodle\#Command_line_installer}.}. For MoodleBox, the administrator account is defined with \emph{moodlebox} as username and the password \emph{Moodlebox4\$}.
+We can now launch Moodle installation, either by loading URL \url{http://moodlebox.home/} in a browser and follow the instructions on screen, or by using Moodle command line interface.\footnote{See \url{https://docs.moodle.org/311/en/Installing_Moodle\#Command_line_installer}.}
+For MoodleBox, the administrator account is defined with \emph{moodlebox} as username and the password \emph{Moodlebox4\$}.
 
-The installation takes more than 10 minutes. So be patient!
+The installation takes at least 10 minutes.
+So be patient!
 
-%:TODO: --> <--
-\subsubsection{Utilisation de \emph{X-Sendfile}}
+\subsection{Tweaking the Moodle configuration}
 
-L'utilisation de \emph{X-Sendfile} permet d'accélérer l'envoi par le serveur web des fichiers du dossier de données de Moodle.
+\subsubsection{Moodle course backup directory}
 
-Ajouter les lignes
-\begin{lstlisting}[language=bash]
-$CFG->xsendfile = 'X-Accel-Redirect';
-$CFG->xsendfilealiases = array (
-    '/dataroot/' => $CFG->dataroot
-);
+As we use for Moodle course backup a different directory than the data folder, we set the following line in Moodle configuration file \lstinline{/var/www/moodle/config.php}:
+%, just after line \lstinline{$CFG->admin = 'admin';}
+\begin{lstlisting}[language=php]
+$CFG->backuptempdir = '/var/www/moodledata/backup';
 \end{lstlisting}
-après la ligne \lstinline{$CFG->admin = 'admin';} dans le fichier de configuration de Moodle \lstinline{/var/www/moodle/config.php}.
 
-%\begin{lstlisting}[language=bash]
-%$ sudo nano /var/www/moodle/config.php
-%\end{lstlisting}
+\subsubsection{\emph{X-Sendfile} setup}
 
-Le contenu du fichier \lstinline{/var/www/moodle/config.php} sera alors :
-\lstinputlisting[language=bash]{files/config.php}
-
-Ajouter ensuite les lignes ci-dessous dans le fichier \lstinline{/etc/nginx/sites-available/default}
-
+We also set \emph{X-Sendfile} in \lstinline{/var/www/moodle/config.php} to allow files in the Moodle data folder to be uploaded faster through the web server:
+\begin{lstlisting}[language=php]
+$CFG->xsendfile = 'X-Accel-Redirect';
+$CFG->xsendfilealiases = array ('/dataroot/' => $CFG->dataroot);
+\end{lstlisting}
+For \emph{X-Sendfile} to be active, we must add following lines to Nginx configuration file \lstinline{/etc/nginx/sites-available/default}, inside \lstinline{server} block:
 \begin{lstlisting}[language=bash]
 location /dataroot/ {
     internal;
@@ -714,12 +738,40 @@ location /dataroot/ {
 }
 \end{lstlisting}
 
-Le contenu du fichier \lstinline{/etc/nginx/sites-available/default} devient alors :
-\lstinputlisting[language=bash]{files/default2}
+\subsubsection{Custom filetype definition}
 
+Defining a custom file type in Moodle facilitates the web certificate from MoodleBox home page. The definition is coded in \lstinline{/var/www/moodle/config.php} too:
+\begin{lstlisting}[language=php]
+$CFG->customfiletypes = array(
+  (object)array(
+    'extension' => 'crt',
+    'icon' => 'sourcecode',
+    'type' => 'application/x-x509-ca-cert',
+    'customdescription' => 'X.509 CA certificate'
+  )
+);
+\end{lstlisting}
+
+\subsubsection{Hiding content that doesn't make sense}
+
+We hide Moodle campaign and Moodle services and support sections from notifications page.
+These content don't make sense for MoodleBox, which is off-line most of the time.
+\begin{lstlisting}[language=php]
+$CFG->showcampaigncontent = false;
+$CFG->showservicesandsupportcontent = false;
+\end{lstlisting}
+
+Final content of the file \lstinline{/var/www/moodle/config.php} is then:
+\lstinputlisting[language=php]{files/config.php}
+
+%Final content of the file \lstinline{/etc/nginx/sites-available/default} is then:
+%\lstinputlisting[language=bash]{files/default2}
+
+%:TODO: --> <--
 \subsection{Cron configuration}
 
-On lance le cron de Moodle toutes les 3 minutes. Pour ce faire, lancer la commande
+On lance le cron de Moodle toutes les 3 minutes.
+Pour ce faire, lancer la commande
 
 \begin{lstlisting}[language=bash]
 $ sudo crontab -e
@@ -740,7 +792,7 @@ Dans Moodle, visiter l'administration sous \emph{Administration du site > Serveu
 
 \subsection{Fichiers sur une clef USB}
 
-On configure le montage automatique de clefs USB (quel que soit leur format), ainsi que l'accès à tous les fichiers de clefs USB branchées via le dépôt \emph{Système de fichiers} de Moodle\footnote{Si plusieurs clefs USB sont branchées à la MoodleBox, seuls les fichiers de la première clef branchée sont accessibles via le dépôt de fichiers.}.
+On configure le montage automatique de clefs USB (quel que soit leur format), ainsi que l'accès à tous les fichiers de clefs USB branchées via le dépôt \emph{Système de fichiers} de Moodle.\footnote{Si plusieurs clefs USB sont branchées à la MoodleBox, seuls les fichiers de la première clef branchée sont accessibles via le dépôt de fichiers.}
 
 Pour ce faire, on installe le paquet \lstinline{usbmount}, puis on crée un dossier dans le dossier de données de Moodle, et l'on crée enfin un lien depuis le point de montage de la clef USB vers ce dossier.
 
@@ -751,7 +803,7 @@ $ sudo chown -R www-data:moodlebox /var/www/moodledata/
 $ sudo ln -s /media/usb /var/www/moodledata/repository
 \end{lstlisting}
 
-Il faut ensuite configurer Moodle de façon adéquate\footnote{Voir \url{https://docs.moodle.org/en/File_system_repository}.}: connecté comme administrateur sur la plateforme, on visite \emph{Administration du site > Plugins > Dépôts > Gérer les dépôts}.
+Il faut ensuite configurer Moodle de façon adéquate:\footnote{Voir \url{https://docs.moodle.org/en/File_system_repository}.}: connecté comme administrateur sur la plateforme, on visite \emph{Administration du site > Plugins > Dépôts > Gérer les dépôts}.
 
 Dans la ligne \emph{Système de fichiers}, on sélectionne dans le menu déroulant \emph{Activé et visible}.
 
@@ -762,7 +814,8 @@ Dans la ligne \emph{Système de fichiers}, on sélectionne dans le menu déroula
 \end{minipage}
 \end{figure}
 
-On clique ensuite sur \emph{Enregistrer}, puis sur \emph{Paramètres} (même ligne), puis sur le bouton \emph{Créer une instance de dépôt}. Enfin, on sélectionne \emph{usb} dans le menu déroulant, et on indique \emph{USB Drive} dans le champ obligatoire \emph{Nom}.
+On clique ensuite sur \emph{Enregistrer}, puis sur \emph{Paramètres} (même ligne), puis sur le bouton \emph{Créer une instance de dépôt}.
+Enfin, on sélectionne \emph{usb} dans le menu déroulant, et on indique \emph{USB Drive} dans le champ obligatoire \emph{Nom}.
 
 \begin{figure}[!ht]
 \begin{minipage}[b]{\linewidth}
@@ -773,7 +826,8 @@ On clique ensuite sur \emph{Enregistrer}, puis sur \emph{Paramètres} (même lig
 
 \subsection{Fichiers déposés par SFTP}
 
-On crée un dossier dans lequel les fichiers devront être déposés pour être accessibles depuis Moodle, ainsi qu'un lien vers le dossier de données de Moodle. Les permissions adéquates sont données.
+On crée un dossier dans lequel les fichiers devront être déposés pour être accessibles depuis Moodle, ainsi qu'un lien vers le dossier de données de Moodle.
+Les permissions adéquates sont données.
 
 \begin{lstlisting}[language=bash]
 $ mkdir -p /home/moodlebox/files
@@ -784,7 +838,8 @@ $ sudo ln -s /home/moodlebox/files /var/www/moodledata/repository
 
 On effectue la configuration d'un dépôt \emph{Système de fichiers}, de façon similaire au dépôt « USB Drive » ci-dessus, en indiquant le dossier \emph{files} et en indiquant \emph{SFTP Documents} comme nom de dépôt.
 
-Pour déposer des fichiers, on se connecte au moyen d'un logiciel SFTP\footnote{Par exemple : \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.} sur la MoodleBox, avec le nom d'utilisateur \emph{moodlebox} et le mot de passe \emph{Moodlebox4\$}. Les fichiers seront déposés dans le dossier \lstinline{files}.
+Pour déposer des fichiers, on se connecte au moyen d'un logiciel SFTP\footnote{Par exemple : \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.} sur la MoodleBox, avec le nom d'utilisateur \emph{moodlebox} et le mot de passe \emph{Moodlebox4\$}.
+Les fichiers seront déposés dans le dossier \lstinline{files}.
 
 Installation de ghostscript et de poppler-utils
 
@@ -792,23 +847,26 @@ Installation de ghostscript et de poppler-utils
 
 \subsection{Activation de l'accès via l'app mobile de Moodle}
 
-Après s'être connecté à la plateforme avec le compte administrateur,  on visite dans le Moodle \emph{Administration du site > Plugins > Services web > Mobile}. On coche la case \emph{Activer les services web pour appareils mobiles} et l'on enregistre les modifications.
+Après s'être connecté à la plateforme avec le compte administrateur,  on visite dans le Moodle \emph{Administration du site > Plugins > Services web > Mobile}.
+On coche la case \emph{Activer les services web pour appareils mobiles} et l'on enregistre les modifications.
 
 Pour cette plateforme dont la destination n'est pas d'être publiée sur Internet, l'avertissement concernant le certificat SSL peut être ignoré sans risque.
 
 \iffalse
 \begin{verification}
-Depuis un smartphone connecté en Wi-Fi sur le réseau MoodleBox, lancer l'app mobile Moodle et se connecter à la plateforme au moyen de l'URL \url{http://moodlebox.home}, avec le compte administrateur. Aucune erreur ne doit être signalée, et le message \emph{Aucune information de cours à afficher} est affiché sur l'écran du smartphone.
+Depuis un smartphone connecté en Wi-Fi sur le réseau MoodleBox, lancer l'app mobile Moodle et se connecter à la plateforme au moyen de l'URL \url{http://moodlebox.home}, avec le compte administrateur.
+Aucune erreur ne doit être signalée, et le message \emph{Aucune information de cours à afficher} est affiché sur l'écran du smartphone.
 \end{verification}
 \fi
 
 \subsection{Installation du plugin Administration MoodleBox}
 
-Afin de permettre le redémarrage et l'arrêt de la MoodleBox sans risque de corruption de la carte microSD, la modification du mot de passe, le réglage de l'heure, le changement du mot de passe du réseau Wi-Fi, ainsi que pour donner des informations utiles sur son fonctionnement, on installe le plugin d'administration \emph{MoodleBox} pour Moodle\footnote{Plugin MoodleBox \url{https://github.com/martignoni/moodlebox-plugin}.}.
+Afin de permettre le redémarrage et l'arrêt de la MoodleBox sans risque de corruption de la carte microSD, la modification du mot de passe, le réglage de l'heure, le changement du mot de passe du réseau Wi-Fi, ainsi que pour donner des informations utiles sur son fonctionnement, on installe le plugin d'administration \emph{MoodleBox} pour Moodle.\footnote{Plugin MoodleBox \url{https://github.com/martignoni/moodlebox-plugin}.}
 
-Le plus simple est de l'installer au moyen de l'interface graphique de Moodle, en visitant \emph{Administration du site > Plugins > Dépôts > Installer des plugins}. On clique sur le bouton \emph{Installer des plugins à partir du répertoire des plugins Moodle} et choisit le plugin d'administration \emph{MoodleBox} (\emph{Admin tools}).
+Le plus simple est de l'installer au moyen de l'interface graphique de Moodle, en visitant \emph{Administration du site > Plugins > Dépôts > Installer des plugins}.
+On clique sur le bouton \emph{Installer des plugins à partir du répertoire des plugins Moodle} et choisit le plugin d'administration \emph{MoodleBox} (\emph{Admin tools}).
 
-Il est aussi possible de l'installer via Git\footnote{Le code source du plugin MoodleBox est disponible à l'adresse \url{https://moodle.org/plugins/tool_moodlebox}.}.
+Il est aussi possible de l'installer via Git.\footnote{Le code source du plugin MoodleBox est disponible à l'adresse \url{https://moodle.org/plugins/tool_moodlebox}.}
 
 \begin{lstlisting}[language=bash]
 $ cd /var/www/moodle/admin/tool/
@@ -857,17 +915,22 @@ en y ajoutant les lignes
 $ sudo apt-get install -y -t stretch phpmyadmin
 $ sudo ln -s /usr/share/phpmyadmin /var/www/moodle/phpmyadmin
 \end{lstlisting}
-Définir un mot de passe fort. Pour cette installation, le mot de passe choisi est \emph{Moodlebox4\$}. Pour accéder à la totalité des fonctionnalités de PhpMyAdmin, on accèdera à l'interface au moyen de l'utilisateur \emph{moodlebox} et du mot de passe \emph{Moodlebox4\$}.
+Définir un mot de passe fort.
+Pour cette installation, le mot de passe choisi est \emph{Moodlebox4\$}.
+Pour accéder à la totalité des fonctionnalités de PhpMyAdmin, on accèdera à l'interface au moyen de l'utilisateur \emph{moodlebox} et du mot de passe \emph{Moodlebox4\$}.
 
 \iffalse
 \begin{verification}
-Charger l'URL \url{http://moodlebox.home/phpmyadmin/}. L'interface de PhpMyAdmin doit s'afficher. Pour s'y connecter, utiliser le nom d'utilisateur \emph{moodlebox} et le mot de passe \emph{Moodlebox4\$}.
+Charger l'URL \url{http://moodlebox.home/phpmyadmin/}.
+L'interface de PhpMyAdmin doit s'afficher.
+Pour s'y connecter, utiliser le nom d'utilisateur \emph{moodlebox} et le mot de passe \emph{Moodlebox4\$}.
 \end{verification}
 \fi
 
 \section{Optimisation}
 
-Pour que la MoodleBox soit utilisable en pratique, il est nécessaire de prendre soin à son optimisation. On configure ainsi le cache de Moodle, ainsi que sa gestion des dépôts et téléchargements de fichiers.
+Pour que la MoodleBox soit utilisable en pratique, il est nécessaire de prendre soin à son optimisation.
+On configure ainsi le cache de Moodle, ainsi que sa gestion des dépôts et téléchargements de fichiers.
 
 \subsubsection[Disque RAM pour certains dossiers de Moodle]{Disque RAM pour certains dossiers de Moodle\footnote{Cette section est en partie inspirée de \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
 
@@ -878,9 +941,11 @@ $ sudo chown www-data:moodlebox /var/cache/moodle/
 $ sudo chmod ug+w,o-w /var/cache/moodle/
 \end{lstlisting}
 
-On utilise également des disques RAM pour le dossier temporaire et le dossiers des sessions de Moodle. Ces deux dossiers sont situés dans le dossier \emph{moodledata}.
+On utilise également des disques RAM pour le dossier temporaire et le dossiers des sessions de Moodle.
+Ces deux dossiers sont situés dans le dossier \emph{moodledata}.
 
-On définit dans la table des partitions du Raspberry les disques RAM. Pour ce faire, on ajoute au fichier \lstinline{/etc/fstab}, les lignes suivantes
+On définit dans la table des partitions du Raspberry les disques RAM.
+Pour ce faire, on ajoute au fichier \lstinline{/etc/fstab}, les lignes suivantes
 \begin{lstlisting}[language=bash]
 tmpfs /var/cache/moodle tmpfs size=64M,mode=775,uid=www-data,gid=www-data 0 0
 tmpfs /var/www/moodledata/temp tmpfs size=64M,mode=775,uid=www-data,gid=www-data 0 0
@@ -896,7 +961,8 @@ Le contenu du fichier \lstinline{/etc/fstab} sera alors :
 
 Après un redémarrage de la Raspberry, le cache peut être configuré dans Moodle.
 
-On se connecte à Moodle avec le compte administrateur (créé plus haut), puis dans le Moodle on visite \emph{Administration du site > Plugins > Cache > Configuration}. On crée deux nouvelles instances de dépôt, en cliquant sur \emph{Ajouter une instance} dans la section \emph{Entrepôts de cache installés} (en haut de la page).
+On se connecte à Moodle avec le compte administrateur (créé plus haut), puis dans le Moodle on visite \emph{Administration du site > Plugins > Cache > Configuration}.
+On crée deux nouvelles instances de dépôt, en cliquant sur \emph{Ajouter une instance} dans la section \emph{Entrepôts de cache installés} (en haut de la page).
 
 \begin{figure}[!ht]
 \begin{minipage}[b]{0.45\linewidth} % A minipage that covers half the page
@@ -939,7 +1005,9 @@ drwxrwxrwx  8 www-data www-data 160 mai   29 19:00 sessions
 \end{verification}
 \fi
 
-Le cache en disque RAM a un défaut: les données qu'il contient disparaissent à chaque redémarrage de la MoodleBox. Moodle doit donc à chaque fois reconstruire le cache. Si l'on veut conserver le cache entre les redémarrages, on copie à intervalle régulier le contenu du disque RAM sur la carte microSD, et, lors de chaque démarrage, on effectue l'opération inverse.
+Le cache en disque RAM a un défaut: les données qu'il contient disparaissent à chaque redémarrage de la MoodleBox.
+Moodle doit donc à chaque fois reconstruire le cache.
+Si l'on veut conserver le cache entre les redémarrages, on copie à intervalle régulier le contenu du disque RAM sur la carte microSD, et, lors de chaque démarrage, on effectue l'opération inverse.
 
 On crée le dossier de sauvegarde, puis on définit le cron
 \begin{lstlisting}[language=bash]
@@ -955,8 +1023,8 @@ On ajoute à la table des crons les deux lignes suivantes pour effectuer la sauv
 
 \subsubsection{Optimisation de MariaDB}
 
-On modifie les valeurs de quelques variables de MariaDB dans le fichier \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}. Pour ce faire, on ouvre le fichier en question
-et on y modifie les lignes adéquates, à savoir:
+On modifie les valeurs de quelques variables de MariaDB dans le fichier \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}.
+Pour ce faire, on ouvre le fichier en question et on y modifie les lignes adéquates, à savoir:
 \begin{lstlisting}[language=bash]
 table_cache             = 512
 table_definition_cache  = 512
@@ -967,7 +1035,8 @@ query_cache_type        = 0
 
 \section{Redimensionnement automatique de la partition}
 
-Afin d'éviter à l'utilisateur de devoir redimensionner manuellement la partition de travail, on configure le redimensionnement automatique au premier démarrage. La méthode est identique à celle utilisée lors de la construction de l'image-disque de \emph{Raspbian Stretch Lite}\footnote{\url{https://github.com/RPi-Distro/pi-gen}}.
+Afin d'éviter à l'utilisateur de devoir redimensionner manuellement la partition de travail, on configure le redimensionnement automatique au premier démarrage.
+La méthode est identique à celle utilisée lors de la construction de l'image-disque de \emph{Raspbian Stretch Lite}.\footnote{\url{https://github.com/RPi-Distro/pi-gen}.}
 
 On copie le fichier \lstinline{resize2fs_once} ci-dessous dans le dossier \lstinline{/etc/init.d/}, et on lui donne les permissions adéquates pour être lancé au redémarrage.
 \lstinputlisting[language=bash]{files/resize2fs_once}
@@ -1008,11 +1077,13 @@ $ sudo bash -c 'for logs in `find /var/log -type f`; do > $logs; done'
 $ cat /dev/null > ~/.bash_history && history -c && sudo shutdown -h now
 \end{lstlisting}
 
-Si tout s'est bien passé, la totalité a une taille d'environ 1.6~Go. L'image-disque, une fois tronquée, a une taille d'environ 1.9~Go. Compressée, elle tient dans environ 550~Mo.
+Si tout s'est bien passé, la totalité a une taille d'environ 1.6~Go.
+L'image-disque, une fois tronquée, a une taille d'environ 1.9~Go.
+Compressée, elle tient dans environ 550~Mo.
 
 \section{Acknowledgements}
 
-MoodleBox utilise certaines idées de la première version de Christian Westphal\footnote{Christian Westphal, Académie de Strasbourg, voir \url{https://moodle.org/user/view.php?id=1378197&course=20}.}, qui mérite pour cela une gratitude particulière.
+MoodleBox utilise certaines idées de la première version de Christian Westphal,\footnote{Christian Westphal, Académie de Strasbourg, voir \url{https://moodle.org/user/view.php?id=1378197&course=20}.} qui mérite pour cela une gratitude particulière.
 
 \end{document}
 %%
