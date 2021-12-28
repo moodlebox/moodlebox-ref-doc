@@ -365,7 +365,7 @@ dtoverlay=gpio-shutdown
 
 We want to be able to use standard wireless interface \lstinline{wlan0} to optionally connect to a wireless LAN, so we need another interface for our AP.
 
-We use a \textsl{udev} rule for this purpose, creating a new file named \lstinline{90-wireless.rules} in folder \lstinline{/etc/udev/rules.d/}.
+We use a \textsl{udev} rule for this purpose, creating a new file named \lstinline{90-wireless.rules} in directory \lstinline{/etc/udev/rules.d/}.
 
 Here's the content of \lstinline{/etc/udev/rules.d/90-wireless.rules} on the MoodleBox:
 \lstinputlisting{files/90-wireless.rules}
@@ -391,7 +391,7 @@ $ sudo ln -sf ../cypress/cyfmac43455-sdio-minimal.bin \
 
 \subsection{Wireless connection as a client (optional)}
 
-If MoodleBox is intended to be used as a client (STA mode) as well as an access point, a valid configuration file named \lstinline{wpa_supplicant.conf} should be provided to \lstinline{wpa_supplicant} service, in folder \lstinline{/etc/wpa_supplicant/}.
+If MoodleBox is intended to be used as a client (STA mode) as well as an access point, a valid configuration file named \lstinline{wpa_supplicant.conf} should be provided to \lstinline{wpa_supplicant} service, in directory \lstinline{/etc/wpa_supplicant/}.
 
 Following listing shows an example of such file:
 \lstinputlisting{files/wpa_supplicant.conf}
@@ -544,7 +544,7 @@ Nodogsplash configuration file \lstinline{/etc/nodogsplash/nodogsplash.conf} sho
 \lstinputlisting[language=bash]{files/nodogsplash.conf}
 
 We can now edit Nodogsplash splash page at our convenience.
-The files to edit are located in folder \lstinline{/etc/nodogsplash/htdocs/}.
+The files to edit are located in directory \lstinline{/etc/nodogsplash/htdocs/}.
 
 In the official MoodleBox image, Nodogsplash captive portal is not enabled.
 If we want to disable it too, we type following commands in our shell:
@@ -579,7 +579,7 @@ The web page "Welcome to nginx on Debian!" Should be displayed.
 
 \subsection{SSL certificate and key}
 
-We can now copy the SSL certificate \lstinline{moodlebox.pem} and its key \lstinline{moodlebox.key} to the folder \lstinline{/etc/nginx/}.
+We can now copy the SSL certificate \lstinline{moodlebox.pem} and its key \lstinline{moodlebox.key} to the directory \lstinline{/etc/nginx/}.
 
 SSL certificate generation is not covered in this guide.
 Refer to adequate documentation on SSL certificate generation, e.g. on \url{https://stackoverflow.com/a/10176685}.
@@ -683,7 +683,7 @@ $ sudo apt-get install -y git
 \end{lstlisting}
 
 We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle.
-A shallow clone is used to save space on the image.
+A shallow clone is used to later save space on the MoodleBox image.
 \begin{lstlisting}[language=bash]
 $ sudo git clone --depth=1 -b MOODLE_311_STABLE \
     git://git.moodle.org/moodle.git /var/www/moodle
@@ -717,7 +717,7 @@ So be patient!
 
 \subsubsection{Moodle course backup directory}
 
-As we use for Moodle course backup a different directory than the data folder, we set the following line in Moodle configuration file \lstinline{/var/www/moodle/config.php}:
+As we use for Moodle course backup a different directory than the data directory, we set the following line in Moodle configuration file \lstinline{/var/www/moodle/config.php}:
 %, just after line \lstinline{$CFG->admin = 'admin';}
 \begin{lstlisting}[language=php]
 $CFG->backuptempdir = '/var/www/moodledata/backup';
@@ -725,7 +725,7 @@ $CFG->backuptempdir = '/var/www/moodledata/backup';
 
 \subsubsection{\emph{X-Sendfile} setup}
 
-We also set \emph{X-Sendfile} in \lstinline{/var/www/moodle/config.php} to allow files in the Moodle data folder to be uploaded faster through the web server:
+We set \emph{X-Sendfile} in \lstinline{/var/www/moodle/config.php} to allow files in the Moodle data directory to be uploaded faster through the web server:
 \begin{lstlisting}[language=php]
 $CFG->xsendfile = 'X-Accel-Redirect';
 $CFG->xsendfilealiases = array ('/dataroot/' => $CFG->dataroot);
