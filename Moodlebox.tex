@@ -755,7 +755,7 @@ $CFG->customfiletypes = array(
 \subsubsection{Hiding content that doesn't make sense}
 
 We hide Moodle campaign and Moodle services and support sections from notifications page.
-These content don't make sense for MoodleBox, which is off-line most of the time.
+These content don't make sense for MoodleBox, which is offline most of the time.
 \begin{lstlisting}[language=php]
 $CFG->showcampaigncontent = false;
 $CFG->showservicesandsupportcontent = false;
@@ -767,27 +767,27 @@ Final content of the file \lstinline{/var/www/moodle/config.php} is then:
 %Final content of the file \lstinline{/etc/nginx/sites-available/default} is then:
 %\lstinputlisting[language=bash]{files/default2}
 
-%:TODO: --> <--
 \subsection{Cron configuration}
 
-On lance le cron de Moodle toutes les 3 minutes.
-Pour ce faire, lancer la commande
-
+Moodle cron should be launched every minute.
+Moreover, since MoodleBox is offline most of the time and doesn't have a mail server, no mail should be sent by cron process.
+We edit cron configuration with the shell command
 \begin{lstlisting}[language=bash]
 $ sudo crontab -e
 \end{lstlisting}
-
-et ajouter à la table des crons la ligne
+and add following lines to the crontab
 \begin{lstlisting}[language=bash]
-*/3 * * * * nice -n 10 ionice -c2 /usr/bin/php /var/www/moodle/admin/cli/cron.php
+MAILTO=""
+* * * * * nice -n10 ionice -c2 /usr/bin/php /var/www/moodle/admin/cli/cron.php
 \end{lstlisting}
 
 \iffalse
 \begin{verification}
-Dans Moodle, visiter l'administration sous \emph{Administration du site > Serveur > Tâches programmées}, vérifier que les tâches programmées se lancent régulièrement.
+Visit Moodle administration via \emph{Site administration > Server > Scheduled tasks}, check that the scheduled tasks are launched regularly.
 \end{verification}
 \fi
 
+%:TODO: --> <--
 \section{Accès depuis Moodle aux fichiers d'une clef USB ou déposés par SFTP}
 
 \subsection{Fichiers sur une clef USB}
