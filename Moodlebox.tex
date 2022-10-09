@@ -711,7 +711,7 @@ We can now launch Moodle installation, either by loading URL \url{http://moodleb
 For MoodleBox, the administrator account is defined with \emph{moodlebox} as username and the password \emph{Moodlebox4\$}.
 
 The installation takes at least 10 minutes.
-So be patient!
+Be patient!
 
 \subsection{Tweaking the Moodle configuration}
 
@@ -752,7 +752,7 @@ $CFG->customfiletypes = array(
 );
 \end{lstlisting}
 
-\subsubsection{Hiding content that doesn't make sense}
+\subsubsection{Hiding content that doesn't make sense for MoodleBox}
 
 We hide Moodle campaign and Moodle services and support sections from notifications page.
 These content don't make sense for MoodleBox, which is offline most of the time.
@@ -778,7 +778,7 @@ $ sudo crontab -e
 and add following lines to the crontab
 \begin{lstlisting}[language=bash]
 MAILTO=""
-* * * * * nice -n10 ionice -c2 /usr/bin/php /var/www/moodle/admin/cli/cron.php
+* * * * * nice -n10 /usr/bin/php /var/www/moodle/admin/cli/cron.php
 \end{lstlisting}
 
 \iffalse
@@ -787,109 +787,45 @@ Visit Moodle administration via \emph{Site administration > Server > Scheduled t
 \end{verification}
 \fi
 
-%:TODO: --> <--
-\section{Accès depuis Moodle aux fichiers d'une clef USB ou déposés par SFTP}
+\section{MoodleBox plugin installation}
 
-\subsection{Fichiers sur une clef USB}
+MoodleBox plugin\footnote{MoodleBox plugin source code is available at \url{https://github.com/moodlebox/moodle-tool_moodlebox}.} enables monitoring of the MoodleBox as well as managing several of its settings, such as password change, date and time setting, wireless access settings, etc.
 
-On configure le montage automatique de clefs USB (quel que soit leur format), ainsi que l'accès à tous les fichiers de clefs USB branchées via le dépôt \emph{Système de fichiers} de Moodle.\footnote{Si plusieurs clefs USB sont branchées à la MoodleBox, seuls les fichiers de la première clef branchée sont accessibles via le dépôt de fichiers.}
+We install it by visiting \emph{Site administration > Plugins > Repositories > Install plugins}.
+Click on the \emph{Install plugins from the Moodle plugins directory} button and select \emph{MoodleBox} administration plugin (\emph{Admin tools}).
 
-Pour ce faire, on installe le paquet \lstinline{usbmount}, puis on crée un dossier dans le dossier de données de Moodle, et l'on crée enfin un lien depuis le point de montage de la clef USB vers ce dossier.
-
-\begin{lstlisting}[language=bash]
-$ sudo apt-get install -y usbmount ntfs-3g exfat-fuse
-$ sudo mkdir -p /var/www/moodledata/repository
-$ sudo chown -R www-data:moodlebox /var/www/moodledata/
-$ sudo ln -s /media/usb /var/www/moodledata/repository
-\end{lstlisting}
-
-Il faut ensuite configurer Moodle de façon adéquate:\footnote{Voir \url{https://docs.moodle.org/en/File_system_repository}.}: connecté comme administrateur sur la plateforme, on visite \emph{Administration du site > Plugins > Dépôts > Gérer les dépôts}.
-
-Dans la ligne \emph{Système de fichiers}, on sélectionne dans le menu déroulant \emph{Activé et visible}.
-
-\begin{figure}[!ht]
-\begin{minipage}[b]{\linewidth}
-\centering
-\includegraphics[width=10cm]{repo-filesystem-usb-1.png}
-\end{minipage}
-\end{figure}
-
-On clique ensuite sur \emph{Enregistrer}, puis sur \emph{Paramètres} (même ligne), puis sur le bouton \emph{Créer une instance de dépôt}.
-Enfin, on sélectionne \emph{usb} dans le menu déroulant, et on indique \emph{USB Drive} dans le champ obligatoire \emph{Nom}.
-
-\begin{figure}[!ht]
-\begin{minipage}[b]{\linewidth}
-\centering
-\includegraphics[width=11cm]{repo-filesystem-usb-2.png}
-\end{minipage}
-\end{figure}
-
-\subsection{Fichiers déposés par SFTP}
-
-On crée un dossier dans lequel les fichiers devront être déposés pour être accessibles depuis Moodle, ainsi qu'un lien vers le dossier de données de Moodle.
-Les permissions adéquates sont données.
-
-\begin{lstlisting}[language=bash]
-$ mkdir -p /home/moodlebox/files
-$ sudo chown -R moodlebox:www-data files/
-$ sudo chmod g+s files/
-$ sudo ln -s /home/moodlebox/files /var/www/moodledata/repository
-\end{lstlisting}
-
-On effectue la configuration d'un dépôt \emph{Système de fichiers}, de façon similaire au dépôt « USB Drive » ci-dessus, en indiquant le dossier \emph{files} et en indiquant \emph{SFTP Documents} comme nom de dépôt.
-
-Pour déposer des fichiers, on se connecte au moyen d'un logiciel SFTP\footnote{Par exemple : \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.} sur la MoodleBox, avec le nom d'utilisateur \emph{moodlebox} et le mot de passe \emph{Moodlebox4\$}.
-Les fichiers seront déposés dans le dossier \lstinline{files}.
-
-Installation de ghostscript et de poppler-utils
-
-\section{Configurations additionnelles de Moodle}
-
-\subsection{Activation de l'accès via l'app mobile de Moodle}
-
-Après s'être connecté à la plateforme avec le compte administrateur,  on visite dans le Moodle \emph{Administration du site > Plugins > Services web > Mobile}.
-On coche la case \emph{Activer les services web pour appareils mobiles} et l'on enregistre les modifications.
-
-Pour cette plateforme dont la destination n'est pas d'être publiée sur Internet, l'avertissement concernant le certificat SSL peut être ignoré sans risque.
-
-\iffalse
-\begin{verification}
-Depuis un smartphone connecté en Wi-Fi sur le réseau MoodleBox, lancer l'app mobile Moodle et se connecter à la plateforme au moyen de l'URL \url{http://moodlebox.home}, avec le compte administrateur.
-Aucune erreur ne doit être signalée, et le message \emph{Aucune information de cours à afficher} est affiché sur l'écran du smartphone.
-\end{verification}
-\fi
-
-\subsection{Installation du plugin Administration MoodleBox}
-
-Afin de permettre le redémarrage et l'arrêt de la MoodleBox sans risque de corruption de la carte microSD, la modification du mot de passe, le réglage de l'heure, le changement du mot de passe du réseau Wi-Fi, ainsi que pour donner des informations utiles sur son fonctionnement, on installe le plugin d'administration \emph{MoodleBox} pour Moodle.\footnote{Plugin MoodleBox \url{https://github.com/martignoni/moodlebox-plugin}.}
-
-Le plus simple est de l'installer au moyen de l'interface graphique de Moodle, en visitant \emph{Administration du site > Plugins > Dépôts > Installer des plugins}.
-On clique sur le bouton \emph{Installer des plugins à partir du répertoire des plugins Moodle} et choisit le plugin d'administration \emph{MoodleBox} (\emph{Admin tools}).
-
-Il est aussi possible de l'installer via Git.\footnote{Le code source du plugin MoodleBox est disponible à l'adresse \url{https://moodle.org/plugins/tool_moodlebox}.}
+It's also possible to install it via Git.
 
 \begin{lstlisting}[language=bash]
 $ cd /var/www/moodle/admin/tool/
-$ sudo git clone https://github.com/martignoni/moodlebox-plugin.git moodlebox
+$ sudo git clone https://github.com/moodlebox/moodle-tool_moodlebox.git moodlebox
 \end{lstlisting}
 
-On termine dans ce cas l'installation du plugin en visitant la page \url{http://moodlebox.home/admin}.
+In this case, the installation of the plugin is completed by visiting the page \url{http://moodlebox.home/admin}.
 
-Pour finaliser l'installation du plugin, il est nécessaire de créer quelques fichiers et d'en régler les autorisations.
+We have still to create a few files and set their permissions.
 \begin{lstlisting}[language=bash]
 $ cd /var/www/moodle/admin/tool/moodlebox
-$ sudo touch .reboot-server; touch .shutdown-server; touch .set-server-datetime; touch .newpassword; touch .wifisettings
+$ sudo touch .reboot-server .shutdown-server .set-server-datetime \ 
+    .newpassword .wifisettings .resize-partition
 $ sudo chown -R www-data:moodlebox /var/www/moodle/admin/tool/moodlebox
 $ sudo chmod -R ug+w,o-w /var/www/moodle/admin/tool/moodlebox
+$ sudo chmod -R 774 /var/www/moodle/admin/tool/moodlebox/bin
 \end{lstlisting}
+
+%:TODO: >--- pointer ---<
+
+
+%:TODO: Create sudoers file
+TODO: Create sudoers file \lstinline{/etc/sudoers.d/020_www-data-nopasswd}
 
 %:TODO: Replace incron with direvent
 TODO: Replace incron with direvent
 
-On installe finalement le paquetage \emph{incron}.
+On installe et configure finalement le paquetage \emph{direvent}.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y incron
+$ sudo apt-get install -y direvent
 \end{lstlisting}
 
 On autorise l'utilisation de \emph{incron} par \emph{root}, puis modifie la table des tâches de \emph{incron}.
@@ -908,6 +844,79 @@ en y ajoutant les lignes
 /var/www/moodle/admin/tool/moodlebox/.wifisettings IN_CLOSE_WRITE /bin/bash /var/www/moodle/admin/tool/moodlebox/bin/changewifisettings.sh
 \end{lstlisting}
 
+\section{Repositories for USB stick and uploads via SFTP}
+
+\subsection{USB stick}
+
+We set up automatic mounting of USB sticks (regardless of their format), as well as access to all files on inserted USB sticks via the \textsl{File system} repository.\footnote{If more than one USB stick is inserted into the MoodleBox, only the files on the first stick inserted are accessible via the File system repository.}
+
+This is done by installing the \lstinline{usbmount} package, then creating a folder in the Moodle data folder, and finally creating a link from the USB stick mount point to this folder.
+
+The \lstinline{usbmount} package should be built from its source code before to be installed.\footnote{See \url{https://github.com/rbrito/usbmount}. Follow the instructions in the README file.} We also install standard packages to support exFAT and NTFS formatted devices.
+
+\begin{lstlisting}[language=bash]
+$ sudo apt-get install -y ntfs-3g exfat-fuse
+$ sudo dpkg –i usbmount_0.0.24_all.deb
+$ sudo mkdir -p /var/www/moodledata/repository
+$ sudo chown -R www-data:moodlebox /var/www/moodledata/
+$ sudo ln -s /media/usb /var/www/moodledata/repository
+\end{lstlisting}
+
+You then have to configure Moodle appropriately:\footnote{See \url{https://docs.moodle.org/en/File_system_repository}.}: logged in as administrator on the platform, visit \emph{
+Site administration > Plugins > Repositories > Manage repositories}.
+
+Select \emph{Enabled and visible} in the row \emph{File system} to enable this repository.
+\begin{figure}[!ht]
+\begin{minipage}[b]{\linewidth}\centering
+\includegraphics[width=13cm]{repo-filesystem-usb-1.png}
+\end{minipage}
+\end{figure}
+
+Click on \emph{Save}, then, on the same row, on \emph{Settings}, then on the button \emph{Create a repository instance}.
+Finally select \emph{usb} from the drop-down menu, and enter \emph{USB Drive} in the mandatory \emph{Name} field.
+
+\begin{figure}[!ht]
+\begin{minipage}[b]{\linewidth}\centering
+\includegraphics[width=13cm]{repo-filesystem-usb-2.png}
+\end{minipage}
+\end{figure}
+
+\subsection{SFTP upload}
+
+We create a folder in which the files must be dropped in order to be accessible from Moodle, as well as a link to the Moodle data folder.
+Appropriate permissions are set.
+
+\begin{lstlisting}[language=bash]
+$ mkdir -p /home/moodlebox/files
+$ sudo chown -R moodlebox:www-data files/
+$ sudo chmod g+s files/
+$ sudo ln -s /home/moodlebox/files /var/www/moodledata/repository
+\end{lstlisting}
+
+A repository is configured in a similar way to the \textsl{USB Drive} repository above, by specifying the folder \emph{files} and enter \emph{SFTP Documents} as the repository name.
+
+To use this feature, log into the MoodleBox using a SFTP software\footnote{For instance: \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.}, with the user name \emph{moodlebox} and the password \emph{Moodlebox4\$}.
+Upload files in the \lstinline{files} folder.
+
+\section{Additional Moodle configurations}
+
+\subsection{Activation de l'accès via l'app mobile de Moodle}
+
+Après s'être connecté à la plateforme avec le compte administrateur,  on visite dans le Moodle \emph{Administration du site > Plugins > Services web > Mobile}.
+On coche la case \emph{Activer les services web pour appareils mobiles} et l'on enregistre les modifications.
+
+Pour cette plateforme dont la destination n'est pas d'être publiée sur Internet, l'avertissement concernant le certificat SSL peut être ignoré sans risque.
+
+\iffalse
+\begin{verification}
+Depuis un smartphone connecté en Wi-Fi sur le réseau MoodleBox, lancer l'app mobile Moodle et se connecter à la plateforme au moyen de l'URL \url{http://moodlebox.home}, avec le compte administrateur.
+Aucune erreur ne doit être signalée, et le message \emph{Aucune information de cours à afficher} est affiché sur l'écran du smartphone.
+\end{verification}
+\fi
+
+\subsection{Autres réglages: installation de ghostscript et de poppler-utils}
+
+Bla
 
 \section{Configuration de Adminer}
 
@@ -932,7 +941,7 @@ Pour s'y connecter, utiliser le nom d'utilisateur \emph{moodlebox} et le mot de 
 Pour que la MoodleBox soit utilisable en pratique, il est nécessaire de prendre soin à son optimisation.
 On configure ainsi le cache de Moodle, ainsi que sa gestion des dépôts et téléchargements de fichiers.
 
-\subsubsection[Disque RAM pour certains dossiers de Moodle]{Disque RAM pour certains dossiers de Moodle\footnote{Cette section est en partie inspirée de \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
+\subsubsection[Disque RAM pour certains dossiers de Moodle]{Disque RAM pour certains dossiers de Moodle\footnote{Inspired by \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
 
 Créer un dossier comme point de montage pour le disque RAM.
 \begin{lstlisting}[language=bash]
