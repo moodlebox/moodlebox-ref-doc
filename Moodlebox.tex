@@ -39,9 +39,9 @@
 \geometry{foot=15mm, head=15pt}
 %% Paragraphes sans indentation, légèrement espacés
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus1pt minus1pt}
+\setlength{\parskip}{3pt plus2pt minus1pt}
 %%
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{2}
 \setcounter{secnumdepth}{1}
 %%
 \usepackage{listings}
@@ -69,7 +69,7 @@
 \begin{document}
 
 \title{MoodleBox building reference\footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}\\
-Version 1.9.3}
+Version 2.0 dev\footnote{This is work in progress, do not use!}}
 \date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
 \author{Nicolas Martignoni}
 \maketitle
@@ -78,11 +78,14 @@ Version 1.9.3}
 \setlength{\parskip}{0pt}
 \tableofcontents
 \endgroup
+\clearpage
 
 \section{Introduction}
 
 This article documents how to build a MoodleBox.
 It is intended for developers or system administrators to provide background information on how a MoodleBox is built.
+
+\subsection{Caveat}
 
 This is not meant to be an end-user documentation.
 For end-user documentation, please consult \href{https://moodlebox.net/}{MoodleBox website}.
@@ -106,9 +109,9 @@ This is a totally standard Moodle installation.
 
 \subsubsection{Specific Moodle features}
 \begin{itemize}
-\item Moodle version 3.11.x in its basic configuration, with no content (no courses).
+\item Moodle version 4.0.x in its basic configuration, with no content (no courses).
 The only Moodle user account is an administrator account (username: \emph{moodlebox}, password: \emph{Moodlebox4\$}).
-The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.} \textsl{cron} service is launched every minute.
+The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.} The \textsl{cron} service is launched every minute.
 \item When a USB stick is inserted into the MoodleBox, its files are available to users in Moodle's \textsl{File system} repository.
 \item Ability to upload files via SFTP directly to the MoodleBox (username: \emph{moodlebox}, password: \emph{Moodlebox4\$}); these files are then available to users in Moodle's \textsl{File system} repository.
 \item Adminer, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
@@ -127,20 +130,28 @@ Although MoodleBox works fine on other models, a Raspberry Pi Model 3B, 3B+ or 4
 
 \subsection{Copy last version of Raspberry Pi OS Lite on a microSD card}
 
-Download last version of \emph{Raspberry Pi OS Lite} from Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} copy it on your (good quality!) microSD card.
-Complete description of the process is available on Raspberry Pi web site.\footnote{\url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
+We download the current version of \emph{Raspberry Pi OS Lite (64-bit)} from Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card.
+A complete description of the process is available on Raspberry Pi web site.\footnote{\url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
 \subsection{Enable SSH access}
 
-For security reasons, SSH access isn't enabled by default.\footnote{See \url{https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/}}
+For security reasons, SSH access isn't enabled by default.
 To enable it, we copy a file with name \lstinline{ssh} in the \lstinline{boot} directory (root of \lstinline{boot} partition of microSD card).
 The content of the file doesn't matter.
 The following commands will do.
 
 \begin{lstlisting}[language=bash]
 $ cd <mounting point of "boot" partition>
-$ > ssh
+$ touch ssh.txt
 \end{lstlisting}
+
+\subsection{Add a user account}\label{ssec-new-account}
+
+For security reasons (again), the default image of Raspberry Pi OS Lite has no user account defined.
+
+%:TODO: Add a user to the MoodleBox
+
+\subsection{Log in to the Raspberry Pi via SSH}
 
 Eject the microSD card and insert it into the Raspberry Pi.
 
@@ -175,8 +186,6 @@ round-trip min/avg/max/stddev = 0.222/0.308/0.452/0.102 ms
 \end{lstlisting}
 \end{verification}
 \fi
-
-\subsection{Log in to the Raspberry Pi via SSH}
 
 From now on, all operations are done via the command line, using \lstinline{ssh} (a regular terminal on macOS and Linux, or \lstinline{Putty} on Windows).
 
@@ -219,18 +228,18 @@ $ sudo apt-get full-upgrade -y
 
 This step can take several minutes, depending on your Internet connection speed.
 
-\subsection{Configure some Raspberry Pi important settings}
+\subsection{Configure some important settings}
 
 Launch \emph{raspi-config} utility:
 \begin{lstlisting}[language=bash]
 $ sudo raspi-config
 \end{lstlisting}
 
-With \emph{raspi-config}, configure following settings:
+With \emph{raspi-config} utility, we configure the following settings.
 \begin{itemize}
 \item Expand Filesystem.
-\item Change password for the \lstinline{pi} user.
-As the disk image being produced is intended to be openly distributed, we choose MoodleBox default password \emph{Moodlebox4\$}.
+%\item Change password for the \lstinline{pi} user.
+%As the disk image being produced is intended to be openly distributed, we choose MoodleBox default password \emph{Moodlebox4\$}.
 \item Install following \emph{locales}:
 \begin{itemize}
 \item \lstinline{de_DE.UTF-8}
@@ -247,14 +256,14 @@ MoodleBox default settings are respectively \lstinline{Europe/Zurich} and \lstin
 \item Set the hostname to \emph{moodlebox}.
 \end{itemize}
 
-From now on, to connect to the Raspberry Pi (via SSH or SFTP), use address \lstinline{moodlebox.local}, username \emph{pi} and password \emph{Moodlebox4\$}.
+From now on, to connect to the Raspberry Pi (via SSH or SFTP), we use the address \lstinline{moodlebox.local}.
 
-Reboot and log in to the MoodleBox with these new credentials.
+Let's reboot and log in to the MoodleBox with the credentials defined in section~\ref{ssec-new-account}.
 
 \iffalse
 \subsection{Upgrade Raspberry Pi firmware}
 
-In specific and rare occasions, it's advisable to upgrade the firmware of the Raspberry Pi.
+In specific and very rare occasions, it's advisable to upgrade the firmware of the Raspberry Pi.
 Do this only if you know why!
 And don't forget the reboot immediately.
 
@@ -267,6 +276,7 @@ $ sudo reboot
 \fi
 
 \subsection[Change default username]{Change default username\footnote{This section is based on \url{http://unixetc.co.uk/2016/01/07/how-to-rename-the-default-raspberry-pi-user/}.}}
+%:TODO: This whole subsection should be deleted, as not needed any more
 
 There's no problem to use default username \emph{pi} for MoodleBox usage.
 However, for the convenience of the end-user, we change the default username to \emph{moodlebox}.
@@ -483,7 +493,7 @@ RestartSec=5
 Restart=on-failure
 \end{lstlisting}
 
-\subsection{mDNS services publication}
+\subsection{mDNS services advertising}
 
 In order to make MoodleBox services visible on the network, we create the file \lstinline{/etc/avahi/services/moodlebox.service}, with following content.
 \lstinputlisting[language=xml]{files/moodlebox.service.xml}
@@ -556,7 +566,7 @@ $ sudo systemctl disable nodogsplash.service
 
 The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications.
 The term LEMP is an acronym that represents a Linux operating system with an Nginx (pronounced "engine-x", hence the E in the acronym) web server.
-The backend data stored in a MariaDB database and the dynamic processing is handled by PHP.
+The backend data is stored in a MariaDB database and the dynamic processing is handled by PHP.
 
 \subsection{Installation of Nginx and PHP}\label{ssec-nginx-php-installation}
 
@@ -624,8 +634,7 @@ user = www-data
 group = moodlebox
 ...
 \end{lstlisting}
-If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains.
-%:TODO: Indicate the default tweaks in MoodleBox image?
+If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
 
 \subsection{MariaDB installation and configuration}
 
@@ -655,12 +664,7 @@ $ sudo mysql
     > QUIT;
 \end{lstlisting}
 
-If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains.
-%:TODO: Indicate the default tweaks in MoodleBox image?
-% key_buffer_size         = 16M
-% max_allowed_packet      = 16M
-% query_cache_size        = 2M
-% log_error = /var/log/mysql/error.log
+If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
 
 \section{Installation and configuration of Moodle}
 
@@ -933,12 +937,12 @@ To log in, use usual credentials: by default, username \emph{moodlebox} and pass
 \end{verification}
 \fi
 
-\section{Optimisation}
+\section{Optimisation}\label{sec-optimisation}
 
 To make the MoodleBox more comfortable to use, it is necessary to take care of its optimisation.
 We configure Moodle's cache, as well as its management of file uploads and downloads.
 
-\subsubsection[RAM disks for some Moodle directories]{RAM disks for some Moodle directories\footnote{Inspired by \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
+\subsection[RAM disks for some Moodle directories]{RAM disks for some Moodle directories\footnote{Inspired by \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
 
 Some files in Moodle data directory are needed very frequently.
 To enable faster access to them, we deliver them directly from the server's RAM, faster than the SD-card.
@@ -1017,25 +1021,30 @@ drwxrwxrwx 13 www-data moodlebox  260 Oct  9 21:41 session
 \end{verification}
 \fi
 
-%:TODO: >--- pointer ---<
+Putting the cache in a RAM disk has one big drawback: the data in it disappears every time the MoodleBox is restarted, and without proper handling Moodle must rebuild its cache each time.
+To keep the cache between reboots, we copy the contents of the RAM disk to the microSD card at regular intervals, and at each boot, we do the opposite.
 
-Le cache en disque RAM a un défaut: les données qu'il contient disparaissent à chaque redémarrage de la MoodleBox.
-Moodle doit donc à chaque fois reconstruire le cache.
-Si l'on veut conserver le cache entre les redémarrages, on copie à intervalle régulier le contenu du disque RAM sur la carte microSD, et, lors de chaque démarrage, on effectue l'opération inverse.
-
-On crée le dossier de sauvegarde, puis on définit le cron
+Let's create the backup folder, then define the cron job:
 \begin{lstlisting}[language=bash]
 $ sudo mkdir /var/cache/moodle-cache-backup/
 $ sudo crontab -e
 \end{lstlisting}
 
-On ajoute à la table des crons les deux lignes suivantes pour effectuer la sauvegarde du cache toutes les 20 minutes et pour restaurer le cache au démarrage:
+The following two lines are added to the cron table to back up the cache every 20 minutes and to restore the cache at startup:
 \begin{lstlisting}[language=bash]
 */20 * * * * rsync -a --delete /var/cache/moodle/ /var/cache/moodle-cache-backup/
 @reboot cp -Rpf /var/cache/moodle-cache-backup/* /var/cache/moodle/
 \end{lstlisting}
 
-\subsubsection{Optimisation de MariaDB}
+%:TODO: >--- pointer ---<
+
+\subsection{MariaDB optimisation}
+
+%:TODO: Indicate the default tweaks in MoodleBox image
+% key_buffer_size         = 16M
+% max_allowed_packet      = 16M
+% query_cache_size        = 2M
+% log_error = /var/log/mysql/error.log
 
 On modifie les valeurs de quelques variables de MariaDB dans le fichier \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}.
 Pour ce faire, on ouvre le fichier en question et on y modifie les lignes adéquates, à savoir:
@@ -1046,6 +1055,11 @@ max_connections         = 100
 query_cache_size        = 16M
 query_cache_type        = 0
 \end{lstlisting}
+
+\subsection{PHP optimisation}
+%:TODO: Indicate the default tweaks in MoodleBox image
+
+TODO
 
 \section{Redimensionnement automatique de la partition}
 
