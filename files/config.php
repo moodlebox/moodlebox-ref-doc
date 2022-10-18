@@ -33,9 +33,9 @@ $CFG->customfiletypes = array(
     'customdescription' => 'X.509 CA certificate'
   )
 );
+$CFG->site_is_public = false;
 $CFG->showcampaigncontent = false;
 $CFG->showservicesandsupportcontent = false;
-
 $CFG->directorypermissions = 02777;
 
 require_once(__DIR__ . '/lib/setup.php');
