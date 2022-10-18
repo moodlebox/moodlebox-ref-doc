@@ -511,22 +511,33 @@ The web page "Welcome to nginx on Debian!" Should be displayed.
 \end{verification}
 \fi
 
-%:TODO: >--- pointer ---<
-
-\subsection{SSL certificate and key}
-
-We can now copy the SSL certificate \lstinline{moodlebox.pem} and its key \lstinline{moodlebox.key} to the directory \lstinline{/etc/nginx/}.
-
-SSL certificate generation is not covered in this guide, but any help can be 
-found in any adequate documentation on SSL certificate generation, e.g. on \url{https://stackoverflow.com/a/10176685}.
-
-\subsection{Web server configuration: Nginx and PHP}
+\subsection{Configuration of Nginx and PHP}
 
 Nginx web server configuration is set in file \lstinline{/etc/nginx/sites-available/default}, which content should be like below.
 \lstinputlisting[language=bash]{files/default}
 
-Last \lstinline{fastcgi_param} line, with line \lstinline{client_max_body_size}, increases to 50~MB the max upload file size, as well as script maximum execution time to~300~s.
+The \lstinline{fastcgi_param PHP_VALUE} line, together with line \lstinline{client_max_body_size}, sets variables specific to the MoodleBox typical usage.
+It increases to 50~MB the maximum upload file size, as well as script maximum execution time to~300~s.
 It also sets \lstinline{max_input_vars} to~5000.
+
+The ownership, group and access rights of Nginx and PHP should now be changed, so that the default user \emph{moodlebox} can easily edit the files, while allowing Moodle updates and plugin installation via the web interface.
+
+To do this, we edit the two files \lstinline{/lib/systemd/system/nginx.service} and \lstinline{/lib/systemd/system/php7.4-fpm.service}, adding after the line \lstinline{[Service]} the line \lstinline{UMask=0002}, to get in both files something like
+\begin{lstlisting}[language=bash]
+...
+[Service]
+UMask=0002
+Type=...
+...
+\end{lstlisting}
+We then edit the file \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} to set the correct group ownership for PHP, replacing line \lstinline{group = www-data} with \lstinline{group = moodlebox}, so we have now
+\begin{lstlisting}[language=bash]
+...
+user = www-data
+group = moodlebox
+...
+\end{lstlisting}
+If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
 
 We then relaunch the web server:
 \begin{lstlisting}[language=bash]
@@ -544,24 +555,18 @@ The long PHP settings page should appear, with the \lstinline{upload_max_filesiz
 \end{verification}
 \fi
 
-The ownership, group and access rights of Nginx and PHP should now be tweaked so that the default user \emph{moodlebox} can easily edit the files, while allowing Moodle updates and plugin installation via the web interface.
+\subsection{SSL certificate and key}
 
-To do this, we edit the two files \lstinline{/lib/systemd/system/nginx.service} and \lstinline{/lib/systemd/system/php7.4-fpm.service}, adding after line \lstinline{[Service]} the line \lstinline{UMask=0002}, to get something like
-\begin{lstlisting}[language=bash]
-...
-[Service]
-UMask=0002
-Type=...
-...
-\end{lstlisting}
-We then edit the file \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} to set the correct group ownership for PHP, replacing line \lstinline{group = www-data} with \lstinline{group = moodlebox}, so we have now
-\begin{lstlisting}[language=bash]
-...
-user = www-data
-group = moodlebox
-...
-\end{lstlisting}
-If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
+The SSL certificate is needed to prepare HTTPS feature of the MoodleBox.
+We copy the SSL certificate \lstinline{moodlebox.pem} and its key \lstinline{moodlebox.key} to the directory \lstinline{/etc/nginx/}.
+
+The certicificate is not used by default, but without it, Nginx setup above will not be valid.
+If HTTPS is not required, this can be left out, but the lines 7 to 10 of Nginx configuration must then be deleted.
+
+SSL certificate generation is not covered in this guide, but any help can be 
+found in any adequate documentation on SSL certificate generation, e.g. on \url{https://stackoverflow.com/a/10176685}.
+
+%:TODO: >--- pointer ---<
 
 \subsection{MariaDB installation and configuration}
 
