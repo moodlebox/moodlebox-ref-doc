@@ -19,7 +19,7 @@
 \hypersetup{linkcolor=blue,citecolor=blue,filecolor=blue,urlcolor=blue}
 \urlstyle{same}
 \usepackage[shortlabels]{enumitem}
-%\setlist[enumerate,1]{label=\arabic*., ref=\arabic*}
+\setlist[enumerate,1]{label=\arabic*.,ref=\arabic*,leftmargin=*}
 %\setlist[itemize,1]{label=--,topsep=0pt,itemsep=0pt,leftmargin=*}
 \setlist[itemize,1]{topsep=0pt,itemsep=0pt,leftmargin=1em}
 \setlist[itemize,2]{topsep=0pt,itemsep=0pt}
@@ -75,7 +75,7 @@ Version 2.0 dev\footnote{This is work in progress, do not use!}}
 \maketitle
 
 \begingroup
-\setlength{\parskip}{0pt}
+\setlength{\parskip}{3pt plus1pt minus1pt}
 \tableofcontents
 \endgroup
 \clearpage
@@ -124,7 +124,7 @@ The server is configured to accept clients from the official Moodle app.\footnot
 
 \section{Preparation of the Raspberry Pi}
 
-Although the MoodleBox works fine on other models Raspberry Pi models, a Raspberry Pi Model 3B, 3B+ or 4B is recommended to \textbf{build} it.
+Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi Model 3B, 3B+ or 4B is recommended to \textbf{build} it.
 
 \subsection{Copy of Raspberry Pi OS Lite on a microSD card}
 
