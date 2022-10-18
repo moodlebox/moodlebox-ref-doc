@@ -69,9 +69,9 @@
 \begin{document}
 
 \title{MoodleBox building reference\footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}\\
-Version 2.0 dev\footnote{This is work in progress, do not use!}}
+Version 4.4.0}
 \date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
-\author{Nicolas Martignoni}
+\author{Nicolas Martignoni\footnote{Teacher in college level mathematics and computer science and teacher trainer in Fribourg, Switzerland.}}
 \maketitle
 
 \begingroup
@@ -121,6 +121,10 @@ The server is configured to accept clients from the official Moodle app.\footnot
 \item Email server: MoodleBox is intended to be used "in the field", independently of any network infrastructure; email server functionality is not relevant for this purpose.
 \item Coffee machine.
 \end{itemize}
+
+\subsection{Acknowledgements}
+
+MoodleBox uses some of the great ideas from its first proof of concept by Christian Westphal\footnote{Christian Westphal, Académie de Strasbourg, see \url{https://moodle.org/user/view.php?id=1378197&course=20}.}, for which he deserves special thanks.
 
 \section{Preparation of the Raspberry Pi}
 
@@ -566,10 +570,10 @@ If HTTPS is not required, this can be left out, but the lines 7 to 10 of Nginx c
 SSL certificate generation is not covered in this guide, but any help can be 
 found in any adequate documentation on SSL certificate generation, e.g. on \url{https://stackoverflow.com/a/10176685}.
 
-\subsection{MariaDB installation and configuration}
+\subsection{MariaDB installation and configuration}\label{ssec-mariadb}
 
 We install now MariaDB package.
-PHP MariaDB support was already installed with PHP (see section~\ref{ssec-nginx-php-installation}).
+PHP MariaDB support was already installed with PHP (see section~\ref{ssec-lemp}).
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y mariadb-server
 \end{lstlisting}
@@ -684,7 +688,8 @@ location /dataroot/ {
 
 \subsubsection{Definition of a custom filetype for the certificate SSL}
 
-Defining a custom file type in Moodle facilitates the SSL certificate from MoodleBox home page. The definition is hardcoded in \lstinline{/var/www/moodle/config.php}:
+Defining a custom file type in Moodle makes it easier to download the SSL certificate from MoodleBox home page.
+The definition is hardcoded in \lstinline{/var/www/moodle/config.php}:
 \begin{lstlisting}[language=php]
 $CFG->customfiletypes = array(
   (object)array(
@@ -706,13 +711,10 @@ $CFG->showcampaigncontent = false;
 $CFG->showservicesandsupportcontent = false;
 \end{lstlisting}
 
-Final content of the file \lstinline{/var/www/moodle/config.php} is then:
+\subsubsection{Summary of tweaks in Moodle configuration file}
+
+Here's the final content of the file \lstinline{/var/www/moodle/config.php}:
 \lstinputlisting[language=php]{files/config.php}
-
-%:TODO: MathJax configuration + other settings
-
-
-%:TODO: >--- pointer ---<
 
 \subsection{Cron configuration}
 
@@ -736,20 +738,20 @@ Visit Moodle administration via \emph{Site administration > Server > Scheduled t
 
 \section{MoodleBox plugin}
 
-MoodleBox plugin\footnote{MoodleBox plugin source code is available at \url{https://github.com/moodlebox/moodle-tool_moodlebox}.} enables monitoring of the MoodleBox as well as managing several of its settings, such as password change, date and time setting, wireless access settings, etc.
+MoodleBox plugin\footnote{MoodleBox plugin source code is available at \url{https://github.com/moodlebox/moodle-tool_moodlebox}.} provides monitoring of the MoodleBox as well as managing several of its settings, such as password change, date and time setting, wireless access settings, etc.
 
-This plugin works only on Raspberry Pi hardware, and needs some prerequisites to work
+This plugin works only on Raspberry Pi hardware, and needs some prerequisites to work correctly.
 
 \subsection{Installation of the MoodleBox plugin in Moodle}
 
 As usually, we install the plugin in Moodle by visiting \emph{Site administration > Plugins > Repositories > Install plugins}.
-Click on the \emph{Install plugins from the Moodle plugins directory} button and select \emph{MoodleBox} administration plugin (\emph{Admin tools}).
+Click on the \emph{Install plugins from the Moodle plugins directory} button and select \emph{MoodleBox} administration plugin.
 
 It's also possible to install it via Git.
 
 \begin{lstlisting}[language=bash]
 $ cd /var/www/moodle/admin/tool/
-$ sudo git clone https://github.com/moodlebox/moodle-tool_moodlebox.git moodlebox
+$ sudo git clone --depth=1 https://github.com/moodlebox/moodle-tool_moodlebox.git moodlebox
 \end{lstlisting}
 
 In this case, we need to complete the installation of the plugin by visiting the page \url{http://moodlebox.home/admin}.
@@ -777,7 +779,7 @@ Here's the configuration file of \lstinline{direvent}:
 Lastly, we copy these lines at the end of \lstinline{/etc/sudoers.d/020_www-data-nopasswd} (or create it if it's not there):
 \lstinputlisting[language=bash]{files/020_www-data-nopasswd}
 
-And we don't forget to reboot now!
+Rebooting is necessary after these steps!
 
 \section{Moodle repositories for USB sticks and SFTP uploads}
 
@@ -785,7 +787,7 @@ Let's now configure the Moodle \textsl{File system} repositories, which will mak
 
 \subsection{USB sticks}
 
-We set up automatic mounting of USB sticks (regardless of their format), as well as access to all files on inserted USB sticks via the \textsl{File system} repository.\footnote{If more than one USB stick is inserted into the MoodleBox, only the files on the first inserted stick are accessible via the File system repository.}
+We set up automatic mounting of USB sticks (regardless of their format), as well as access to all files on inserted USB sticks via Moodle's \textsl{File system} repositories.\footnote{If more than one USB stick is inserted into the MoodleBox, only the files on the first inserted stick are accessible via the File system repository.}
 
 This is done by installing the \lstinline{usbmount} package, then creating a directory in the Moodle data directory, and finally creating a link from the USB stick mount point to this directory.
 
@@ -833,12 +835,12 @@ $ sudo ln -s /home/moodlebox/files /var/www/moodledata/repository
 
 The repository is then configured in a similar way to the \textsl{USB Drive} repository above, by specifying the directory \emph{files} and enter \emph{SFTP Documents} as the repository name.
 
-To use this feature, MoodleBox's admin will log in to the MoodleBox using a SFTP software\footnote{For instance: \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.}, with the user name \emph{moodlebox} and the password \emph{Moodlebox4\$}.
-He can then upload files in the \lstinline{files} directory.
+To use this feature, MoodleBox's admin will log in to the MoodleBox using a SFTP software\footnote{For instance: \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.}, with their usual credentials.
+They can then upload files in the \lstinline{files} directory.
 
 \section{Additional Moodle configurations}
 
-\subsection{Enabling access to the MoodleBox via the Moodle mobile app}
+\subsection{Enable MoodleBox access via the Moodle mobile app}
 
 After logging in to Moodle with the administrator account, we visit \textsl{Site Administration > Advanced features}.
 We check the box \emph{Enable web services for mobile devices} and save the changes.
@@ -852,12 +854,42 @@ No errors should be notified, and the dashboard should be displayed on the smart
 \end{verification}
 \fi
 
-\subsection{Utilities to use PDF files in Moodle}
+\subsection{Install MathJax locally}
+
+By default, Moodle loads the MathJax library from the Internet.
+We want that this library is available locally, since MoodleBox is offline most of the time.
+
+We install the MathJax library with Git at the correct location; we get the version supported by Moodle, in a shallow clone to save space, and we set the adequate permissions and ownership.
+\begin{lstlisting}[language=bash]
+$ cd /var/www/moodle/lib/
+$ sudo git clone --depth=1 -b 2.7.9 https://github.com/mathjax/MathJax.git MathJax
+$ sudo chown -R www-data:moodlebox /var/www/moodle/lib/MathJax
+$ sudo chmod -R ug+w,o-w /var/www/moodle/lib/MathJax
+\end{lstlisting}
+
+We can now update the MathJax library URL in \emph{Site administration > Plugins > Filters > MathJax}, setting it to \lstinline{/lib/MathJax/MathJax.js}.
+
+\subsection{Install utilities for PDF files manipulation in Moodle}
 
 We install Ghostscript and Poppler to enable Moodle to manage PDF annotations and PDF to PNG conversions.
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y ghostscript poppler-utils
 \end{lstlisting}
+
+\subsection{Set Moodle system paths}
+
+We configure the Moodle system paths relevant for the MoodleBox, by visiting \emph{Site administration > Server > System paths}, and we set there the following paths:
+\begin{itemize}
+\item Path to PHP CLI: \texttt{/usr/bin/php}
+\item Path to du: \texttt{/usr/bin/du}
+\item Path to ghostscript: \texttt{/usr/bin/gs}
+\item Path to pdftoppm: \texttt{/usr/bin/pdftoppm}
+\item Path to Python: \texttt{/usr/bin/python3}
+\end{itemize}
+
+\subsection{Make sure to disable Moodle's debug messages display}
+
+We then disable Moodle debug messages display, by visiting \emph{Site administration > Development > Debugging}, making sure that the checkbox \emph{Display debug messages} is unchecked. 
 
 \section{Installation of \textsl{Adminer}}
 
@@ -871,7 +903,7 @@ $ sudo chmod -R 664 adminer.php
 \end{lstlisting}
 
 To manage the database with \textsl{Adminer}, the interface should be accessed at \url{http://moodlebox.home/adminer.php}.
-To log in, use usual credentials: by default, username \emph{moodlebox} and password \emph{Moodlebox4\$}.
+To log in, use the credentials set at the MariaDB installation, section~\ref{ssec-mariadb}.
 
 \iffalse
 \begin{verification}
@@ -886,13 +918,13 @@ To log in, use usual credentials: by default, username \emph{moodlebox} and pass
 To make the MoodleBox more comfortable to use, it is necessary to take care of its optimisation.
 We configure Moodle's cache, as well as its management of file uploads and downloads.
 
-\subsection[RAM disks for some Moodle directories]{RAM disks for some Moodle directories\footnote{Inspired by \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
+\subsection[Setup RAM disks for specific Moodle directories]{Setup RAM disks for specific Moodle directories\footnote{Inspired by \url{https://www.leading-interactive.de/e-learning/moodle-performance-tuning-mit-tmpfs/}.}}
 
-Some files in Moodle data directory are needed very frequently.
-To enable faster access to them, we deliver them directly from the server's RAM, faster than the SD-card.
+Some files in Moodle data directory are needed very frequently and quickly, e.g. cached files, temporary files and session data.
+To enable faster access to them, we deliver them directly from the server's RAM, faster than the microSD card, using RAM disks.
 
-We create a directory as a mount point for the RAM disk, with adequate permissions.
-This directory will contain the cache files that we will define below. 
+We create a directory for the Moodle cache, as a mount point for its RAM disk, with adequate permissions.
+This RAM disk will contain the cache files we will define later, page~\pageref{ssec-cache}. 
 \begin{lstlisting}[language=bash]
 $ sudo mkdir /var/cache/moodle
 $ sudo chown www-data:moodlebox /var/cache/moodle/
@@ -902,7 +934,7 @@ $ sudo chmod ug+w,o-w /var/cache/moodle/
 RAM disks are also used for the temporary and sessions directories in Moodle.
 These two directories are located Moodle data directory \emph{moodledata}.
 
-We define the RAM disks in the Raspberry's mount table.
+We define the RAM disks in the Raspberry Pi's mount table.
 To do this, we add the following lines to the file \lstinline{/etc/fstab}:
 \begin{lstlisting}[language=bash]
 tmpfs /var/cache/moodle tmpfs size=64M,mode=775,uid=www-data,gid=www-data 0 0
@@ -917,7 +949,9 @@ tmpfs /var/www/moodledata/sessions tmpfs size=16M,mode=775,uid=www-data,gid=www-
 %Le contenu du fichier \lstinline{/etc/fstab} sera alors :
 %\lstinputlisting[language=bash]{files/fstab}
 
-After a reboot of the MoodleBox, the cache can be configured in Moodle.
+\subsection{Moodle cache configuration}\label{ssec-cache}
+
+After a reboot of the MoodleBox, the Moodle cache can be configured.
 
 Log in to Moodle with the administrator account, then visit \textsl{Site Administration > Plugins > Caching > Configuration}.
 We create two new cache stores, by clicking on \emph{Add Instance} in the \emph{Installed cache stores} section (at the top of the page).
@@ -926,12 +960,12 @@ We create two new cache stores, by clicking on \emph{Add Instance} in the \emph{
 \hspace{\fill}
 \begin{minipage}[b]{0.45\linewidth} % A minipage that covers half the page
 \centering
-\includegraphics[width=7.3cm]{cache-application.png}
+\includegraphics[width=7cm]{cache-application.png}
 \end{minipage}
 \hspace{\fill} % To get a little bit of space between the figures
 \begin{minipage}[b]{0.45\linewidth}
 \centering
-\includegraphics[width=7.3cm]{cache-session.png}
+\includegraphics[width=7cm]{cache-session.png}
 \end{minipage}
 \hspace{\fill}
 \end{figure}
@@ -943,12 +977,16 @@ We create two new cache stores, by clicking on \emph{Add Instance} in the \emph{
 
 Finally, we map these new cache instances with their destination, by clicking on \emph{Edit mappings} in the \emph{Stores used when no mapping is present} section, at the very bottom of the page.
 
+We map there Application to \emph{TMPFS application} and Session to \emph{TMPFS session}.
+
+\iffalse
 \begin{figure}[!ht]
 \begin{minipage}[b]{\linewidth}
 \centering
-\includegraphics[width=11cm]{cache-mappings.png}
+\includegraphics[width=8.5cm]{cache-mappings.png}
 \end{minipage}
 \end{figure}
+\fi
 
 \iffalse
 \begin{verification}
@@ -965,20 +1003,25 @@ drwxrwxrwx 13 www-data moodlebox  260 Oct  9 21:41 session
 \end{verification}
 \fi
 
-Putting the cache in a RAM disk has one big drawback: the data in it disappears every time the MoodleBox is restarted, and without proper handling Moodle must rebuild its cache each time.
+\subsection{Backup and restore cache RAM disk}
+
+Putting the cache in a RAM disk has one big drawback: the data in it disappears every time the MoodleBox is restarted, and without proper handling Moodle must rebuild its cache after every reboot.
 To keep the cache between reboots, we copy the contents of the RAM disk to the microSD card at regular intervals, and at each boot, we do the opposite.
 
-Let's create the backup directory, then define the cron job:
+Let's create the backup directory, then define the required cron jobs for this task:
 \begin{lstlisting}[language=bash]
 $ sudo mkdir /var/cache/moodle-cache-backup/
 $ sudo crontab -e
 \end{lstlisting}
 
-The following two lines are added to the cron table to back up the cache every 20 minutes and to restore the cache at startup:
+The following two lines are added to the cron table.
+The first one will backup the cache every 20 minutes, and the second one will restore the cache at every startup:
 \begin{lstlisting}[language=bash]
 */20 * * * * rsync -a --delete /var/cache/moodle/ /var/cache/moodle-cache-backup/
 @reboot cp -Rpf /var/cache/moodle-cache-backup/* /var/cache/moodle/
 \end{lstlisting}
+
+%:TODO: >--- pointer ---<
 
 \subsection{MariaDB optimisation}
 
@@ -1000,13 +1043,16 @@ pm.max_requests = 50
 
 \section{Setup of partition auto-resizing}
 
-In order to avoid the user having to manually resize the working partition, automatic resizing is configured at first boot.
-The method is the same as that used when building the \emph{Raspberry Pi OS Lite} disk image.\footnote{See \url{https://github.com/RPi-Distro/pi-gen}.}
+This setting is only useful if you intend to distribute a disk image that you'll minimise.
+It can be skipped otherwise.
+
+In order to avoid the user having to manually resize the working partition, automatic resizing at first boot can be configured.
+The method used is the same than when building the \emph{Raspberry Pi OS Lite} disk image.\footnote{See \url{https://github.com/RPi-Distro/pi-gen}.}
 
 We copy the file \lstinline{resize2fs_once} below into the \lstinline{/etc/init.d/} directory, and give it the appropriate permissions to be launched on reboot.
 \lstinputlisting[language=bash]{files/resize2fs_once}
 
-Finally, before the last shutdown before cloning and resizing the disk image, we finish by running the command
+Finally, before the last shutdown before cloning and minimising the disk image, we finish by running the command
 \begin{lstlisting}[language=bash]
 $ sudo systemctl enable resize2fs_once
 \end{lstlisting}
@@ -1019,7 +1065,7 @@ It is essential that the MoodleBox is not restarted, otherwise the entire operat
 
 \section{Cleanup}
 
-The commands below will clean up the MoodleBox and reduce the amount of disk space it requires, before cloning and distributing it.
+The commands below will clean up the MoodleBox and reduce the amount of disk space it requires, if you intend distributing it as a disk image.
 
 \begin{lstlisting}[language=bash]
 $ sudo systemctl stop dnsmasq
@@ -1045,10 +1091,6 @@ $ sudo rm -f ~/.mysql_history ~/.nano_history ~/.bash_history
 $ sudo apt-get --purge autoremove
 $ sudo truncate -s 0 /root/.bash_history
 \end{lstlisting}
-
-\section{Acknowledgements}
-
-MoodleBox uses some of the great ideas from the first  proof of concept by Christian Westphal\footnote{Christian Westphal, Académie de Strasbourg, see \url{https://moodle.org/user/view.php?id=1378197&course=20}.}, for which he deserves special thanks.
 
 \end{document}
 %%
