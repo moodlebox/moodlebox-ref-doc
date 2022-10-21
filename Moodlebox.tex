@@ -789,14 +789,21 @@ Let's now configure the Moodle \textsl{File system} repositories, which will mak
 
 We set up automatic mounting of USB sticks (regardless of their format), as well as access to all files on inserted USB sticks via Moodle's \textsl{File system} repositories.\footnote{If more than one USB stick is inserted into the MoodleBox, only the files on the first inserted stick are accessible via the File system repository.}
 
-This is done by installing the \lstinline{usbmount} package, then creating a directory in the Moodle data directory, and finally creating a link from the USB stick mount point to this directory.
-
-The \lstinline{usbmount} package should be built from its source code before to be installed.\footnote{See \url{https://github.com/rbrito/usbmount}. Follow the instructions in the README file.}
+This is done by installing the \lstinline{usbmount} package, which should be built from its source code before to be installed.\footnote{See \url{https://github.com/birdslikewires/usbmount}. Follow the instructions at the end of the README file.}
 We also install standard packages to support exFAT and NTFS formatted devices. Support for other formats is built-in.
 
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y ntfs-3g exfat-fuse
-$ sudo dpkg –i usbmount_0.0.24_all.deb
+$ sudo dpkg –i usbmount_0.0.25_all.deb
+\end{lstlisting}
+By adding the formats \lstinline{exfat}, \lstinline{ntfs} and \lstinline{fuseblk} to the line beginning with \lstinline{FILESYSTEMS=} of the configuratin file of USBMount \lstinline{/etc/usbmount/usbmount.conf}, support for USB sticks of these formats is activated.
+This line should now read
+\begin{lstlisting}[language=bash]
+FILESYSTEMS="vfat exfat ntfs fuseblk ext2 ext3 ext4 hfsplus"
+\end{lstlisting}
+
+We create then a directory with adequate permissions, and a link from the USB stick mount point to this directory:
+\begin{lstlisting}[language=bash]
 $ sudo mkdir -p /var/www/moodledata/repository
 $ sudo chown -R www-data:moodlebox /var/www/moodledata/
 $ sudo ln -s /media/usb /var/www/moodledata/repository
