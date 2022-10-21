@@ -794,7 +794,7 @@ We also install standard packages to support exFAT and NTFS formatted devices. S
 
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y ntfs-3g exfat-fuse
-$ sudo dpkg –i usbmount_0.0.25_all.deb
+$ sudo dpkg –i usbmount_0.0.26_all.deb
 \end{lstlisting}
 By adding the formats \lstinline{exfat}, \lstinline{ntfs} and \lstinline{fuseblk} to the line beginning with \lstinline{FILESYSTEMS=} of the configuratin file of USBMount \lstinline{/etc/usbmount/usbmount.conf}, support for USB sticks of these formats is activated.
 This line should now read
