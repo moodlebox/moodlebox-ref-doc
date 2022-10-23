@@ -564,8 +564,8 @@ The long PHP settings page should appear, with the \lstinline{upload_max_filesiz
 The SSL certificate is needed to prepare HTTPS feature of the MoodleBox.
 We copy the SSL certificate \lstinline{moodlebox.pem} and its key \lstinline{moodlebox.key} to the directory \lstinline{/etc/nginx/}.
 
-The certicificate is not used by default, but without it, Nginx setup above will not be valid.
-If HTTPS is not required, this can be left out, but the lines 7 to 10 of Nginx configuration must then be deleted.
+The certificate is not used by default.
+If HTTPS is not required, this can be left out.
 
 SSL certificate generation is not covered in this guide, but any help can be 
 found in any adequate documentation on SSL certificate generation, e.g. on \url{https://stackoverflow.com/a/10176685}.
