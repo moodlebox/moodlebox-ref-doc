@@ -275,14 +275,13 @@ Each time a feature is added or a bug fix made, the amount of SRAM available for
 
 An alternative firmware is now available that has been tuned to maximise the number of clients in access point mode (AP) while still supporting client mode (STA).
 We want to use this alternative firmware in the MoodleBox.
-To switch the firmware to the alternative one, we launch the following commands.
+To switch the firmware to the alternative one, we launch the following command and select \lstinline{cyfmac43455-sdio-minimal.bin} firmware.
 
 \begin{lstlisting}[language=bash]
-$ cd /lib/firmware/brcm/
-$ sudo ln -sf ../cypress/cyfmac43455-sdio-minimal.bin \
-    brcmfmac43455-sdio.bin
+$ sudo update-alternatives --config cyfmac43455-sdio.bin
 \end{lstlisting}
 
+\iffalse
 \subsection{Raspberry Pi firmware upgrade  (optional)}
 
 In very specific and very rare occasions, it's advisable to upgrade the firmware of the Raspberry Pi.
@@ -295,6 +294,8 @@ $ sudo SKIP_BACKUP=1 PRUNE_MODULES=1 rpi-update
 $ sudo apt-get remove rpi-update
 $ sudo reboot
 \end{lstlisting}
+\fi
+
 
 \subsection{Configuration of the system memory}
 
@@ -510,8 +511,8 @@ We install first Nginx and all needed PHP packages, notably those required by Mo
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y nginx php7.4-fpm php7.4-cli php7.4-common \
     php7.4-json php7.4-mbstring php7.4-opcache php7.4-readline \
-    php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-intl php7.4-soap \
-    php7.4-mysql php7.4-xml php7.4-zip php7.4 php-apcu
+    php7.4-curl php7.4-gd php7.4-intl php7.4-soap php7.4-mysql \
+    php7.4-xml php7.4-zip php7.4 php-apcu
 \end{lstlisting}
 
 \iffalse
@@ -632,7 +633,7 @@ $ sudo apt-get install -y git
 We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle.
 To save space, we use a shallow clone.
 \begin{lstlisting}[language=bash]
-$ sudo git clone --depth=1 -b MOODLE_400_STABLE \
+$ sudo git clone --depth=1 -b MOODLE_401_STABLE \
     git://git.moodle.org/moodle.git /var/www/moodle
 \end{lstlisting}
 
@@ -893,6 +894,13 @@ $ sudo chmod -R ug+w,o-w /var/www/moodle/lib/MathJax
 \end{lstlisting}
 
 We can now update the MathJax library URL in \emph{Site administration > Plugins > Filters > MathJax}, setting it to \lstinline{/lib/MathJax/MathJax.js}.
+
+\subsection{Download H5P libraries}
+
+%:TODO: finish this subsection
+To be able to use H5P out of the box without needing to connect to Internet, we download all the H5P libraries within Moodle user interface, by visiting \emph{Site administration > …}
+
+Blabla
 
 \subsection{Install utilities for PDF files manipulation in Moodle}
 
