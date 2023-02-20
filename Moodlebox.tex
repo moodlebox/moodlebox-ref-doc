@@ -256,6 +256,12 @@ MoodleBox default settings are respectively \lstinline{Europe/Zurich} and \lstin
 \item Set the hostname to \emph{moodlebox}.
 \end{itemize}
 
+If hostname is changed, MoodleBox won't work correctly.
+To prevent this issue, we check the hostname at first boot and fix it if needed.
+This is done by copying the following file to \lstinline{/etc/init.d/fix_hostname_once}, with adequate permissions.
+
+\lstinputlisting{files/fix_hostname_once}
+
 From now on, to connect to the Raspberry Pi (via SSH or SFTP), we'll use the address \lstinline{moodlebox.local}.
 
 Let's reboot and log in to the MoodleBox with the default credentials set up page~\pageref{ssec-new-account}.
@@ -534,11 +540,11 @@ UMask=0002
 Type=...
 ...
 \end{lstlisting}
-We then edit the file \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} to set the correct group ownership for PHP, replacing line \lstinline{group = www-data} with \lstinline{group = moodlebox}, so we have now
+We then edit the file \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} to set the correct group ownership for PHP, replacing line \lstinline{group = www-data} with \lstinline{group = 1000}, so we have now
 \begin{lstlisting}[language=bash]
 ...
 user = www-data
-group = moodlebox
+group = 1000
 ...
 \end{lstlisting}
 If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
@@ -842,7 +848,19 @@ $ sudo ln -s /home/moodlebox/files /var/www/moodledata/repository
 
 The repository is then configured in a similar way to the \textsl{USB Drive} repository above, by specifying the directory \emph{files} and enter \emph{SFTP Documents} as the repository name.
 
-To use this feature, MoodleBox's admin will log in to the MoodleBox using a SFTP software\footnote{For instance: \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.}, with their usual credentials.
+If the main username of the MoodleBox is changed, the soft link will be broken.
+To prevent this issue, we check the link at login time and fix it if needed, by adding the following lines to file \lstinline{/home/moodlebox/.profile}.
+
+\begin{lstlisting}[language=bash]
+# Fix soft link to repository if broken
+SOFTLINK="/var/www/moodledata/repository/files"
+if [ ! -e ${SOFTLINK} ] ; then
+    rm -f ${SOFTLINK}
+    ln -s /home/$(getent passwd 1000 | cut -d: -f1)/files ${SOFTLINK}
+fi
+\end{lstlisting}
+
+To use the SFTP upload feature, MoodleBox's admin will log in to the MoodleBox using a SFTP software\footnote{For instance: \href{https://filezilla-project.org/}{FileZilla}, \href{https://cyberduck.io/}{Cyberduck}, \href{http://winscp.net/}{WinSCP}.}, with their usual credentials.
 They can then upload files in the \lstinline{files} directory.
 
 \section{Additional Moodle configurations}
@@ -900,7 +918,8 @@ We then disable Moodle debug messages display, by visiting \emph{Site administra
 
 \section{Installation of \textsl{Adminer}}
 
-\textsl{Adminer} is a full-featured database management tool written in PHP. It consists of a single file ready to be deployed to the server.
+\textsl{Adminer} is a full-featured database management tool written in PHP.
+It consists of a single file ready to be deployed to the server.
 We install it by downloading it to the adequate location, and set its appropriate permissions.
 \begin{lstlisting}[language=bash]
 $ cd /var/www/moodle/
@@ -919,6 +938,21 @@ The Adminer interface should be displayed.
 To log in, use usual credentials: by default, username \emph{moodlebox} and password \emph{Moodlebox4\$}.
 \end{verification}
 \fi
+
+\section{Installation of \texttt{rpi-clone}}
+
+The \texttt{rpi-clone} utility enables to make copies of the currently running MoodleBox image to an external device.
+It consists of a single file ready to be deployed to the server.
+We install it by downloading it to the adequate location, and set its appropriate permissions.
+\begin{lstlisting}[language=bash]
+$ wget -c https://github.com/billw2/rpi-clone/archive/refs/heads/master.tar.gz -O rpi-clone.tar.gz
+$ tar -xzf rpi-clone.tar.gz
+$ cp rpi-clone-master/rpi-clone /usr/local/sbin/
+$ sudo chown root:root /usr/local/sbin/rpi-clone
+$ sudo chmod -R 775 /usr/local/sbin/rpi-clone
+\end{lstlisting}
+
+Usage of \texttt{rpi-clone} is not covered in this document.
 
 \section{Optimisation}\label{sec-optimisation}
 
