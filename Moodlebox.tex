@@ -1,5 +1,5 @@
 % !TEX encoding = UTF-8 Unicode
-% !TEX program = xelatexmk
+% !TEX program = lualatexmk
 % !TEX pdfSinglePage
 \documentclass[12pt]{article}
 %% Versioning info
@@ -106,7 +106,7 @@ This is a fully standard Moodle installation.
 
 \subsubsection{Specific Moodle features}
 \begin{itemize}
-\item Moodle version 4.1.x in its basic configuration, with no content (no courses).
+\item Moodle version 4.3.x in its basic configuration, with no content (no courses).
 The only Moodle user account is an administrator account (username: \emph{moodlebox}, password: \emph{Moodlebox4\$}).
 The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.} The \textsl{cron} service is launched every minute.
 \item When a USB sticks are inserted into the MoodleBox, their files are available to users in Moodle's \textsl{File system} repository.
@@ -127,11 +127,12 @@ MoodleBox uses some of the great ideas from its first proof of concept by Christ
 
 \section{Preparation of the Raspberry Pi}
 
-Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi Model 3B, 3B+ or 4B is recommended to \textbf{build} it.
+Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi Model 3B, 3B+, 4B or 5 is recommended to \textbf{build} it.
 
 \subsection{Copy of Raspberry Pi OS Lite on a microSD card}
 
 We download the current version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card.
+For this process, it is recommended to use \href{https://www.raspberrypi.com/software/}{Raspberry Pi Imager}.
 A complete description of the process is available on Raspberry Pi web site.\footnote{See \url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
 We then insert the SD card into a computer and mount it.
@@ -222,8 +223,8 @@ moodlebox@raspberrypi:~ $
 
 We begin by upgrading the Raspberry Pi's operating system and its installed packages, with these commands:
 \begin{lstlisting}[language=bash]
-$ sudo apt-get update -y
-$ sudo apt-get full-upgrade -y
+$ sudo apt update
+$ sudo apt full-upgrade -y
 \end{lstlisting}
 
 This step can take several minutes, depending on the available Internet connection speed.
@@ -1004,7 +1005,7 @@ We create one new Redis cache store, by clicking on \emph{Add Instance} in the \
 
 Store name: \emph{Redis cache}, Server: \emph{127.0.0.1:6379}, and we save the changes.
 
-Finally, we map these new cache instances with their destination, by clicking on \emph{Edit mappings} in the \emph{Stores used when no mapping is present} section, at the very bottom of the page.
+Finally, we map the Application and Session stores to this new cache instance, by clicking on \emph{Edit mappings} in the \emph{Stores used when no mapping is present} section, at the very bottom of the page.
 We map there Application and Session to \emph{Redis cache}.
 
 \iffalse
