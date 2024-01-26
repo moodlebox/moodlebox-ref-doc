@@ -131,7 +131,7 @@ Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi M
 
 \subsection{Copy of Raspberry Pi OS Lite on a microSD card}
 
-Download the latest version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card with at least 8~GB capacity.
+Download the latest version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{See \url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card with at least 8~GB capacity.
 For this process, it is recommended to use \href{https://www.raspberrypi.com/software/}{Raspberry Pi Imager}.
 A complete description of the process is available on Raspberry Pi web site.\footnote{See \url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
@@ -531,7 +531,7 @@ PHP MariaDB support was already installed with PHP (see section~\ref{ssec-lemp})
 $ sudo apt-get install -y mariadb-server
 \end{lstlisting}
 
-In order to allow flexible access to all the databases, a new database user is created in MariaDB, with all privileges.
+In order to allow flexible access to all the databases, a new database user with all privileges is created in MariaDB.
 For this installation, we set the credentials as earlier (see page~\pageref{ssec-new-account}), for consistency.
 
 \begin{lstlisting}[language=bash]
@@ -588,10 +588,10 @@ $ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/
 $ sudo chmod -R g+s /var/www/moodledata/
 \end{lstlisting}
 
-We can now launch Moodle installation, either by loading URL \url{http://moodlebox.home/} in a browser and follow the instructions on screen, or by using Moodle command line interface (preferred).\footnote{See \url{https://docs.moodle.org/400/en/Installing_Moodle\#Command_line_installer}.}
+We can now launch Moodle installation, either by loading URL \url{http://moodlebox.home/} in a browser and follow the instructions on screen, or by using Moodle command line interface (recommended).\footnote{See \url{https://docs.moodle.org/en/Installing_Moodle\#Command_line_installer}.}
 During the installation, we set the administrator account with the usual credentials.
 
-If using the command line interface, this steps takes at least 10 minutes.
+If using the command line interface, this steps takes about 10 minutes.
 
 When Moodle installation is complete, we set the adequate permissions and ownership on Moodle's configuration file \lstinline{/var/www/moodle/config.php}:
 \begin{lstlisting}[language=bash]
@@ -1009,8 +1009,6 @@ It is essential that the MoodleBox is not restarted, otherwise the entire operat
 The commands below will clean up the MoodleBox and reduce the amount of disk space it requires, if you intend distributing it as a disk image.
 
 \begin{lstlisting}[language=bash]
-$ sudo systemctl stop dnsmasq
-$ sudo truncate -s 0 /var/lib/misc/dnsmasq.leases
 $ sudo rm -rf /var/www/moodledata/temp/*
 $ sudo rm -rf /var/www/moodledata/trashdir/*
 $ sudo rm -rf /var/www/moodledata/sessions/*
