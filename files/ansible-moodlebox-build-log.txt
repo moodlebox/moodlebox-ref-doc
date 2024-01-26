@@ -1,0 +1,650 @@
+nicolasiMac-bureau: ~/Documents/Development/moodlebox-project/moodlebox [git:main]
+➜ ansible-playbook moodlebox.yml
+
+PLAY [Playbook to get SSH public key into root account] ******************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [Include customised variables] **************************************************************************************************************************
+ok: [moodlebox] => (item=/Users/nicolas/Documents/Development/moodlebox-project/moodlebox/config.yml)
+
+TASK [Install SSH public key to root user] *******************************************************************************************************************
+changed: [moodlebox]
+
+PLAY [Playbook to provision most of the MoodleBox] ***********************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [Print out begin of build date and time] ****************************************************************************************************************
+ok: [moodlebox] => {
+    "msg": "Beginning of build: 2024-01-07T14:50:24+0100"
+}
+
+TASK [Set fact with build start timestamp] *******************************************************************************************************************
+ok: [moodlebox]
+
+TASK [Include customised variables] **************************************************************************************************************************
+ok: [moodlebox] => (item=/Users/nicolas/Documents/Development/moodlebox-project/moodlebox/config.yml)
+
+TASK [Create temporary directory] ****************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [rpisettings : Reduce memory split down to 16Mb, as we are on a headless system] ************************************************************************
+changed: [moodlebox]
+
+TASK [rpisettings : Enable shutdown/startup hardware button] *************************************************************************************************
+changed: [moodlebox]
+
+TASK [rpisettings : Add script to fix hostname at the very first boot] ***************************************************************************************
+changed: [moodlebox]
+
+TASK [rpisettings : Limit journald file size to 16 megabytes] ************************************************************************************************
+changed: [moodlebox]
+
+TASK [rpisettings : Flush handlers] **************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Reboot box] **********************************************************************************************************************
+changed: [moodlebox]
+
+RUNNING HANDLER [handlers : Restart journald service] ********************************************************************************************************
+changed: [moodlebox]
+
+TASK [apt : Update apt cache and upgrade] ********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [firmware : Install rpi-update] *************************************************************************************************************************
+skipping: [moodlebox]
+
+TASK [firmware : Update firmware] ****************************************************************************************************************************
+skipping: [moodlebox]
+
+TASK [firmware : Uninstall rpi-update] ***********************************************************************************************************************
+skipping: [moodlebox]
+
+TASK [firmware : Reboot box] *********************************************************************************************************************************
+skipping: [moodlebox]
+
+TASK [hostname : Change hostname] ****************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [hostname : Change /etc/hosts] **************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [useraccount : Fix default user home directory permissions] *********************************************************************************************
+changed: [moodlebox]
+
+TASK [useraccount : Change default user prompt definition] ***************************************************************************************************
+changed: [moodlebox]
+
+TASK [useraccount : Add a few shell shortcuts to default user] ***********************************************************************************************
+changed: [moodlebox]
+
+TASK [useraccount : Change default target to multi-user.target] **********************************************************************************************
+changed: [moodlebox]
+
+TASK [useraccount : Remove `autologin.conf` file] ************************************************************************************************************
+ok: [moodlebox]
+
+TASK [useraccount : Fix broken link to repository at login if needed] ****************************************************************************************
+changed: [moodlebox]
+
+TASK [timezone : Set timezone] *******************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [timezone : Flush handlers] *****************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Restart networking] **************************************************************************************************************
+changed: [moodlebox]
+
+RUNNING HANDLER [timezone : Update tzdata] *******************************************************************************************************************
+changed: [moodlebox]
+
+TASK [locales : Deploy default locale] ***********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [locales : Add locales] *********************************************************************************************************************************
+ok: [moodlebox] => (item=en_GB.UTF-8)
+changed: [moodlebox] => (item=en_AU.UTF-8)
+changed: [moodlebox] => (item=fr_FR.UTF-8)
+changed: [moodlebox] => (item=de_DE.UTF-8)
+changed: [moodlebox] => (item=es_ES.UTF-8)
+changed: [moodlebox] => (item=it_IT.UTF-8)
+
+TASK [locales : Generate locales] ****************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Switch wireless chip firmware to minimal one for AP mode] ***************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Set regulatory country with iw] *****************************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Set regulatory country in kernel command line] **************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Copy udev rule to add wireless interface for AP mode] *******************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Flush handlers] *********************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Reboot box] **********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Create the wifi client connection] **************************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Create the wifi access point connection] ********************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Configure AP settings] **************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Update polkit] **********************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [wifi : Get rfkill files] *******************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [wifi : Unblock wifi, since wifi country is set] ********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/lib/systemd/rfkill/platform-fe300000.mmcnr:wlan', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 2, 'inode': 60616, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.551748, 'mtime': 1702269609.643231, 'ctime': 1702270461.551748, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/systemd/rfkill/platform-3f300000.mmcnr:wlan', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 2, 'inode': 60615, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.551748, 'mtime': 1702269609.643231, 'ctime': 1702270461.551748, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/systemd/rfkill/platform-1001100000.mmc:wlan', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 2, 'inode': 22035, 'dev': 45826, 'nlink': 1, 'atime': 1702270506.32, 'mtime': 1702270506.32, 'ctime': 1702270506.32, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+
+TASK [wifi : Flush handlers] *********************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Restart networking] **************************************************************************************************************
+changed: [moodlebox]
+
+TASK [zeroconf : Configure zeroconf service] *****************************************************************************************************************
+changed: [moodlebox]
+
+TASK [zeroconf : Flush handlers] *****************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Restart networking] **************************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Install MariaDB] ****************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Install python3-pymysql] ********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Add MariaDB user with all privileges] *******************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Skip reverse DNS lookup in MariaDB] *********************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Set MariaDB query cache size] ***************************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Log MariaDB errors into a separate file] ****************************************************************************************************
+changed: [moodlebox]
+
+TASK [database : Restart MariaDB database] *******************************************************************************************************************
+changed: [moodlebox]
+
+TASK [packages : Uninstall useless packages] *****************************************************************************************************************
+skipping: [moodlebox]
+
+TASK [packages : Install packages] ***************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Enable exfat and hfsplus formats mounting by udevil] ***********************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Remove nonempty option from default_options_exfat in udevil configuration] *************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Add script to be run by root after a successful mount by udevil] ***********************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Copy script to fix USB mount permissions] **********************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Unmask, enable and start devmon service] ***********************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Copy nodogsplash deb package file] *****************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Install nodogsplash package] ***********************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Delete nodogsplash deb package file] ***************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Configure nodogsplash captive portal] **************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Disable nodogsplash service at startup] ************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Remove default nodogsplash files] ******************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Update nodogsplash files] **************************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Set umask for nginx and php-fpm services] **********************************************************************************************
+changed: [moodlebox] => (item=/lib/systemd/system/nginx.service)
+changed: [moodlebox] => (item=/lib/systemd/system/php8.2-fpm.service)
+
+TASK [packageconfig : Set 'group' of php-fpm process] ********************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Set 'pm.max_requests' of php-fpm process] **********************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Set 'emergency_restart_threshold' for php-fpm to fix potential SIGSEGV] ****************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Set 'emergency_restart_interval' for php-fpm to fix potential SIGSEGV] *****************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Set 'process_control_timeout' for php-fpm to fix potential SIGSEGV] ********************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Set 'max_input_vars' to 5000] **********************************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Enable git to write to directories owned by anyone] ************************************************************************************
+changed: [moodlebox]
+
+TASK [packageconfig : Flush handlers] ************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Restart web services] ************************************************************************************************************
+changed: [moodlebox] => (item=nginx)
+changed: [moodlebox] => (item=php8.2-fpm)
+
+TASK [partitionresize : Add script to resize partition on first boot] ****************************************************************************************
+changed: [moodlebox]
+
+TASK [webserver : Configure nginx] ***************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [webserver : Copy SSL certificate and key] **************************************************************************************************************
+changed: [moodlebox]
+
+TASK [webserver : Flush handlers] ****************************************************************************************************************************
+
+RUNNING HANDLER [handlers : Restart web services] ************************************************************************************************************
+changed: [moodlebox] => (item=nginx)
+changed: [moodlebox] => (item=php8.2-fpm)
+
+TASK [moodleuninstall : Check if database for Moodle exists] *************************************************************************************************
+ok: [moodlebox]
+
+TASK [moodleuninstall : Remove Moodle temporary storage] *****************************************************************************************************
+ok: [moodlebox] => (item={'name': '/var/www/moodledata/temp'})
+ok: [moodlebox] => (item={'name': '/var/www/moodledata/sessions'})
+
+TASK [moodleuninstall : Remove previous Moodle installation data and plugin] *********************************************************************************
+ok: [moodlebox] => (item=/var/www/moodledata)
+ok: [moodlebox] => (item=/var/www/moodle/config.php)
+ok: [moodlebox] => (item=/var/www/moodle/admin/tool/moodlebox)
+
+TASK [moodleuninstall : Set default direvent configuration] **************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleuninstall : Flush handlers] **********************************************************************************************************************
+
+TASK [moodledatabase : Create database for Moodle] ***********************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Set moodleinstall_config_cmd variable] *************************************************************************************************
+ok: [moodlebox]
+
+TASK [moodleinstall : Format release date using locales] *****************************************************************************************************
+changed: [moodlebox] => (item=[0, 'en_GB.UTF-8'])
+changed: [moodlebox] => (item=[1, 'en_AU.UTF-8'])
+changed: [moodlebox] => (item=[2, 'fr_FR.UTF-8'])
+changed: [moodlebox] => (item=[3, 'de_DE.UTF-8'])
+changed: [moodlebox] => (item=[4, 'es_ES.UTF-8'])
+changed: [moodlebox] => (item=[5, 'it_IT.UTF-8'])
+
+TASK [moodleinstall : Set vars with formatted dates] *********************************************************************************************************
+ok: [moodlebox] => (item=['en_GB.UTF-8', {'changed': True, 'stdout': '7 January 2024', 'stderr': '', 'rc': 0, 'cmd': ['date', '--date=2024-01-07', '+%-d %B %Y'], 'start': '2024-01-07 14:55:57.387421', 'end': '2024-01-07 14:55:57.391304', 'delta': '0:00:00.003883', 'msg': '', 'invocation': {'module_args': {'_raw_params': "date --date=2024-01-07 '+%-d %B %Y'\n", '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['7 January 2024'], 'stderr_lines': [], 'failed': False, 'item': [0, 'en_GB.UTF-8'], 'ansible_loop_var': 'item'}])
+ok: [moodlebox] => (item=['en_AU.UTF-8', {'changed': True, 'stdout': '7 January 2024', 'stderr': '', 'rc': 0, 'cmd': ['date', '--date=2024-01-07', '+%-d %B %Y'], 'start': '2024-01-07 14:55:57.621256', 'end': '2024-01-07 14:55:57.625995', 'delta': '0:00:00.004739', 'msg': '', 'invocation': {'module_args': {'_raw_params': "date --date=2024-01-07 '+%-d %B %Y'\n", '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['7 January 2024'], 'stderr_lines': [], 'failed': False, 'item': [1, 'en_AU.UTF-8'], 'ansible_loop_var': 'item'}])
+ok: [moodlebox] => (item=['fr_FR.UTF-8', {'changed': True, 'stdout': '7 janvier 2024', 'stderr': '', 'rc': 0, 'cmd': ['date', '--date=2024-01-07', '+%-d %B %Y'], 'start': '2024-01-07 14:55:57.838879', 'end': '2024-01-07 14:55:57.849454', 'delta': '0:00:00.010575', 'msg': '', 'invocation': {'module_args': {'_raw_params': "date --date=2024-01-07 '+%-d %B %Y'\n", '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['7 janvier 2024'], 'stderr_lines': [], 'failed': False, 'item': [2, 'fr_FR.UTF-8'], 'ansible_loop_var': 'item'}])
+ok: [moodlebox] => (item=['de_DE.UTF-8', {'changed': True, 'stdout': '7 Januar 2024', 'stderr': '', 'rc': 0, 'cmd': ['date', '--date=2024-01-07', '+%-d %B %Y'], 'start': '2024-01-07 14:55:58.058482', 'end': '2024-01-07 14:55:58.069171', 'delta': '0:00:00.010689', 'msg': '', 'invocation': {'module_args': {'_raw_params': "date --date=2024-01-07 '+%-d %B %Y'\n", '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['7 Januar 2024'], 'stderr_lines': [], 'failed': False, 'item': [3, 'de_DE.UTF-8'], 'ansible_loop_var': 'item'}])
+ok: [moodlebox] => (item=['es_ES.UTF-8', {'changed': True, 'stdout': '7 enero 2024', 'stderr': '', 'rc': 0, 'cmd': ['date', '--date=2024-01-07', '+%-d %B %Y'], 'start': '2024-01-07 14:55:58.276492', 'end': '2024-01-07 14:55:58.285222', 'delta': '0:00:00.008730', 'msg': '', 'invocation': {'module_args': {'_raw_params': "date --date=2024-01-07 '+%-d %B %Y'\n", '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['7 enero 2024'], 'stderr_lines': [], 'failed': False, 'item': [4, 'es_ES.UTF-8'], 'ansible_loop_var': 'item'}])
+ok: [moodlebox] => (item=['it_IT.UTF-8', {'changed': True, 'stdout': '7 gennaio 2024', 'stderr': '', 'rc': 0, 'cmd': ['date', '--date=2024-01-07', '+%-d %B %Y'], 'start': '2024-01-07 14:55:58.492512', 'end': '2024-01-07 14:55:58.500487', 'delta': '0:00:00.007975', 'msg': '', 'invocation': {'module_args': {'_raw_params': "date --date=2024-01-07 '+%-d %B %Y'\n", '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['7 gennaio 2024'], 'stderr_lines': [], 'failed': False, 'item': [5, 'it_IT.UTF-8'], 'ansible_loop_var': 'item'}])
+
+TASK [moodleinstall : Set summary string with formatted dates] ***********************************************************************************************
+ok: [moodlebox]
+
+TASK [moodleinstall : Get Moodle from git repository] ********************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Create Moodle data directories and set adequate permissions] ***************************************************************************
+changed: [moodlebox] => (item=/var/www/moodle)
+changed: [moodlebox] => (item=/var/www/moodledata/repository)
+changed: [moodlebox] => (item=/var/www/moodledata/temp)
+changed: [moodlebox] => (item=/var/www/moodledata/backup)
+
+TASK [moodleinstall : Set SGID permission on Moodle data directory] ******************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Create file and USB repository directories] ********************************************************************************************
+changed: [moodlebox] => (item={'path': '/home/moodlebox/files'})
+changed: [moodlebox] => (item={'path': '/media/moodlebox'})
+
+TASK [moodleinstall : Link file and USB repository directories] **********************************************************************************************
+changed: [moodlebox] => (item={'src': '/home/moodlebox/files', 'path': '/var/www/moodledata/repository/files'})
+changed: [moodlebox] => (item={'src': '/media/moodlebox', 'path': '/var/www/moodledata/repository/usb'})
+
+TASK [moodleinstall : Configure Moodle temporary storage] ****************************************************************************************************
+changed: [moodlebox] => (item={'name': '/var/www/moodledata/temp', 'size': '64M'})
+changed: [moodlebox] => (item={'name': '/var/www/moodledata/sessions', 'size': '16M'})
+
+TASK [moodleinstall : Install Moodle via CLI] ****************************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Set Moodle config file owner, group and permissions] ***********************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Write extra parameters to the Moodle config file] **************************************************************************************
+changed: [moodlebox] => (item={'name': 'backuptempdir', 'value': "'/var/www/moodledata/backup'"})
+changed: [moodlebox] => (item={'name': 'xsendfile', 'value': "'X-Accel-Redirect'"})
+changed: [moodlebox] => (item={'name': 'xsendfilealiases', 'value': "array('/dataroot/' => $CFG->dataroot)"})
+changed: [moodlebox] => (item={'name': 'customfiletypes', 'value': "array(\n  (object)array(\n    'extension' => 'crt',\n    'icon' => 'sourcecode',\n    'type' => 'application/x-x509-ca-cert',\n    'customdescription' => 'X.509 CA certificate'\n  )\n)"})
+changed: [moodlebox] => (item={'name': 'site_is_public', 'value': 'false'})
+changed: [moodlebox] => (item={'name': 'showcampaigncontent', 'value': 'false'})
+changed: [moodlebox] => (item={'name': 'showservicesandsupportcontent', 'value': 'false'})
+
+TASK [moodleinstall : Get MoodleBox plugin from git repository] **********************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Touch files for MoodleBox plugin functionality] ****************************************************************************************
+changed: [moodlebox] => (item=.reboot-server)
+changed: [moodlebox] => (item=.shutdown-server)
+changed: [moodlebox] => (item=.set-server-datetime)
+changed: [moodlebox] => (item=.newpassword)
+changed: [moodlebox] => (item=.wifisettings)
+changed: [moodlebox] => (item=.resize-partition)
+
+TASK [moodleinstall : Change MoodleBox plugin file permissions (1)] ******************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Change MoodleBox plugin file permissions (2)] ******************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Create sudoers file for MoodleBox plugin usage] ****************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Install MoodleBox plugin via CLI] ******************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Create directory for MathJax library] **************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Download and unarchive MathJax library] ************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Change MathJax library URL] ************************************************************************************************************
+changed: [moodlebox]
+
+TASK [moodleinstall : Set valid Moodle system paths] *********************************************************************************************************
+changed: [moodlebox] => (item={'name': 'pathtophp', 'value': '/usr/bin/php'})
+changed: [moodlebox] => (item={'name': 'pathtodu', 'value': '/usr/bin/du'})
+changed: [moodlebox] => (item={'name': 'pathtopython', 'value': '/usr/bin/python3'})
+changed: [moodlebox] => (item={'name': 'pathtopdftoppm', 'value': '/usr/bin/pdftoppm'})
+changed: [moodlebox] => (item={'name': 'pathtounoconv', 'value': ''})
+changed: [moodlebox] => (item={'name': 'pathtosassc', 'value': ''})
+changed: [moodlebox] => (item={'name': 'servicespage', 'value': '/user/contactsitesupport.php'})
+
+TASK [moodleinstall : Disable Moodle debug messages display] *************************************************************************************************
+changed: [moodlebox]
+
+TASK [cron : Configure timely cron] **************************************************************************************************************************
+changed: [moodlebox] => (item={'name': 'Launch Moodle tasks', 'minute': '*', 'job': 'nice -n10 /usr/bin/php /var/www/moodle/admin/cli/cron.php'})
+changed: [moodlebox] => (item={'name': 'Copy DHCP leases file', 'minute': '*', 'job': 'install -C -m 644 /var/lib/NetworkManager/dnsmasq-uap0.leases /tmp/dnsmasq.leases'})
+
+TASK [cron : Configure special time cron] ********************************************************************************************************************
+changed: [moodlebox] => (item={'name': 'Ensure minimal wireless firmware is used', 'special_time': 'reboot', 'job': 'update-alternatives --set cyfmac43455-sdio.bin /lib/firmware/cypress/cyfmac43455-sdio-minimal.bin'})
+
+TASK [cron : Configure direvent] *****************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [cron : Configure cron mailto variable to suppress warnings in log] *************************************************************************************
+changed: [moodlebox]
+
+TASK [adminer : Install adminer latest release] **************************************************************************************************************
+changed: [moodlebox]
+
+TASK [cert : Copy root CA certificate] ***********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [rpiclone : Download and unarchive rpi-clone latest release] ********************************************************************************************
+changed: [moodlebox]
+
+TASK [branding : Read reference RPiOS version from '/boot/firmware/issue.txt'] *******************************************************************************
+ok: [moodlebox]
+
+TASK [branding : Set 'branding_reference_version' variable] **************************************************************************************************
+ok: [moodlebox]
+
+TASK [branding : Write version file] *************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [branding : Copy version file to boot partition] ********************************************************************************************************
+changed: [moodlebox]
+
+TASK [branding : Update motd] ********************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [branding : Copy ascii logo file] ***********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [branding : Copy script to display ascii logo] **********************************************************************************************************
+changed: [moodlebox]
+
+TASK [sshkey : Copy authorized key] **************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [cleanup : Remove packages used only during the build] **************************************************************************************************
+changed: [moodlebox]
+
+TASK [cleanup : Clean Moodle database log tables] ************************************************************************************************************
+changed: [moodlebox] => (item=mdl_config_log)
+changed: [moodlebox] => (item=mdl_logstore_standard_log)
+changed: [moodlebox] => (item=mdl_task_log)
+changed: [moodlebox] => (item=mdl_upgrade_log)
+
+TASK [cleanup : Empty apt cache] *****************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Stop wifi access point] **********************************************************************************************************************
+changed: [moodlebox]
+
+TASK [cleanup : Delete files] ********************************************************************************************************************************
+changed: [moodlebox] => (item=/var/lib/NetworkManager/dnsmasq-uap0.leases)
+ok: [moodlebox] => (item=/root/.bash_history)
+ok: [moodlebox] => (item=/root/.mysql_history)
+ok: [moodlebox] => (item=/root/.nano_history)
+changed: [moodlebox] => (item=/root/.gitconfig)
+
+TASK [cleanup : Cleanup dirs] ********************************************************************************************************************************
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/www/moodledata/cache/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/www/moodledata/localcache/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/www/moodledata/temp/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/www/moodledata/trashdir/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/www/moodledata/sessions/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/lib/apt/lists/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/cache/debconf/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/tmp/)
+included: /Users/nicolas/Documents/Development/moodlebox-project/moodlebox/roles/cleanup/tasks/cleandirfile.yml for moodlebox => (item=/var/tmp/)
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/cache/core_component.php', 'mode': '0666', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 1000, 'size': 637017, 'inode': 254055, 'dev': 45826, 'nlink': 1, 'atime': 1704635992.818755, 'mtime': 1704635992.818755, 'ctime': 1704635992.818755, 'gr_name': 'moodlebox', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': True, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/cache/cachestore_file', 'mode': '2777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 1000, 'size': 4096, 'inode': 253901, 'dev': 45826, 'nlink': 3, 'atime': 1704635983.8547225, 'mtime': 1704635983.8547225, 'ctime': 1704635983.8547225, 'gr_name': 'moodlebox', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': True})
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/localcache/bootstrap.php', 'mode': '0666', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 1000, 'size': 374, 'inode': 256758, 'dev': 45826, 'nlink': 1, 'atime': 1704635993.090756, 'mtime': 1704635993.090756, 'ctime': 1704635993.090756, 'gr_name': 'moodlebox', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': True, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/localcache/theme', 'mode': '2777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 1000, 'size': 4096, 'inode': 253896, 'dev': 45826, 'nlink': 3, 'atime': 1704635981.8427153, 'mtime': 1704635983.8387222, 'ctime': 1704635983.8387222, 'gr_name': 'moodlebox', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': True})
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/localcache/mustache', 'mode': '2777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 1000, 'size': 4096, 'inode': 253890, 'dev': 45826, 'nlink': 3, 'atime': 1704635970.778677, 'mtime': 1704635970.778677, 'ctime': 1704635970.778677, 'gr_name': 'moodlebox', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': True})
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/localcache/htmlpurifier', 'mode': '2777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 1000, 'size': 4096, 'inode': 253884, 'dev': 45826, 'nlink': 3, 'atime': 1704635969.8386738, 'mtime': 1704635969.8386738, 'ctime': 1704635969.8386738, 'gr_name': 'moodlebox', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': True})
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/temp/filestorage', 'mode': '0777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 40, 'inode': 4, 'dev': 42, 'nlink': 2, 'atime': 1704635866.1825018, 'mtime': 1704635866.1825018, 'ctime': 1704635866.1825018, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/www/moodledata/temp/backup', 'mode': '0777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 40, 'inode': 3, 'dev': 42, 'nlink': 2, 'atime': 1704635795.490429, 'mtime': 1704635795.490429, 'ctime': 1704635795.490429, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False})
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+skipping: [moodlebox]
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+skipping: [moodlebox]
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian-security_dists_bookworm-security_InRelease', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 47951, 'inode': 22281, 'dev': 45826, 'nlink': 1, 'atime': 1704630739.0, 'mtime': 1704630739.0, 'ctime': 1704635453.78, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/archive.raspberrypi.com_debian_dists_bookworm_main_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1473653, 'inode': 22352, 'dev': 45826, 'nlink': 1, 'atime': 1704376537.0, 'mtime': 1704376537.0, 'ctime': 1704635453.788, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_contrib_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 179646, 'inode': 60651, 'dev': 45826, 'nlink': 1, 'atime': 1702270474.984008, 'mtime': 1702111360.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm-updates_main_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 83585, 'inode': 22459, 'dev': 45826, 'nlink': 1, 'atime': 1703858306.0, 'mtime': 1703858306.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_non-free-firmware_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 24212, 'inode': 60657, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.0080085, 'mtime': 1696668344.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/lock', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 0, 'inode': 868, 'dev': 45826, 'nlink': 1, 'atime': 1702270466.1238365, 'mtime': 1702270466.1238365, 'ctime': 1702270466.1238365, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_contrib_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 194019, 'inode': 60650, 'dev': 45826, 'nlink': 1, 'atime': 1702270474.976008, 'mtime': 1702111360.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_non-free-firmware_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 156926, 'inode': 60658, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.0080085, 'mtime': 1696668344.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian-security_dists_bookworm-security_main_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 797338, 'inode': 22372, 'dev': 45826, 'nlink': 1, 'atime': 1704405523.0, 'mtime': 1704405523.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_main_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 49341511, 'inode': 57862, 'dev': 45826, 'nlink': 1, 'atime': 1702270472.351957, 'mtime': 1702228840.0, 'ctime': 1702270472.2799556, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian-security_dists_bookworm-security_non-free-firmware_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 924, 'inode': 60663, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.028009, 'mtime': 1695574332.0, 'ctime': 1702270472.291956, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_non-free_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 402871, 'inode': 60655, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.0040085, 'mtime': 1702111359.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian-security_dists_bookworm-security_main_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 619254, 'inode': 22174, 'dev': 45826, 'nlink': 1, 'atime': 1704115117.0, 'mtime': 1704115117.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_non-free-firmware_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 25782, 'inode': 60656, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.0080085, 'mtime': 1702111359.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_main_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 32676164, 'inode': 60649, 'dev': 45826, 'nlink': 1, 'atime': 1702270474.6960025, 'mtime': 1702228838.0, 'ctime': 1702270472.2839558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/archive.raspberrypi.com_debian_dists_bookworm_InRelease', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 23590, 'inode': 22139, 'dev': 45826, 'nlink': 1, 'atime': 1704376567.0, 'mtime': 1704376567.0, 'ctime': 1704635453.788, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm-updates_main_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 66088, 'inode': 22266, 'dev': 45826, 'nlink': 1, 'atime': 1703858306.0, 'mtime': 1703858306.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_contrib_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 189152, 'inode': 60652, 'dev': 45826, 'nlink': 1, 'atime': 1702270474.9880083, 'mtime': 1702111360.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm-updates_main_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 62096, 'inode': 22457, 'dev': 45826, 'nlink': 1, 'atime': 1703858306.0, 'mtime': 1703858306.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_main_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 47870718, 'inode': 60648, 'dev': 45826, 'nlink': 1, 'atime': 1702270473.6719828, 'mtime': 1702228839.0, 'ctime': 1702270472.2839558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian-security_dists_bookworm-security_main_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 815888, 'inode': 22453, 'dev': 45826, 'nlink': 1, 'atime': 1704405523.0, 'mtime': 1704405523.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm-updates_InRelease', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 52105, 'inode': 22283, 'dev': 45826, 'nlink': 1, 'atime': 1704615159.0, 'mtime': 1704615159.0, 'ctime': 1704635453.784, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/archive.raspberrypi.com_debian_dists_bookworm_main_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1430253, 'inode': 22355, 'dev': 45826, 'nlink': 1, 'atime': 1704376537.0, 'mtime': 1704376537.0, 'ctime': 1704635453.788, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_InRelease', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 151082, 'inode': 1248, 'dev': 45826, 'nlink': 1, 'atime': 1702270472.3479571, 'mtime': 1702230573.0, 'ctime': 1704635453.492, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_non-free_binary-arm64_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 411757, 'inode': 60653, 'dev': 45826, 'nlink': 1, 'atime': 1702270474.9880083, 'mtime': 1702111360.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_non-free_binary-armhf_Packages', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 271063, 'inode': 60654, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.0000083, 'mtime': 1702111360.0, 'ctime': 1702270472.2879558, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/deb.debian.org_debian-security_dists_bookworm-security_contrib_i18n_Translation-en', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 653, 'inode': 60662, 'dev': 45826, 'nlink': 1, 'atime': 1702270475.028009, 'mtime': 1697566663.0, 'ctime': 1702270472.291956, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/partial', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 42, 'gid': 0, 'size': 4096, 'inode': 55496, 'dev': 45826, 'nlink': 2, 'atime': 1702270477.868064, 'mtime': 1704635453.788, 'ctime': 1704636017.8588502, 'gr_name': 'root', 'pw_name': '_apt', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/lib/apt/lists/auxfiles', 'mode': '0755', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 42, 'gid': 0, 'size': 4096, 'inode': 55495, 'dev': 45826, 'nlink': 2, 'atime': 1702270477.868064, 'mtime': 1702269342.4740353, 'ctime': 1704636017.8588502, 'gr_name': 'root', 'pw_name': '_apt', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': True, 'xgrp': True, 'woth': False, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False})
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/cache/debconf/templates.dat-old', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1997920, 'inode': 61654, 'dev': 45826, 'nlink': 1, 'atime': 1704635725.6182582, 'mtime': 1704635725.6302583, 'ctime': 1704635726.2982566, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/cache/debconf/templates.dat', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1997920, 'inode': 61655, 'dev': 45826, 'nlink': 1, 'atime': 1704635726.118257, 'mtime': 1704635726.1262572, 'ctime': 1704635726.2982566, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/cache/debconf/config.dat-old', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 34836, 'inode': 59968, 'dev': 45826, 'nlink': 1, 'atime': 1704635652.3456056, 'mtime': 1704635652.3456056, 'ctime': 1704635700.1303716, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/cache/debconf/config.dat', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 34853, 'inode': 60687, 'dev': 45826, 'nlink': 1, 'atime': 1704635700.1183715, 'mtime': 1704635700.1183715, 'ctime': 1704635700.1303716, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/cache/debconf/passwords.dat', 'mode': '0600', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 0, 'inode': 57790, 'dev': 45826, 'nlink': 1, 'atime': 1702270458.7476935, 'mtime': 1702269255.8963482, 'ctime': 1702270458.7476935, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/cache/debconf/tmp.ci', 'mode': '0755', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 55347, 'dev': 45826, 'nlink': 2, 'atime': 1702270457.3316662, 'mtime': 1704635652.3456056, 'ctime': 1704635652.3456056, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': True, 'xgrp': True, 'woth': False, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False})
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/tmp/dnsmasq.leases', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 0, 'inode': 60840, 'dev': 45826, 'nlink': 1, 'atime': 1704636001.9307888, 'mtime': 1704636001.9307888, 'ctime': 1704636001.9307888, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/ansible', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126512, 'dev': 45826, 'nlink': 2, 'atime': 1704635582.936, 'mtime': 1704636006.3068056, 'ctime': 1704636006.3068056, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-systemd-logind.service-eYnsmr', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126489, 'dev': 45826, 'nlink': 3, 'atime': 1704635575.868, 'mtime': 1704635575.872, 'ctime': 1704635575.872, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+ok: [moodlebox] => (item={'path': '/tmp/ansible_ansible.builtin.find_payload_wlmf4z7q', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 253884, 'dev': 45826, 'nlink': 2, 'atime': 1704636039.454937, 'mtime': 1704636039.454937, 'ctime': 1704636039.454937, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-redis-server.service-SyNCu9', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 131301, 'dev': 45826, 'nlink': 3, 'atime': 1704635728.830252, 'mtime': 1704635728.830252, 'ctime': 1704635728.830252, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-systemd-timesyncd.service-zXs5Zn', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126471, 'dev': 45826, 'nlink': 3, 'atime': 1704635575.692, 'mtime': 1704635575.692, 'ctime': 1704635575.692, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/requestdir', 'mode': '0777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 256789, 'dev': 45826, 'nlink': 3, 'atime': 1704636002.1187897, 'mtime': 1704636002.1187897, 'ctime': 1704636002.1187897, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-bluetooth.service-Z0gRWV', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126484, 'dev': 45826, 'nlink': 3, 'atime': 1704635576.712, 'mtime': 1704635576.712, 'ctime': 1704635576.712, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-ModemManager.service-jyAKX2', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126494, 'dev': 45826, 'nlink': 3, 'atime': 1704635576.108, 'mtime': 1704635576.108, 'ctime': 1704635576.108, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+
+TASK [cleanup : Define outer loop] ***************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Find files] **********************************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Remove temp directories and files] ***********************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-systemd-timesyncd.service-aqpHE1', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126473, 'dev': 45826, 'nlink': 3, 'atime': 1704635575.692, 'mtime': 1704635575.692, 'ctime': 1704635575.692, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-systemd-logind.service-imQUxe', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126491, 'dev': 45826, 'nlink': 3, 'atime': 1704635575.872, 'mtime': 1704635575.872, 'ctime': 1704635575.872, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-bluetooth.service-nIQ7CW', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126487, 'dev': 45826, 'nlink': 3, 'atime': 1704635576.712, 'mtime': 1704635576.712, 'ctime': 1704635576.712, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-ModemManager.service-ceEaPi', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 126496, 'dev': 45826, 'nlink': 3, 'atime': 1704635576.108, 'mtime': 1704635576.108, 'ctime': 1704635576.108, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/tmp/systemd-private-04a89356a7164ae88c280593ffb6ec27-redis-server.service-53FboR', 'mode': '0700', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 131303, 'dev': 45826, 'nlink': 3, 'atime': 1704635728.830252, 'mtime': 1704635728.830252, 'ctime': 1704635728.830252, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+
+TASK [cleanup : Find log files to truncate] ******************************************************************************************************************
+ok: [moodlebox]
+
+TASK [cleanup : Empty log files] *****************************************************************************************************************************
+changed: [moodlebox] => (item={'path': '/var/log/php8.2-fpm.log', 'mode': '0600', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1036, 'inode': 61642, 'dev': 45826, 'nlink': 1, 'atime': 1704635723.5262637, 'mtime': 1704635754.4702702, 'ctime': 1704635754.4702702, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/lastlog', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 43, 'size': 296, 'inode': 60639, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.5597482, 'mtime': 1704635581.548, 'ctime': 1704635581.548, 'gr_name': 'utmp', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/faillog', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 0, 'inode': 60638, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.5597482, 'mtime': 1702270499.2364779, 'ctime': 1702270499.2364779, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/alternatives.log', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 5009, 'inode': 60634, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.555748, 'mtime': 1704635754.5782704, 'ctime': 1704635754.5782704, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/wtmp', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 43, 'size': 16000, 'inode': 60640, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.5597482, 'mtime': 1704635585.352, 'ctime': 1704635585.352, 'gr_name': 'utmp', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/dpkg.log', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 71423, 'inode': 60637, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.5597482, 'mtime': 1704636016.0868435, 'ctime': 1704636016.0868435, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/dnsmasq.log', 'mode': '0660', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1283, 'inode': 1969, 'dev': 45826, 'nlink': 1, 'atime': 1704635585.316, 'mtime': 1704636023.2428715, 'ctime': 1704636023.2428715, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/btmp', 'mode': '0660', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 43, 'size': 0, 'inode': 60636, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.555748, 'mtime': 1702270499.244478, 'ctime': 1702270499.244478, 'gr_name': 'utmp', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/bootstrap.log', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 0, 'inode': 60635, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.555748, 'mtime': 1702270499.248478, 'ctime': 1702270499.248478, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/apt/term.log', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 4, 'size': 39995, 'inode': 60643, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.5597482, 'mtime': 1704636016.1628437, 'ctime': 1704636016.1628437, 'gr_name': 'adm', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/apt/history.log', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 7713, 'inode': 60642, 'dev': 45826, 'nlink': 1, 'atime': 1702270461.5597482, 'mtime': 1704636016.1628437, 'ctime': 1704636016.1628437, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/apt/eipp.log.xz', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 26592, 'inode': 768, 'dev': 45826, 'nlink': 1, 'atime': 1704636014.8628385, 'mtime': 1704636015.0388393, 'ctime': 1704636015.0388393, 'gr_name': 'root', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/redis/redis-server.log', 'mode': '0660', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 107, 'gid': 4, 'size': 1131, 'inode': 131305, 'dev': 45826, 'nlink': 1, 'atime': 1704635728.906252, 'mtime': 1704635728.9102519, 'ctime': 1704635728.9102519, 'gr_name': 'adm', 'pw_name': 'redis', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/journal/a48295b41a6647278cb2a8556cecc883/system.journal', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 999, 'size': 8388608, 'inode': 126466, 'dev': 45826, 'nlink': 1, 'atime': 1702270498.24, 'mtime': 1704636043.0229516, 'ctime': 1704636043.0229516, 'gr_name': 'systemd-journal', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/journal/a48295b41a6647278cb2a8556cecc883/user-1000.journal', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 999, 'size': 8388608, 'inode': 126498, 'dev': 45826, 'nlink': 1, 'atime': 1704635421.276132, 'mtime': 1704635429.2361908, 'ctime': 1704635429.2361908, 'gr_name': 'systemd-journal', 'pw_name': 'root', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/nginx/error.log', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 33, 'gid': 4, 'size': 78, 'inode': 131192, 'dev': 45826, 'nlink': 1, 'atime': 1704635712.0463176, 'mtime': 1704635718.6502814, 'ctime': 1704635718.6502814, 'gr_name': 'adm', 'pw_name': 'www-data', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [moodlebox] => (item={'path': '/var/log/nginx/access.log', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 33, 'gid': 4, 'size': 0, 'inode': 131191, 'dev': 45826, 'nlink': 1, 'atime': 1704635712.0463176, 'mtime': 1704635712.0463176, 'ctime': 1704635712.0463176, 'gr_name': 'adm', 'pw_name': 'www-data', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+
+TASK [cleanup : Reboot box] **********************************************************************************************************************************
+changed: [moodlebox]
+
+TASK [cleanup : Remove ssh public keys] **********************************************************************************************************************
+skipping: [moodlebox]
+
+TASK [Print out end of build date and time and build duration] ***********************************************************************************************
+ok: [moodlebox] => {
+    "msg": [
+        "End of build: 2024-01-07T15:01:43+0100",
+        "Build duration: 679 s"
+    ]
+}
+
+PLAY RECAP ***************************************************************************************************************************************************
+moodlebox                  : ok=163  changed=117  unreachable=0    failed=0    skipped=8    rescued=0    ignored=0
+

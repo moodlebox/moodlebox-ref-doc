@@ -233,15 +233,6 @@ $ sudo apt full-upgrade -y
 This step can take several minutes, depending on the available Internet connection speed.
 We just wait until it's finished.
 
-\subsection{Set MoodleBox IP address}
-
-We edit now the file \lstinline{/etc/hosts}, replacing the last line, beginning with \lstinline{127.0.1.1}, with the following, containing the static IP address.
-For the MoodleBox, the static IP address chosen is \lstinline{10.0.0.1}.
-\begin{lstlisting}[language=bash]
-10.0.0.1	moodlebox
-\end{lstlisting}
-%This configuration enables any device to access the MoodleBox via its URL \url{http://moodlebox.home/}, even those that do not implement \emph{zeroconf}\footnote{\url{https://en.wikipedia.org/wiki/Zero-configuration_networking}} standard protocol.
-
 \subsection{Fix default user home directory permissions}
 
 We must fix the default user home directory permissions, otherwise certain features will not be available.
@@ -367,99 +358,48 @@ We use a \textsl{udev} rule to define this new interface named \lstinline{uap0},
 Here's the content of \lstinline{/etc/udev/rules.d/90-wireless.rules} on the MoodleBox:
 \lstinputlisting{files/90-wireless.rules}
 
-\subsection{Configuration of the wireless connection as a client}
-
-If MoodleBox is intended to be used as a client (STA mode) as well as an access point, a valid configuration file named \lstinline{wpa_supplicant.conf} should be provided to \lstinline{wpa_supplicant} service, in directory \lstinline{/etc/wpa_supplicant/}.
-
-Following listing shows an example of such file:
-\lstinputlisting{files/wpa_supplicant.conf}
-
-Obviously the file should be edited to enter the real SSID and password of an existent wireless network.
-
-\subsection{Installation of the packages for the access point feature}
-
-The AP feature requires the packages \lstinline{hostapd} and \lstinline{dnsmasq}.
-Let's install them.
-\begin{lstlisting}[language=bash]
-$ sudo apt-get install -y hostapd dnsmasq
-\end{lstlisting}
-
 \subsection{Configuration of the static IP address}\label{ssec-static-ip}
 
 MoodleBox gets dynamically via DHCP its IP address on the ethernet interface \lstinline{eth0} or as a wireless client on the \lstinline{wlan0} interface.
 
 With its routed access point feature, it will also act as a DHCP provider on its wireless interface \lstinline{uap0}, so we need a static IP address on \lstinline{uap0} interface.
+
+We edit now the file \lstinline{/etc/hosts}, replacing the last line, beginning with \lstinline{127.0.1.1}, with the following, containing the static IP address.
+For the MoodleBox, the static IP address chosen is \lstinline{10.0.0.1}.
 Any other private IP address can alternatively be used.
-
-At the very end of file \lstinline{/etc/dhcpcd.conf}, we add the lines
 \begin{lstlisting}[language=bash]
-interface wlan0
-# Uncomment following line to disable AP+STA mode
-# nohook wpa_supplicant
-
-interface uap0
-static ip_address=10.0.0.1/24
-nohook wpa_supplicant
+10.0.0.1	moodlebox
 \end{lstlisting}
+%This configuration enables any device to access the MoodleBox via its URL \url{http://moodlebox.home/}, even those that do not implement \emph{zeroconf}\footnote{\url{https://en.wikipedia.org/wiki/Zero-configuration_networking}} standard protocol.
 
 \subsection{Configuration of the access point}
 
-We can now configure the access point, by editing the file \lstinline{/etc/hostapd/hostapd.conf}.
-This is where the access point SSID and password are set, as well as other options, such as the broadcast channel and regulatory country.
-We define \emph{MoodleBox} as the SSID and \emph{moodlebox} as the password.
-
-Here's the content of \lstinline{/etc/hostapd/hostapd.conf} on the MoodleBox:
-
-\lstinputlisting[language=bash]{files/hostapd.conf}
-
-\iffalse
-\begin{verification}
-Start \lstinline{hostapd}:
+We create the wifi access point connection using NetworkManager.
+Note we use the interface \lstinline{uap0} and the static IP address we just defined.
+Other settings such as SSID, password and wireless channel can be changed.
 \begin{lstlisting}[language=bash]
-$ sudo /usr/sbin/hostapd /etc/hostapd/hostapd.conf
+$ sudo nmcli c add type wifi ifname uap0 con-name WifiAP ssid MoodleBox
+$ sudo nmcli c mod WifiAP autoconnect yes 802-11-wireless.mode ap \
+    802-11-wireless.band bg 802-11-wireless.channel 11
+$ sudo nmcli c mod WifiAP ipv4.address 10.0.0.1/24 ipv4.gateway 10.0.0.1 \
+    ipv4.method shared
+$ sudo nmcli c mod WifiAP wifi-sec.key-mgmt wpa-psk wifi-sec.psk moodlebox
+$ sudo nmcli c mod WifiAP wifi-sec.proto rsn wifi-sec.group ccmp \ 
+    wifi-sec.pairwise ccmp
 \end{lstlisting}
 
-We get an error message (expected as the configuration is not finished yet); this message should end with \lstinline{uap0: AP-ENABLED}.
-Wireless clients should detect \emph{MoodleBox} SSID, even if they cannot to it.
-\end{verification}
-\fi
+We change some settings of the AP, in particular the DHCP settings, by adding a configuration file to \lstinline{dnsmasq} instance managed by NetworkManager.
+The file has to be placed in \lstinline{/etc/NetworkManager/dnsmasq-shared.d/}
+Here's the content of MoodleBox setting file \lstinline{/etc/NetworkManager/dnsmasq-shared.d/00-dhcp.conf}:
+\lstinputlisting{files/00-dhcp.conf}
 
-%:TODO: This was deprecated as of Bullseye and will be changed.
-% See /usr/share/doc/hostapd/README.Debian.
+\subsection{Configuration of the wireless connection as a client}
 
-We now need to define where \lstinline{hostapd} gets its configuration.
-This is set in file \lstinline{/etc/default/hostapd}, where we replace the line \lstinline{#DAEMON_CONF=""} with \lstinline{DAEMON_CONF="/etc/hostapd/hostapd.conf"}.
-It should then have the following line:
+To be used as a client (STA mode) as well as an access point, a valid configuration should be provided to NetworkManager, with SSID and the password of an existent wireless network with which to connect.
+Note we use the interface \lstinline{wlan0}.
 \begin{lstlisting}[language=bash]
-...
-DAEMON_CONF="/etc/hostapd/hostapd.conf"
-...
-\end{lstlisting}
-
-\iffalse
-Here's the content of \lstinline{/etc/default/hostapd} after the substitution:
-\lstinputlisting[language=bash]{files/hostapd}
-\fi
-
-Finally, we unmask and enable \lstinline{hostapd} service:
-\begin{lstlisting}[language=bash]
-$ sudo systemctl unmask hostapd
-$ sudo systemctl enable hostapd
-\end{lstlisting}
-
-\subsection{Configuration of the DHCP and DNS server}
-
-The DHCP and DNS server configuration on \lstinline{uap0} interface is provided through \lstinline{dnsmasq}.
-%\footnote{DNS configuration is based on \url{https://www.linux.com/learn/dnsmasq-easy-lan-name-services}.}
-We edit \lstinline{/etc/dnsmasq.conf} to have this content. Note the static IP address set up on page~\pageref{ssec-static-ip}:
-
-\lstinputlisting[language=bash]{files/dnsmasq.conf}
-
-Finally, we fix a race condition between \lstinline{dhcpcd} and \lstinline{dnsmasq} by editing \lstinline{dnsmasq} service file \lstinline{/lib/systemd/system/dnsmasq.service}.
-We add following lines just before \lstinline{[Install]}:
-\begin{lstlisting}[language=bash]
-RestartSec=5
-Restart=on-failure
+$ sudo nmcli c add type wifi ifname wlan0 con-name WifiSTA ssid WirelessLAN
+$ sudo nmcli c mod WifiSTA wifi-sec.key-mgmt wpa-psk wifi-sec.psk Password
 \end{lstlisting}
 
 \subsection{Configuration of mDNS services advertising}
@@ -467,6 +407,7 @@ Restart=on-failure
 In order to make MoodleBox services discoverable on the network, we create the file \lstinline{/etc/avahi/services/moodlebox.service}, with following content.
 \lstinputlisting[language=xml]{files/moodlebox.service.xml}
 
+\iffalse
 \subsection{Routing configuration}
 
 We configure now the routing, so that the wireless clients can browse the Internet when MoodleBox is connected to an Internet router (via ethernet or wireless).
@@ -492,19 +433,12 @@ $ sudo iptables -A FORWARD -i wlan0 -o uap0 \
 $ sudo iptables -A FORWARD -i uap0 -o eth0 -j ACCEPT
 $ sudo iptables -A FORWARD -i uap0 -o wlan0 -j ACCEPT
 \end{lstlisting}
+\fi
 
 And we reboot.
 \begin{lstlisting}[language=bash]
 $ sudo reboot
 \end{lstlisting}
-
-\iffalse
-\subsection{Wireless access point testing}
-
-\begin{verification}
-After rebooting, a client device should be able to browse Internet after connecting to the \emph{MoodleBox} Wi-Fi network with password \emph{moodlebox}.
-\end{verification}
-\fi
 
 \subsection{Installation and configuration of the captive portal}
 
@@ -514,7 +448,7 @@ Nodogsplash needs first to be compiled for the Raspberry Pi platform.
 
 Let's install the Nodogsplash package we got after compilation:
 \begin{lstlisting}[language=bash]
-$ sudo dpkg –i nodogsplash_5.0.1-1_arm64.deb
+$ sudo dpkg –i nodogsplash_5.0.2-1_arm64.deb
 \end{lstlisting}
 Nodogsplash configuration file \lstinline{/etc/nodogsplash/nodogsplash.conf} should read (note the static IP address defined earlier)
 \lstinputlisting[language=bash]{files/nodogsplash.conf}
@@ -540,18 +474,10 @@ The backend data is stored in a MariaDB database and the dynamic processing is h
 We install first Nginx and all needed PHP packages, notably those required by Moodle.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y nginx php7.4-fpm php7.4-cli php7.4-common \
-    php7.4-json php7.4-mbstring php7.4-opcache php7.4-readline \
-    php7.4-curl php7.4-gd php7.4-intl php7.4-soap php7.4-mysql \
-    php7.4-xml php7.4-zip php7.4 php-apcu
+$ sudo apt-get install -y nginx php8.2-fpm php8.2-mbstring \
+    php8.2-curl php8.2-gd php8.2-intl php8.2-soap php8.2-mysql \
+    php8.2-xml php8.2-zip php8.2-apcu php8.2 php-apcu
 \end{lstlisting}
-
-\iffalse
-\begin{verification}
-With a computer connected to the MoodleBox wireless network, we load URL \url{http://moodlebox.home/} in a web browser.
-The web page "Welcome to nginx on Debian!" Should be displayed.
-\end{verification}
-\fi
 
 \subsection{Configuration of Nginx and PHP}\label{ssec-nginx-php}
 
@@ -564,7 +490,7 @@ It also sets \lstinline{max_input_vars} to~5000.
 
 The ownership, group and access rights of Nginx and PHP should now be changed, so that the default user \emph{moodlebox} can easily edit the files, while allowing Moodle updates and plugin installation via the web interface.
 
-To do this, we edit the two files \lstinline{/lib/systemd/system/nginx.service} and \lstinline{/lib/systemd/system/php7.4-fpm.service}, adding after the line \lstinline{[Service]} the line \lstinline{UMask=0002}, to get in both files something like
+To do this, we edit the two files \lstinline{/lib/systemd/system/nginx.service} and \lstinline{/lib/systemd/system/php8.2-fpm.service}, adding after the line \lstinline{[Service]} the line \lstinline{UMask=0002}, to get in both files something like
 \begin{lstlisting}[language=bash]
 ...
 [Service]
@@ -572,30 +498,19 @@ UMask=0002
 Type=...
 ...
 \end{lstlisting}
-We then edit the file \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} to set the correct group ownership for PHP, replacing line \lstinline{group = www-data} with \lstinline{group = 1000}, so we have now
+We then edit the file \lstinline{/etc/php/8.2/fpm/pool.d/www.conf} to set the correct group ownership for PHP, replacing line \lstinline{group = www-data} with \lstinline{group = 1000}, so we have now
 \begin{lstlisting}[language=bash]
 ...
 user = www-data
 group = 1000
 ...
 \end{lstlisting}
-If needed, variables in \lstinline{/etc/php/7.4/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
+If needed, variables in \lstinline{/etc/php/8.2/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
 
 We then relaunch the web server:
 \begin{lstlisting}[language=bash]
-$ sudo systemctl restart nginx php7.4-fpm
+$ sudo systemctl restart nginx php8.2-fpm
 \end{lstlisting}
-
-\iffalse
-\begin{verification}
-We type the command
-\begin{lstlisting}[language=bash]
-$ echo '<?php phpinfo(); ?>' | sudo tee -a /var/www/html/info.php
-\end{lstlisting}
-then open URL \url{http://moodlebox.home/info.php} in a browser.
-The long PHP settings page should appear, with the \lstinline{upload_max_filesize}, \lstinline{post_max_size} and \lstinline{max_input_vars} variables correctly set.
-\end{verification}
-\fi
 
 \subsection{SSL certificate and key}
 
@@ -615,13 +530,6 @@ PHP MariaDB support was already installed with PHP (see section~\ref{ssec-lemp})
 \begin{lstlisting}[language=bash]
 $ sudo apt-get install -y mariadb-server
 \end{lstlisting}
-
-\iffalse
-\begin{verification}
-Reload URL \url{http://moodlebox.home/info.php}.
-A new section \emph{MySQL} should appear in the page.
-\end{verification}
-\fi
 
 In order to allow flexible access to all the databases, a new database user is created in MariaDB, with all privileges.
 For this installation, we set the credentials as earlier (see page~\pageref{ssec-new-account}), for consistency.
@@ -661,7 +569,7 @@ $ sudo apt-get install -y git
 We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle.
 To save space, we use a shallow clone.
 \begin{lstlisting}[language=bash]
-$ sudo git clone --depth=1 -b MOODLE_401_STABLE \
+$ sudo git clone --depth=1 -b MOODLE_403_STABLE \
     https://github.com/moodle/moodle.git /var/www/moodle
 \end{lstlisting}
 
@@ -670,16 +578,13 @@ $ sudo git clone --depth=1 -b MOODLE_401_STABLE \
 Moodle data and several other directories are now created.
 \begin{lstlisting}[language=bash]
 $ sudo mkdir -p /var/www/moodledata/repository /var/www/moodledata/temp \
-    /var/www/moodledata/backup /var/cache/moodle \
-    /var/cache/moodle-cache-backup
+    /var/www/moodledata/backup
 \end{lstlisting}
 Adequate permissions and ownership are set on these directories, including SGID permission on Moodle data directory.
 We also set the correct permissions to Moodle source directory:
 \begin{lstlisting}[language=bash]
-$ sudo chown -R www-data:moodlebox /var/www/moodle /var/www/moodledata/ \
-    /var/cache/moodle /var/cache/moodle-cache-backup
-$ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/ \
-    /var/cache/moodle /var/cache/moodle-cache-backup
+$ sudo chown -R www-data:moodlebox /var/www/moodle /var/www/moodledata/
+$ sudo chmod -R ug+w,o-w /var/www/moodle /var/www/moodledata/
 $ sudo chmod -R g+s /var/www/moodledata/
 \end{lstlisting}
 
@@ -822,20 +727,33 @@ Let's now configure the Moodle \textsl{File system} repositories, which will mak
 
 \subsection{USB sticks}
 
-We set up automatic mounting of USB sticks (regardless of their format), as well as access to all files on inserted USB sticks via Moodle's \textsl{File system} repositories.\footnote{If more than one USB stick is inserted into the MoodleBox, only the files on the first inserted stick are accessible via the File system repository.}
+We set up automatic mounting of USB sticks (regardless of their format), as well as access to all files on inserted USB sticks via Moodle's \textsl{File system} repositories.
 
-This is done by installing the \lstinline{usbmount} package, which should be built from its source code before to be installed.\footnote{See \url{https://github.com/birdslikewires/usbmount}. Follow the instructions at the end of the README file.}
-We also install standard packages to support exFAT and NTFS formatted devices. Support for other formats is built-in.
+This is done by installing the \lstinline{udevil} package.
+We also install standard packages to support exFAT, HFS+ and NTFS formatted devices.
+Support for other formats is built-in.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y ntfs-3g exfat-fuse
-$ sudo dpkg –i usbmount_0.0.26_all.deb
+$ sudo apt-get install -y udevil ntfs-3g exfat-fuse
 \end{lstlisting}
-By adding the formats \lstinline{exfat}, \lstinline{ntfs} and \lstinline{fuseblk} to the line beginning with \lstinline{FILESYSTEMS=} of the configuratin file of USBMount \lstinline{/etc/usbmount/usbmount.conf}, support for USB sticks of these formats is activated.
+By adding the formats \lstinline{exfat} and \lstinline{hfsplus} to the line beginning with \lstinline{allowed_types} of the configuration file of udevil \lstinline{/etc/udevil/udevil.conf}, support for USB sticks of these formats is activated.
 This line should now read
 \begin{lstlisting}[language=bash]
-FILESYSTEMS="vfat exfat ntfs fuseblk ext2 ext3 ext4 hfsplus"
+allowed_types = $KNOWN_FILESYSTEMS, file, cifs, smbfs, nfs, curlftpfs, ftpfs, sshfs, davfs, tmpfs, ramfs, exfat, hfsplus
 \end{lstlisting}
+We remove the nonempty option from the line beginning with \lstinline{default_options_exfat} of the same file.
+This line should now read
+\begin{lstlisting}[language=bash]
+default_options_exfat = nosuid, noexec, nodev, noatime, uid=$UID, gid=$GID, iocharset=utf8
+\end{lstlisting}
+Finally, we add a script fixing the permissions on the mounted USB devices, by completing the line beginning with \lstinline{success_rootexec} this way:
+\begin{lstlisting}[language=bash]
+success_rootexec = /usr/local/bin/fix-mount-permissions.sh
+\end{lstlisting}
+We copy the script file \lstinline{fix-mount-permissions.sh} to \lstinline{/usr/local/bin/}.
+Here's the content of this file:
+\lstinputlisting[language=bash]{files/fix-mount-permissions.sh}
+
 
 We create then a directory with adequate permissions, and a link from the USB stick mount point to this directory:
 \begin{lstlisting}[language=bash]
@@ -1048,21 +966,6 @@ We map there Application and Session to \emph{Redis cache}.
 \end{figure}
 \fi
 
-\iffalse
-\begin{verification}
-After some actions on the Moodle platform of the MoodleBox, connect via SSH to the MoodleBox, then run the command
-\begin{lstlisting}[language=bash]
-ls -l /var/cache/moodle/
-\end{lstlisting}
-The console should display something like
-\begin{lstlisting}[language=bash]
-total 0
-drwxrwxrwx 59 www-data moodlebox 1180 Oct  9 21:41 application
-drwxrwxrwx 13 www-data moodlebox  260 Oct  9 21:41 session
-\end{lstlisting}
-\end{verification}
-\fi
-
 \subsection{MariaDB optimisation}
 
 For a better performance, we tweak the value of some MariaDB variables in the file \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}:
@@ -1108,8 +1011,6 @@ The commands below will clean up the MoodleBox and reduce the amount of disk spa
 \begin{lstlisting}[language=bash]
 $ sudo systemctl stop dnsmasq
 $ sudo truncate -s 0 /var/lib/misc/dnsmasq.leases
-$ sudo rm -rf /var/www/moodledata/cache/*
-$ sudo rm -rf /var/www/moodledata/localcache/*
 $ sudo rm -rf /var/www/moodledata/temp/*
 $ sudo rm -rf /var/www/moodledata/trashdir/*
 $ sudo rm -rf /var/www/moodledata/sessions/*

@@ -1,8 +1,7 @@
 proc            /proc           proc    defaults          0       0
-PARTUUID=54321fed-01  /boot           vfat    defaults          0       2
-PARTUUID=bcdef012-02  /               ext4    defaults,noatime  0       1
+PARTUUID=fedcba98-01  /boot/firmware  vfat    defaults          0       2
+PARTUUID=fedcba98-02  /               ext4    defaults,noatime  0       1
 # a swapfile is not a swap partition, no line here
 #   use  dphys-swapfile swap[on|off]  for that
-tmpfs /var/cache/moodle tmpfs size=64M,mode=775,uid=www-data,gid=www-data 0 0
 tmpfs /var/www/moodledata/temp tmpfs size=64M,mode=775,uid=www-data,gid=www-data 0 0
 tmpfs /var/www/moodledata/sessions tmpfs size=16M,mode=775,uid=www-data,gid=www-data 0 0
