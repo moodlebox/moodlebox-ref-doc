@@ -68,9 +68,9 @@
 
 \begin{document}
 
-\title{MoodleBox building reference, version 4.6.0 (unreleased)\footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}}
+\title{MoodleBox building reference, version 4.6.0\footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}}
 \date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
-\author{Nicolas Martignoni\footnote{Teacher in college level mathematics and computer science and teacher trainer in Fribourg, Switzerland.}}
+\author{Nicolas Martignoni\footnote{MoodleBox founder and maintainer; teacher in college level mathematics and computer science and teacher trainer in Fribourg, Switzerland.}}
 \maketitle
 
 \begingroup
@@ -82,14 +82,14 @@
 \section{Introduction}
 
 This document explains how to build a MoodleBox manually.
-It is intended for developers or system administrators to provide background information on how a MoodleBox is built.
+It is intended for developers or system administrators and provide background information on how a MoodleBox is built.
+It is not meant to be an end-user documentation.
 
-This is not meant to be an end-user documentation.
-For end-user documentation, please consult \href{https://moodlebox.net/}{MoodleBox website}.
+For the MoodleBox end-user documentation, consult the \href{https://moodlebox.net/}{MoodleBox website}.
 
 \subsection{Caveat}
 
-The actual build of the MoodleBox image is done using \href{https://www.ansible.com/}{Ansible}.
+The actual build of the MoodleBox image is done automatically using \href{https://www.ansible.com/}{Ansible}.\footnote{The MoodleBox project is a free (as in speech and in beer) and open source project. The Ansible playbook source to build the MoodleBox image is provided under a AGPL v3.0 License. It is available at \href{https://github.com/moodlebox/moodlebox}{GitHub}.}
 Using Ansible enables most of the build to be automated, as well as ensuring that it is reproducible.
 Though complete, the instructions in this document should not be understood as a method to obtain a MoodleBox that is totally equivalent to the officially published MoodleBox images.
 
@@ -131,17 +131,19 @@ Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi M
 
 \subsection{Copy of Raspberry Pi OS Lite on a microSD card}
 
-We download the current version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card.
+Download the latest version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{\url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card with at least 8~GB capacity.
 For this process, it is recommended to use \href{https://www.raspberrypi.com/software/}{Raspberry Pi Imager}.
 A complete description of the process is available on Raspberry Pi web site.\footnote{See \url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
-We then insert the SD card into a computer and mount it.
+Insert then the microSD card into a computer and mount it.
 
 \subsection{SSH access enabling}
 
 For security reasons, SSH access isn't enabled by default in Raspberry Pi OS.
-We must enable it, and to do so we create a file with name \lstinline{ssh.txt} in the boot partition of the microSD card; this is the part of the SD card which can be seen when it is mounted in a macOS or Windows computer.
-The content of the file \lstinline{ssh.txt} doesn't matter.
+We must enable it, and to do so we create a file with name \lstinline{ssh.txt} in the boot partition of the microSD card;
+this is the partition of the SD card which can be seen when it is mounted in a macOS or Windows computer.
+(Other partitions aren't visible on these OS.)
+The content of the file \lstinline{ssh.txt} doesn't matter, so the file can be empty.
 The following commands will do this.
 
 \begin{lstlisting}[language=bash]
@@ -153,9 +155,10 @@ $ touch ssh.txt
 
 For security reasons (again), the default image of Raspberry Pi OS Lite has no user account defined.
 We need to create one, by adding a file \lstinline{userconf.txt} in the boot partition of the microSD card.
-The MoodleBox image uses for this account the username \emph{moodlebox} and the password \emph{Moodlebox4\$}.
 
 This file should contain a single line of text, consisting of \lstinline{username:password}: so the desired username, followed immediately by a colon, followed immediately by an \textbf{encrypted} representation of the password to use.\footnote{See \url{https://www.raspberrypi.com/documentation/computers/configuration.html\#configuring-a-user}.}
+
+In the MoodleBox image, the default user account has the username \emph{moodlebox} and the password \emph{Moodlebox4\$}.
 
 \subsection{First login via SSH}
 
@@ -193,7 +196,7 @@ round-trip min/avg/max/stddev = 0.222/0.308/0.452/0.102 ms
 \end{verification}
 \fi
 
-From now on, all operations are done via the command line, using \lstinline{ssh} (a regular terminal on macOS and Linux, or \lstinline{Putty} on Windows).
+From now on, all operations are done via the command line in a regular terminal on macOS and Linux, or with \lstinline{Putty} on Windows.
 
 We can now log in to the Raspberry Pi using the main account we've just setup: username is \emph{moodlebox} with password \emph{Moodlebox4\$}.
 
@@ -230,6 +233,23 @@ $ sudo apt full-upgrade -y
 This step can take several minutes, depending on the available Internet connection speed.
 We just wait until it's finished.
 
+\subsection{Set MoodleBox IP address}
+
+We edit now the file \lstinline{/etc/hosts}, replacing the last line, beginning with \lstinline{127.0.1.1}, with the following, containing the static IP address.
+For the MoodleBox, the static IP address chosen is \lstinline{10.0.0.1}.
+\begin{lstlisting}[language=bash]
+10.0.0.1	moodlebox
+\end{lstlisting}
+%This configuration enables any device to access the MoodleBox via its URL \url{http://moodlebox.home/}, even those that do not implement \emph{zeroconf}\footnote{\url{https://en.wikipedia.org/wiki/Zero-configuration_networking}} standard protocol.
+
+\subsection{Fix default user home directory permissions}
+
+We must fix the default user home directory permissions, otherwise certain features will not be available.
+
+\begin{lstlisting}[language=bash]
+$ sudo chmod u=rwx,g=rx,o=rx /home/moodlebox/
+\end{lstlisting}
+
 \subsection{Configuration of important settings}
 
 Launch \emph{raspi-config} utility:
@@ -242,11 +262,11 @@ With \emph{raspi-config} utility, we configure the following settings.
 \item Expand Filesystem.
 \item Install following \emph{locales}:
 \begin{itemize}
-\item \lstinline{de_DE.UTF-8}
+\item \lstinline{en_GB.UTF-8} (should be already here)
 \item \lstinline{en_AU.UTF-8}
-\item \lstinline{en_GB.UTF-8}
-\item \lstinline{es_ES.UTF-8}
 \item \lstinline{fr_FR.UTF-8}
+\item \lstinline{de_DE.UTF-8}
+\item \lstinline{es_ES.UTF-8}
 \item \lstinline{it_IT.UTF-8}
 \end{itemize}
 and set \lstinline{en_GB.UTF-8} as default \emph{locale}.
@@ -266,23 +286,8 @@ From now on, to connect to the Raspberry Pi (via SSH or SFTP), we'll use the add
 
 Let's reboot and log in to the MoodleBox with the default credentials set up page~\pageref{ssec-new-account}.
 
-\subsection{Switch to the alternative wireless chip firmware}
-
-The Raspberry Pi is usually used as a wireless client, and its wireless firmware has enhanced client features that are not useful for a MoodleBox, which is mainly used as an access point.
-
-However, the SRAM on the wireless chip is used both for data storage whilst in use, but also for these additional features and for bug fixes.
-Each time a feature is added or a bug fix made, the amount of SRAM available for runtime variables decreases, and so the number of clients in access point mode.
-
-An alternative firmware is now available that has been tuned to maximise the number of clients in access point mode (AP) while still supporting client mode (STA).
-We want to use this alternative firmware in the MoodleBox.
-To switch the firmware to the alternative one, we launch the following command and select \lstinline{cyfmac43455-sdio-minimal.bin} firmware.
-
-\begin{lstlisting}[language=bash]
-$ sudo update-alternatives --config cyfmac43455-sdio.bin
-\end{lstlisting}
-
 \iffalse
-\subsection{Raspberry Pi firmware upgrade  (optional)}
+\subsection{Raspberry Pi firmware upgrade (optional)}
 
 In very specific and very rare occasions, it's advisable to upgrade the firmware of the Raspberry Pi.
 We only do this if we know why, since it could brick the device or the image!
@@ -295,7 +300,6 @@ $ sudo apt-get remove rpi-update
 $ sudo reboot
 \end{lstlisting}
 \fi
-
 
 \subsection{Configuration of the system memory}
 
@@ -315,9 +319,44 @@ Insert following line after line beginning with \lstinline{# Additional overlays
 dtoverlay=gpio-shutdown
 \end{lstlisting}
 
+\subsection{Limit journald file size to 16~MB}
+
+The \lstinline{journald} log file can become very large.
+We limit its size to 16~MB by creating the file \lstinline{/etc/systemd/journald.conf.d/journald_moodlebox.conf}, with the following content:\begin{lstlisting}[language=bash]
+[Journal]
+SystemMaxUse=16M
+\end{lstlisting}
+
 \section{Wireless access point feature}
 
 We will now setup the wireless access point (AP) of the MoodleBox.
+
+\subsection{Switch to the alternative wireless chip firmware}
+
+The Raspberry Pi is usually used as a wireless client, and its wireless firmware has enhanced client features that are not useful for a MoodleBox, which is mainly used as an access point.
+
+However, the SRAM on the wireless chip is used both for data storage whilst in use, but also for these additional features and for bug fixes.
+Each time a feature is added or a bug fix made, the amount of SRAM available for runtime variables decreases, and so the number of clients in access point mode.
+
+An alternative firmware is available that has been tuned to maximise the number of clients in access point mode (AP) while still supporting client mode (STA).
+
+We use this alternative firmware in the MoodleBox.
+To switch the firmware to the alternative one, we launch the following command and select \lstinline{cyfmac43455-sdio-minimal.bin} firmware.
+
+\begin{lstlisting}[language=bash]
+$ sudo update-alternatives --config cyfmac43455-sdio.bin
+\end{lstlisting}
+
+\subsection{Setup of the wireless regulatory country}
+
+We have to set the wireless regulatory country.
+MoodleBox default setting for the regulatory country is \lstinline{CH}.
+Two steps are required to do this.
+We first set it via the \lstinline{iw} utility:
+\begin{lstlisting}[language=bash]
+$ sudo iw reg set CH
+\end{lstlisting}
+Then we set it in the kernel command line, by adding \lstinline{cfg80211.ieee80211_regdom=CH} at the end of the unique line of the file \lstinline{/boot/firmware/cmdline.txt}.
 
 \subsection{Configuration of the wireless interface for access point mode}
 
@@ -327,8 +366,6 @@ We use a \textsl{udev} rule to define this new interface named \lstinline{uap0},
 
 Here's the content of \lstinline{/etc/udev/rules.d/90-wireless.rules} on the MoodleBox:
 \lstinputlisting{files/90-wireless.rules}
-
-%:TODO: Disable unused wpa_supplicant service?
 
 \subsection{Configuration of the wireless connection as a client}
 
@@ -351,7 +388,7 @@ $ sudo apt-get install -y hostapd dnsmasq
 
 MoodleBox gets dynamically via DHCP its IP address on the ethernet interface \lstinline{eth0} or as a wireless client on the \lstinline{wlan0} interface.
 
-With its routed access point feature, it will also act as a DHCP provider on its wireless interface \lstinline{uap0}, so we need a static IP address on \lstinline{uap0} interface. For the MoodleBox, we choose \lstinline{10.0.0.1}.
+With its routed access point feature, it will also act as a DHCP provider on its wireless interface \lstinline{uap0}, so we need a static IP address on \lstinline{uap0} interface.
 Any other private IP address can alternatively be used.
 
 At the very end of file \lstinline{/etc/dhcpcd.conf}, we add the lines
@@ -417,12 +454,6 @@ The DHCP and DNS server configuration on \lstinline{uap0} interface is provided 
 We edit \lstinline{/etc/dnsmasq.conf} to have this content. Note the static IP address set up on page~\pageref{ssec-static-ip}:
 
 \lstinputlisting[language=bash]{files/dnsmasq.conf}
-
-We edit now the file \lstinline{/etc/hosts}, replacing the last line, beginning with \lstinline{127.0.1.1}, with the following, containing the same static IP address defined earlier:
-\begin{lstlisting}[language=bash]
-10.0.0.1	moodlebox
-\end{lstlisting}
-This configuration enables any device to access the MoodleBox via its URL \url{http://moodlebox.home/}, even those that do not implement \emph{zeroconf}\footnote{\url{https://en.wikipedia.org/wiki/Zero-configuration_networking}} standard protocol.
 
 Finally, we fix a race condition between \lstinline{dhcpcd} and \lstinline{dnsmasq} by editing \lstinline{dnsmasq} service file \lstinline{/lib/systemd/system/dnsmasq.service}.
 We add following lines just before \lstinline{[Install]}:
@@ -755,7 +786,7 @@ It's also possible to install it via Git, e.g.
 
 \begin{lstlisting}[language=bash]
 $ sudo -u www-data -g moodlebox git clone --depth=1 \
-    https://github.com/moodlebox/moodle-tool_moodlebox.git \ 
+    https://github.com/moodlebox/moodle-tool_moodlebox.git \
     /var/www/moodle/admin/tool/moodlebox
 \end{lstlisting}
 
