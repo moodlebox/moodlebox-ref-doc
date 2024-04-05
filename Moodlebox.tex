@@ -709,7 +709,7 @@ Don't forget in this case to checkout a stable branch, and to complete the insta
 
 \subsection{Finalisation of the installation of the MoodleBox plugin}
 
-To finalise the installation of the MoodleBox plugin, we need to create of a few files and set their permissions.
+To complete the installation of the MoodleBox plugin, we need to create of a few files and set their permissions.
 We'll also set the correct owner, group and permissions for all the plugin files.
 \begin{lstlisting}[language=bash]
 $ cd /var/www/moodle/admin/tool/moodlebox
@@ -725,6 +725,15 @@ $ sudo apt-get install -y direvent
 \end{lstlisting}
 Here's the configuration file of \lstinline{direvent}:
 \lstinputlisting[language=bash]{files/direvent.conf}
+
+We also need to regularly copy the DHCP leases file to a location accessible for PHP, so we configure a cron task.
+\begin{lstlisting}[language=bash]
+$ sudo crontab -e
+\end{lstlisting}
+and add following line to the crontab
+\begin{lstlisting}[language=bash]
+* * * * * install -C -m 644 /var/lib/NetworkManager/dnsmasq-uap0.leases /tmp/dnsmasq.leases
+\end{lstlisting}
 
 Lastly, we copy these lines at the end of \lstinline{/etc/sudoers.d/020_www-data-nopasswd} (or create it if it's not there):
 \lstinputlisting[language=bash]{files/020_www-data-nopasswd}
