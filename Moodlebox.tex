@@ -505,6 +505,13 @@ user = www-data
 group = 1000
 ...
 \end{lstlisting}
+We set also the PHP time zone, so that OS time zone and PHP time zone are the same.
+For consistency, this is done for command line and fpm declination of PHP.
+We set the value of the variable \lstinline{date.timezone} to \lstinline{Europe/Zurich} in both of the files \lstinline{/etc/php/8.2/fpm/php.ini} and \lstinline{/etc/php/8.2/cli/php.ini}:
+\begin{lstlisting}[language=bash]
+date.timezone = Europe/Zurich
+\end{lstlisting}
+
 If needed, variables in \lstinline{/etc/php/8.2/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See page~\pageref{ssec-php-optimisation} for examples.
 
 We then relaunch the web server:
