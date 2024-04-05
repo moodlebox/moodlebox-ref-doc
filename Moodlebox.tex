@@ -296,17 +296,17 @@ $ sudo reboot
 
 To increase the system available memory, we reduce the memory reserved for the graphics chip to 16~MB.
 This is of no consequence, as our system does have no graphical interface.
-We do this by adding the following line at the end of the file \lstinline{/boot/config.txt}:
+We do this by adding the following line at the end of the file \lstinline{/boot/firmware/config.txt}:
 \begin{lstlisting}[language=bash]
 gpu_mem=16
 \end{lstlisting}
 
 \subsection{Configuration of the shutdown/startup hardware button feature}
 
-We enable shutdown/startup hardware button feature by further editing file \lstinline{/boot/config.txt}.
-Insert following line after line beginning with \lstinline{# Additional overlays} to get:
+We enable shutdown/startup hardware button feature by further editing file \lstinline{/boot/firmware/config.txt}, after \lstinline{# Additional overlays...}, to get:
 \begin{lstlisting}[language=bash]
-# Additional overlays and parameters are documented /boot/overlays/README
+# Additional overlays and parameters are documented
+# /boot/firmware/overlays/README
 dtoverlay=gpio-shutdown
 \end{lstlisting}
 
@@ -1007,7 +1007,7 @@ Finally, before the last shutdown before cloning and minimising the disk image, 
 \begin{lstlisting}[language=bash]
 $ sudo systemctl enable resize2fs_once
 \end{lstlisting}
-then we add at the end of the unique line of the file \lstinline{/boot/cmdline.txt} the instruction below, immediately after the text \lstinline{rootwait} (without forgetting a space).
+then we add at the end of the unique line of the file \lstinline{/boot/firmware/cmdline.txt} the instruction below, immediately after the text \lstinline{rootwait} (without forgetting a space).
 \begin{lstlisting}[language=bash]
 quiet init=/usr/lib/raspi-config/init_resize.sh
 \end{lstlisting}
