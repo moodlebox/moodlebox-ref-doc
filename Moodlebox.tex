@@ -548,8 +548,11 @@ $ sudo mysql
     > FLUSH PRIVILEGES;
     > QUIT;
 \end{lstlisting}
-
-If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains. See page~\pageref{ssec-mariadb-optimisation} for examples.
+We also set the database default collation, according to Moodle recommendation.\footnote{See \url{https://docs.moodle.org/en/MySQL_full_unicode_support}}, by setting the variable \lstinline{collation-server} to \lstinline{utf8mb4_unicode_ci} in the file \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}:
+\begin{lstlisting}[language=bash]
+collation-server = utf8mb4_unicode_ci
+\end{lstlisting}
+If needed, other variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains. See page~\pageref{ssec-mariadb-optimisation} for examples.
 
 \section{Installation and configuration of Moodle}
 
