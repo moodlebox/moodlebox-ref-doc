@@ -384,7 +384,7 @@ $ sudo nmcli c mod WifiAP autoconnect yes 802-11-wireless.mode ap \
 $ sudo nmcli c mod WifiAP ipv4.address 10.0.0.1/24 ipv4.gateway 10.0.0.1 \
     ipv4.method shared
 $ sudo nmcli c mod WifiAP wifi-sec.key-mgmt wpa-psk wifi-sec.psk moodlebox
-$ sudo nmcli c mod WifiAP wifi-sec.proto rsn wifi-sec.group ccmp \ 
+$ sudo nmcli c mod WifiAP wifi-sec.proto rsn wifi-sec.group ccmp \
     wifi-sec.pairwise ccmp
 \end{lstlisting}
 
@@ -505,7 +505,7 @@ user = www-data
 group = 1000
 ...
 \end{lstlisting}
-If needed, variables in \lstinline{/etc/php/8.2/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
+If needed, variables in \lstinline{/etc/php/8.2/fpm/pool.d/www.conf} can be tweaked, e.g. for performance gains. See page~\pageref{ssec-php-optimisation} for examples.
 
 We then relaunch the web server:
 \begin{lstlisting}[language=bash]
@@ -542,7 +542,7 @@ $ sudo mysql
     > QUIT;
 \end{lstlisting}
 
-If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains. See section~\ref{sec-optimisation} for examples.
+If needed, variables in \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf} can be tweaked, e.g. for performance gains. See page~\pageref{ssec-mariadb-optimisation} for examples.
 
 \section{Installation and configuration of Moodle}
 
@@ -966,7 +966,7 @@ We map there Application and Session to \emph{Redis cache}.
 \end{figure}
 \fi
 
-\subsection{MariaDB optimisation}
+\subsection{MariaDB optimisation}\label{ssec-mariadb-optimisation}
 
 For a better performance, we tweak the value of some MariaDB variables in the file \lstinline{/etc/mysql/mariadb.conf.d/50-server.cnf}:
 \begin{lstlisting}[language=bash]
@@ -975,7 +975,7 @@ query_cache_size        = 2M
 log_error = /var/log/mysql/error.log
 \end{lstlisting}
 
-\subsection{PHP optimisation}
+\subsection{PHP optimisation}\label{ssec-php-optimisation}
 
 For a better performance, we tweak the value of a PHP variable in the file \lstinline{/etc/php/8.2/fpm/pool.d/www.conf}:
 \begin{lstlisting}[language=bash]
