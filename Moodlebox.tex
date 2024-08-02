@@ -396,10 +396,12 @@ Here's the content of MoodleBox setting file \lstinline{/etc/NetworkManager/dnsm
 \subsection{Configuration of the wireless connection as a client}
 
 To be used as a client (STA mode) as well as an access point, a valid configuration should be provided to NetworkManager, with SSID and the password of an existent wireless network with which to connect.
+We also set the routing metric of the connection adequately.
 Note we use the interface \lstinline{wlan0}.
 \begin{lstlisting}[language=bash]
 $ sudo nmcli c add type wifi ifname wlan0 con-name WifiSTA ssid WirelessLAN
 $ sudo nmcli c mod WifiSTA wifi-sec.key-mgmt wpa-psk wifi-sec.psk Password
+$ sudo nmcli c mod WifiSTA ipv4.route-metric 99
 \end{lstlisting}
 
 \subsection{Configuration of mDNS services advertising}
