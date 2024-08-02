@@ -68,9 +68,13 @@
 
 \begin{document}
 
-\title{MoodleBox building reference, version 4.7.0\footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}}
+\title{MoodleBox building reference\\Version 4.8.0-dev%
+  \footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}%
+}
 \date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
-\author{Nicolas Martignoni\footnote{MoodleBox founder and maintainer; teacher in college level mathematics and computer science and teacher trainer in Fribourg, Switzerland.}}
+\author{Nicolas Martignoni%
+  \footnote{MoodleBox founder and maintainer; teacher in college level mathematics and computer science and teacher trainer in Fribourg, Switzerland.}%
+}
 \maketitle
 
 \begingroup
@@ -444,7 +448,8 @@ $ sudo reboot
 
 \subsection{Installation and configuration of the captive portal}
 
-We can now install the captive portal, based on the free software Nodogsplash.\footnote{\url{https://nodogsplashdocs.readthedocs.io/}.}
+We can now install the captive portal, based on the free software Nodogsplash.%
+\footnote{\url{https://nodogsplashdocs.readthedocs.io/}.}
 Nodogsplash needs first to be compiled for the Raspberry Pi platform.
 \href{https://nodogsplashdocs.readthedocs.io/en/stable/compile.html}{Nodogsplash documentation} gives info about its compilation, which is not covered in this guide.
 
@@ -467,8 +472,8 @@ $ sudo systemctl disable nodogsplash.service
 
 \section{Installation of the LEMP stack}
 
-The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications.
-The term LEMP is an acronym that represents a Linux operating system with an Nginx (pronounced "engine-x", hence the E in the acronym) web server.
+The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications.%
+\footnote{The term LEMP is an acronym that represents a Linux operating system with an Nginx (pronounced "engine-x", hence the E in the acronym) web server.}
 The backend data is stored in a MariaDB database and the dynamic processing is handled by PHP.
 
 \subsection{Installation of Nginx and PHP}\label{ssec-lemp}
