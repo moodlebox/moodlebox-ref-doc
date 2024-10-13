@@ -322,6 +322,18 @@ We limit its size to 16~MB by creating the file \lstinline{/etc/systemd/journald
 SystemMaxUse=16M
 \end{lstlisting}
 
+\subsection{Install Raspberry Pi Connect}
+
+Raspberry Pi Connect provides secure access to your Raspberry Pi from anywhere in the world.
+We install it so people can manage their MoodleBox from anywhere, provided it is connected to the Internet.
+And we reboot before going forward.
+
+\begin{lstlisting}[language=bash]
+$ sudo apt install -y rpi-connect-lite
+$ sudo loginctl enable-linger
+$ sudo reboot
+\end{lstlisting}
+
 \section{Wireless access point feature}
 
 We will now setup the wireless access point (AP) of the MoodleBox.
