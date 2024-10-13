@@ -91,18 +91,24 @@ It is not meant to be an end-user documentation.
 
 For the MoodleBox end-user documentation, consult the \href{https://moodlebox.net/}{MoodleBox website}.
 
+The MoodleBox project is a free (as in speech and in beer) and open source project. The Ansible playbook source to build the MoodleBox image is provided under a AGPL v3.0 License. It is available at \href{https://github.com/moodlebox/moodlebox}{GitHub}.
+
 \subsection{Caveat}
 
-The actual build of the MoodleBox image is done automatically using \href{https://www.ansible.com/}{Ansible}.\footnote{The MoodleBox project is a free (as in speech and in beer) and open source project. The Ansible playbook source to build the MoodleBox image is provided under a AGPL v3.0 License. It is available at \href{https://github.com/moodlebox/moodlebox}{GitHub}.}
+The actual build of the MoodleBox image is done automatically using \href{https://www.ansible.com/}{Ansible}.
 Using Ansible enables most of the build to be automated, as well as ensuring that it is reproducible.
+
 Though complete, the instructions in this document should not be understood as a method to obtain a MoodleBox that is totally equivalent to the officially published MoodleBox images.
+
+Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi Model 3B, 3B+, 4B or 5 is recommended to \textbf{build} it.
 
 \subsection{What MoodleBox does}
 
 \begin{itemize}
 \item Configurable routed wireless access point, with optional captive portal.
-\item Internet router: If MoodleBox is connected via ethernet or wireless LAN to an Internet-connected network, it acts as a router and gives its clients access to the Internet.
+\item Internet router: MoodleBox acts as a router and gives its clients access to the Internet, when it is connected via ethernet or wireless LAN to an Internet-connected network.
 \item DHCP server for wireless clients.
+\item Raspberry Pi Connect:\footnote{\url{https://www.raspberrypi.com/documentation/services/connect.html}.} MoodleBox can be managed from anywhere in the world, when it is connected via ethernet or wireless LAN to an Internet-connected network.
 \item Moodle server (\url{http://moodlebox.home/}).
 This is a fully standard Moodle installation.
 \item MoodleBox plugin\footnote{\url{https://github.com/moodlebox/moodle-tool_moodlebox}.} providing a GUI to manage most aspects of the MoodleBox.
@@ -110,9 +116,10 @@ This is a fully standard Moodle installation.
 
 \subsubsection{Specific Moodle features}
 \begin{itemize}
-\item Moodle version 4.3.x in its basic configuration, with no content (no courses).
-The only Moodle user account is an administrator account (username: \emph{moodlebox}, password: \emph{Moodlebox4\$}).
-The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.} The \textsl{cron} service is launched every minute.
+\item Moodle version 4.5.x in its basic configuration, with no content (no courses).
+The only Moodle user account is an administrator account (default username: \emph{moodlebox}, default password: \emph{Moodlebox4\$}).
+The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.}
+The \textsl{cron} service is launched every minute.
 \item When a USB sticks are inserted into the MoodleBox, their files are available to users in Moodle's \textsl{USB Drives} repository.
 \item Ability to upload files via SFTP directly to the MoodleBox; these files are then available to users in Moodle's \textsl{SFTP Documents} repository.
 \item Adminer, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
@@ -131,11 +138,10 @@ MoodleBox uses some of the great ideas from its first proof of concept by Christ
 
 \section{Preparation of the Raspberry Pi}
 
-Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi Model 3B, 3B+, 4B or 5 is recommended to \textbf{build} it.
-
 \subsection{Copy of Raspberry Pi OS Lite on a microSD card}
 
-Download the latest version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{See \url{https://www.raspberrypi.com/software/operating-systems}.} and copy it on a (good quality!) microSD card with at least 8~GB capacity.
+Download the latest version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{See \url{https://www.raspberrypi.com/software/operating-systems/}.} and copy it on a (good quality!) microSD card with at least 8~GB capacity.
+
 For this process, it is recommended to use \href{https://www.raspberrypi.com/software/}{Raspberry Pi Imager}.
 A complete description of the process is available on Raspberry Pi web site.\footnote{See \url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
