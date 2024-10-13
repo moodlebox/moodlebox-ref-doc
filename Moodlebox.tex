@@ -289,9 +289,9 @@ We only do this if we know why, since it could brick the device or the image!
 And we reboot immediately.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y rpi-update
+$ sudo apt install -y rpi-update
 $ sudo SKIP_BACKUP=1 PRUNE_MODULES=1 rpi-update
-$ sudo apt-get remove rpi-update
+$ sudo apt remove rpi-update
 $ sudo reboot
 \end{lstlisting}
 \fi
@@ -437,7 +437,7 @@ net.ipv4.ip_forward=1
 
 The installation of the package \lstinline{iptables-persistent} enables routing rules to survive MoodleBox reboot or shutdown.
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y iptables-persistent
+$ sudo apt install -y iptables-persistent
 \end{lstlisting}
 
 We can now define the routing rules:
@@ -493,7 +493,7 @@ The backend data is stored in a MariaDB database and the dynamic processing is h
 We install first Nginx and all needed PHP packages, notably those required by Moodle.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y nginx php8.2-fpm php8.2-mbstring \
+$ sudo apt install -y nginx php8.2-fpm php8.2-mbstring \
     php8.2-curl php8.2-gd php8.2-intl php8.2-soap php8.2-mysql \
     php8.2-xml php8.2-zip php8.2-apcu php8.2-tidy php8.2 php-apcu
 \end{lstlisting}
@@ -554,7 +554,7 @@ found in any adequate documentation on SSL certificate generation, e.g. on \url{
 We install now MariaDB package.
 PHP MariaDB support was already installed with PHP (see section~\ref{ssec-lemp}).
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y mariadb-server
+$ sudo apt install -y mariadb-server
 \end{lstlisting}
 
 In order to allow flexible access to all the databases, a new database user with all privileges is created in MariaDB.
@@ -592,7 +592,7 @@ $ sudo mysql
 We then download Moodle with Git, in order to facilitate future updates.
 First, let's install Git.
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y git
+$ sudo apt install -y git
 \end{lstlisting}
 
 We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle.
@@ -740,7 +740,7 @@ $ sudo chmod -R ug+w,o-w /var/www/moodle/admin/tool/moodlebox
 
 We install \lstinline{direvent} and configure some jobs so that the MoodleBox plugin works correctly.
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y direvent
+$ sudo apt install -y direvent
 \end{lstlisting}
 Here's the configuration file of \lstinline{direvent}:
 \lstinputlisting[language=bash]{files/direvent.conf}
@@ -772,7 +772,7 @@ We also install standard packages to support exFAT, HFS+ and NTFS formatted devi
 Support for other formats is built-in.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y udevil ntfs-3g exfat-fuse
+$ sudo apt install -y udevil ntfs-3g exfat-fuse
 \end{lstlisting}
 By adding the formats \lstinline{exfat} and \lstinline{hfsplus} to the line beginning with \lstinline{allowed_types} of the configuration file of udevil \lstinline{/etc/udevil/udevil.conf}, support for USB sticks of these formats is activated.
 This line should now read
@@ -881,7 +881,7 @@ We can now update the MathJax library URL in \emph{Site administration > Plugins
 
 We install Ghostscript and Poppler to enable Moodle to manage PDF annotations and PDF to PNG conversions.
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y ghostscript poppler-utils
+$ sudo apt install -y ghostscript poppler-utils
 \end{lstlisting}
 
 \subsection{Set Moodle system paths}
@@ -974,7 +974,7 @@ We use Redis to speed up Moodle caching.
 Let's install Redis and its PHP module.
 
 \begin{lstlisting}[language=bash]
-$ sudo apt-get install -y redis php-redis
+$ sudo apt install -y redis php-redis
 \end{lstlisting}
 
 \subsection{Moodle cache configuration}\label{ssec-cache}
@@ -1054,13 +1054,13 @@ $ sudo mysql moodle -e "truncate table moodle.mdl_logstore_standard_log"
 $ sudo mysql moodle -e "truncate table moodle.mdl_config_log"
 $ sudo mysql moodle -e "truncate table moodle.mdl_upgrade_log"
 $ sudo mysql moodle -e "truncate table moodle.mdl_task_log"
-$ sudo apt-get clean
+$ sudo apt clean
 $ sudo rm -rf /var/cache/debconf/*
 $ sudo rm -rf /var/lib/apt/lists/*
 $ sudo rm -rf /tmp/*
 $ sudo rm -rf /var/tmp/*
 $ sudo rm -f ~/.mysql_history ~/.nano_history ~/.bash_history
-$ sudo apt-get --purge autoremove
+$ sudo apt --purge autoremove
 $ sudo truncate -s 0 /root/.bash_history
 \end{lstlisting}
 
