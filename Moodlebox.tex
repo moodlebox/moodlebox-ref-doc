@@ -911,14 +911,13 @@ The download time is rather long (around 10 minutes) depending on your Internet 
 
 We then disable Moodle debug messages display, by visiting \emph{Site administration > Development > Debugging}, making sure that the checkbox \emph{Display debug messages} is unchecked.
 
-\section{Installation of \textsl{Adminer}}
+\section{Installation of \textsl{AdminerEvo}}
 
-\textsl{Adminer} is a full-featured database management tool written in PHP.
+\textsl{AdminerEvo}, successor of Adminer, is a full-featured database management tool written in PHP.
 It consists of a single file ready to be deployed to the server.
 We install it by downloading it to the adequate location, and set its appropriate permissions.
 \begin{lstlisting}[language=bash]
-$ sudo wget -c https://www.adminer.org/latest.php \
-    -O /var/www/moodle/adminer.php
+$ sudo wget -qO- https://download.adminerevo.org/latest/adminer/adminer.zip | zcat > /var/www/moodle/adminer.php
 $ sudo chown moodlebox:www-data /var/www/moodle/adminer.php
 $ sudo chmod -R 664 /var/www/moodle/adminer.php
 \end{lstlisting}
