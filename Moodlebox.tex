@@ -140,43 +140,31 @@ MoodleBox uses some of the great ideas from its first proof of concept by Christ
 
 \subsection{Copy of Raspberry Pi OS Lite on a microSD card}
 
-Download the latest version of \emph{Raspberry Pi OS Lite (64-bit)} from the Raspberry Pi web site,\footnote{See \url{https://www.raspberrypi.com/software/operating-systems/}.} and copy it on a (good quality!) microSD card with at least 8~GB capacity.
-
-For this process, it is recommended to use \href{https://www.raspberrypi.com/software/}{Raspberry Pi Imager}.
+For this process, use \href{https://www.raspberrypi.com/software/}{Raspberry Pi Imager}.
 A complete description of the process is available on Raspberry Pi web site.\footnote{See \url{https://www.raspberrypi.org/documentation/computers/getting-started.html}.}
 
-Insert then the microSD card into a computer and mount it.
+Click \textbf{Choose device} and select your Raspberry Pi model from the list.
+Next, click \textbf{Choose OS} and select the \emph{Raspberry Pi OS Lite (64-bit)} from the \textbf{Raspberry Pi OS (Other)} list.
+Plug then your (good quality!) microSD card with at least 8~GB capacity in your computer, click \textbf{Choose storage} and select your storage device.
 
-\subsection{SSH access enabling}
+Now click \textbf{Edit Settings} button to open OS customisation.
+On the \textbf{General} tab, set a hostname, a username and a password.
+MoodleBox uses \emph{moodlebox} as a hostname, and the username \emph{moodlebox} and the password \emph{Moodlebox4\$}.
+Leave as is all other settings.
 
-For security reasons, SSH access isn't enabled by default in Raspberry Pi OS.
-We must enable it, and to do so we create a file with name \lstinline{ssh.txt} in the boot partition of the microSD card;
-this is the partition of the SD card which can be seen when it is mounted in a macOS or Windows computer.
-(Other partitions aren't visible on these OS.)
-The content of the file \lstinline{ssh.txt} doesn't matter, so the file can be empty.
-The following commands will do this.
+On the \textbf{Service} tab, check the box next to \textbf{Enable SSH} and choose the password authentication, then click \textbf{Save} button.
+Next, click \textbf{Yes} to apply OS customisation settings when you write the image to the storage device.
+Finally, respond \textbf{Yes} to the "Are you sure you want to continue?" popup to begin writing data to the storage device.
 
-\begin{lstlisting}[language=bash]
-$ cd <mounting point of "bootfs" partition>
-$ touch ssh.txt
-\end{lstlisting}
-
-\subsection{Configuration of the main user account}\label{ssec-new-account}
-
-For security reasons (again), the default image of Raspberry Pi OS Lite has no user account defined.
-We need to create one, by adding a file \lstinline{userconf.txt} in the boot partition of the microSD card.
-
-This file should contain a single line of text, consisting of \lstinline{username:password}: so the desired username, followed immediately by a colon, followed immediately by an \textbf{encrypted} representation of the password to use.\footnote{See \url{https://www.raspberrypi.com/documentation/computers/configuration.html\#configuring-a-user}.}
-
-In the MoodleBox image, the default user account has the username \emph{moodlebox} and the password \emph{Moodlebox4\$}.
+When you see the "Write Successful" popup, your image is ready and you may eject it from your computer.
 
 \subsection{First login via SSH}
 
-Eject the microSD card from the computer and insert it into the Raspberry Pi.
+Insert the microSD card into the Raspberry Pi.
 
 Connect the power supply of the Raspberry Pi.
 Plug the Raspberry Pi with an Ethernet cable into a network with a DHCP server and wait 20-30 seconds.
-The Raspberry Pi is now reachable on the network using the address \lstinline{raspberrypi.local}.\footnote{This network address is provided by the \emph{zeroconf} standard protocol.
+The Raspberry Pi is now reachable on the network using the address \lstinline{moodlebox.local}.\footnote{This network address is provided by the \emph{zeroconf} standard protocol.
 Some older Android and Windows devices do not understand this protocol.
 With such devices, it is necessary to get access to the Raspberry Pi via its numerical IP address, which must be discovered manually.}
 
@@ -189,17 +177,17 @@ Green LED, indicating accesses to the microSD card, flashes irregularly after 1-
 
 \iffalse
 \begin{verification}
-From a computer, we type the command \lstinline{ping -c3 raspberrypi.local}.
+From a computer, we type the command \lstinline{ping -c3 moodlebox.local}.
 The result should be something like the following.
 
 \begin{lstlisting}[language=bash]
-$ ping -c3 raspberrypi.local
-PING raspberrypi.local (192.168.1.212): 56 data bytes
+$ ping -c3 moodlebox.local
+PING moodlebox.local (192.168.1.212): 56 data bytes
 64 bytes from 192.168.1.212: icmp_seq=0 ttl=64 time=0.452 ms
 64 bytes from 192.168.1.212: icmp_seq=1 ttl=64 time=0.251 ms
 64 bytes from 192.168.1.212: icmp_seq=2 ttl=64 time=0.222 ms
 
---- raspberrypi.local ping statistics ---
+--- moodlebox.local ping statistics ---
 3 packets transmitted, 3 packets received, 0.0% packet loss
 round-trip min/avg/max/stddev = 0.222/0.308/0.452/0.102 ms
 \end{lstlisting}
@@ -211,8 +199,8 @@ From now on, all operations are done via the command line in a regular terminal 
 We can now log in to the Raspberry Pi using the main account we've just setup: username is \emph{moodlebox} with password \emph{Moodlebox4\$}.
 
 \begin{lstlisting}[language=bash]
-$ ssh moodlebox@raspberrypi.local
-$ moodlebox@raspberrypi.local's password:
+$ ssh moodlebox@moodlebox.local
+$ moodlebox@moodlebox.local's password:
 \end{lstlisting}
 
 \iffalse
@@ -227,7 +215,7 @@ individual files in /usr/share/doc/*/copyright.
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 
-moodlebox@raspberrypi:~ $
+moodlebox@moodlebox:~ $
 \end{lstlisting}
 \end{verification}
 \fi
