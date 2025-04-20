@@ -122,7 +122,7 @@ The server is configured to accept clients from the official Moodle app.\footnot
 The \textsl{cron} service is launched every minute.
 \item When a USB sticks are inserted into the MoodleBox, their files are available to users in Moodle's \textsl{USB Drives} repository.
 \item Ability to upload files via SFTP directly to the MoodleBox; these files are then available to users in Moodle's \textsl{SFTP Documents} repository.
-\item AdminerEvo, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
+\item AdminNeo, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
 \end{itemize}
 
 \subsection{What MoodleBox doesn't do}
@@ -864,12 +864,12 @@ We want that this library is available locally, since MoodleBox is offline most 
 
 We install the MathJax library with Git at the correct location; we get the version supported by Moodle, in a shallow clone to save space, and we set the adequate permissions and ownership.
 \begin{lstlisting}[language=bash]
-$ sudo git clone --depth=1 -b 2.7.9 https://github.com/mathjax/MathJax.git /var/www/moodle/lib/MathJax
+$ sudo git clone --depth=1 -b 3.2.2 https://github.com/mathjax/MathJax.git /var/www/moodle/lib/MathJax
 $ sudo chown -R www-data:moodlebox /var/www/moodle/lib/MathJax
 $ sudo chmod -R ug+w,o-w /var/www/moodle/lib/MathJax
 \end{lstlisting}
 
-We can now update the MathJax library URL in \emph{Site administration > Plugins > Filters > MathJax}, setting it to \lstinline{/lib/MathJax/MathJax.js}.
+We can now update the MathJax library URL in \emph{Site administration > Plugins > Filters > MathJax}, setting it to \lstinline{/lib/MathJax/es5/tex-mml-chtml.js}.
 
 \subsection{Install utilities for PDF files manipulation in Moodle}
 
@@ -899,18 +899,18 @@ The download time is rather long (around 10 minutes) depending on your Internet 
 
 We then disable Moodle debug messages display, by visiting \emph{Site administration > Development > Debugging}, making sure that the checkbox \emph{Display debug messages} is unchecked.
 
-\section{Installation of \textsl{AdminerEvo}}
+\section{Installation of \textsl{AdminNeo}}
 
-\textsl{AdminerEvo}, successor of Adminer, is a full-featured database management tool written in PHP.
+\textsl{AdminNeo}, successor of Adminer, is a full-featured database management tool written in PHP.
 It consists of a single file ready to be deployed to the server.
 We install it by downloading it to the adequate location, and set its appropriate permissions.
 \begin{lstlisting}[language=bash]
-$ sudo wget -qO- https://download.adminerevo.org/latest/adminer/adminer.zip | zcat > /var/www/moodle/adminer.php
+$ sudo wget -c https://github.com/adminneo-org/adminneo/releases/download/v4.17.2/adminer-4.17.2.php -O /var/www/moodle/adminer.php
 $ sudo chown moodlebox:www-data /var/www/moodle/adminer.php
 $ sudo chmod -R 664 /var/www/moodle/adminer.php
 \end{lstlisting}
 
-To manage the database with \textsl{AdminerEvo}, the interface should be accessed at \url{http://moodlebox.home/adminer.php}.
+To manage the database with \textsl{AdminNeo}, the interface should be accessed at \url{http://moodlebox.home/adminer.php}.
 To log in, use the credentials set at the MariaDB installation, section~\ref{ssec-mariadb}.
 
 \iffalse
