@@ -414,6 +414,11 @@ $ sudo nmcli c mod WifiSTA wifi-sec.key-mgmt wpa-psk wifi-sec.psk Password
 $ sudo nmcli c mod WifiSTA ipv4.route-metric 99
 \end{lstlisting}
 
+Finally, we make sure the wifi chip is active.
+\begin{lstlisting}[language=bash]
+$ sudo nmcli radio wifi on
+\end{lstlisting}
+
 \subsection{Configuration of mDNS services advertising}
 
 In order to make MoodleBox services discoverable on the network, we create the file \lstinline{/etc/avahi/services/moodlebox.service}, with following content.
