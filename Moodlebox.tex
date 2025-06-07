@@ -68,7 +68,7 @@
 
 \begin{document}
 
-\title{MoodleBox building reference\\Version 4.9.0%
+\title{MoodleBox building reference\\Version 4.10.0-dev%
   \footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}%
 }
 \date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
@@ -116,7 +116,7 @@ This is a fully standard Moodle installation.
 
 \subsubsection{Specific Moodle features}
 \begin{itemize}
-\item Moodle version 4.5.x in its basic configuration, with no content (no courses).
+\item Moodle version 5.0.x in its basic configuration, with no content (no courses).
 The only Moodle user account is an administrator account (default username: \emph{moodlebox}, default password: \emph{Moodlebox4\$}).
 The server is configured to accept clients from the official Moodle app.\footnote{\url{https://download.moodle.org/mobile/}.}
 The \textsl{cron} service is launched every minute.
@@ -134,7 +134,7 @@ The \textsl{cron} service is launched every minute.
 
 \subsection{Acknowledgements}
 
-MoodleBox uses some of the great ideas from its first proof of concept by Christian Westphal\footnote{Christian Westphal, Académie de Strasbourg, see \url{https://moodle.org/user/view.php?id=1378197&course=20}.}, for which he deserves special thanks.
+MoodleBox uses some of the great ideas from its first proof of concept by Christian Westphal\footnote{Christian Westphal, Académie de Strasbourg, author of "Enseigner en ligne avec Moodle", see \url{https://moodle.org/user/view.php?id=1378197&course=20}.}, for which he deserves special thanks.
 
 \section{Preparation of the Raspberry Pi}
 
@@ -460,9 +460,9 @@ $ sudo reboot
 \subsection{Installation and configuration of the captive portal}
 
 We can now install the captive portal, based on the free software Nodogsplash.%
-\footnote{\url{https://nodogsplashdocs.readthedocs.io/}.}
+\footnote{\url{https://github.com/nodogsplash/nodogsplash}.}
 Nodogsplash needs first to be compiled for the Raspberry Pi platform.
-\href{https://nodogsplashdocs.readthedocs.io/en/stable/compile.html}{Nodogsplash documentation} gives info about its compilation, which is not covered in this guide.
+Nodogsplash's compilation is not covered in this guide.
 
 Let's install the Nodogsplash package we got after compilation:
 \begin{lstlisting}[language=bash]
@@ -597,7 +597,7 @@ $ sudo apt install -y git
 We get now Moodle source in the appropriate location, specifying the current stable branch of Moodle.
 To save space, we use a shallow clone.
 \begin{lstlisting}[language=bash]
-$ sudo git clone --depth=1 -b MOODLE_403_STABLE \
+$ sudo git clone --depth=1 -b MOODLE_500_STABLE \
     https://github.com/moodle/moodle.git /var/www/moodle
 \end{lstlisting}
 
@@ -904,13 +904,13 @@ The download time is rather long (around 10 minutes) depending on your Internet 
 
 We then disable Moodle debug messages display, by visiting \emph{Site administration > Development > Debugging}, making sure that the checkbox \emph{Display debug messages} is unchecked.
 
-\section{Installation of \textsl{AdminNeo}}
+\section{Installation of \textsl{Adminer}}
 
-\textsl{AdminNeo}, successor of Adminer, is a full-featured database management tool written in PHP.
+\textsl{Adminer} is a full-featured database management tool written in PHP.
 It consists of a single file ready to be deployed to the server.
 We install it by downloading it to the adequate location, and set its appropriate permissions.
 \begin{lstlisting}[language=bash]
-$ sudo wget -c https://github.com/adminneo-org/adminneo/releases/download/v4.17.2/adminer-4.17.2.php -O /var/www/moodle/adminer.php
+$ sudo wget -c https://www.adminer.org/latest.php -O /var/www/moodle/adminer.php
 $ sudo chown moodlebox:www-data /var/www/moodle/adminer.php
 $ sudo chmod -R 664 /var/www/moodle/adminer.php
 \end{lstlisting}
