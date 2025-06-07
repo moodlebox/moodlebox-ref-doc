@@ -168,32 +168,6 @@ The Raspberry Pi is now reachable on the network using the address \lstinline{mo
 Some older Android and Windows devices do not understand this protocol.
 With such devices, it is necessary to get access to the Raspberry Pi via its numerical IP address, which must be discovered manually.}
 
-\iffalse
-\begin{verification}
-Red LED, indicating the presence of power, lights up constantly.
-Green LED, indicating accesses to the microSD card, flashes irregularly after 1-2 seconds.
-\end{verification}
-\fi
-
-\iffalse
-\begin{verification}
-From a computer, we type the command \lstinline{ping -c3 moodlebox.local}.
-The result should be something like the following.
-
-\begin{lstlisting}[language=bash]
-$ ping -c3 moodlebox.local
-PING moodlebox.local (192.168.1.212): 56 data bytes
-64 bytes from 192.168.1.212: icmp_seq=0 ttl=64 time=0.452 ms
-64 bytes from 192.168.1.212: icmp_seq=1 ttl=64 time=0.251 ms
-64 bytes from 192.168.1.212: icmp_seq=2 ttl=64 time=0.222 ms
-
---- moodlebox.local ping statistics ---
-3 packets transmitted, 3 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 0.222/0.308/0.452/0.102 ms
-\end{lstlisting}
-\end{verification}
-\fi
-
 From now on, all operations are done via the command line in a regular terminal on macOS and Linux, or with \lstinline{Putty} on Windows.
 
 We can now log in to the Raspberry Pi using the main account we've just setup: username is \emph{moodlebox} with password \emph{Moodlebox4\$}.
@@ -202,23 +176,6 @@ We can now log in to the Raspberry Pi using the main account we've just setup: u
 $ ssh moodlebox@moodlebox.local
 $ moodlebox@moodlebox.local's password:
 \end{lstlisting}
-
-\iffalse
-\begin{verification}
-If all goes well, we are connected to the MoodleBox and the console displays
-
-\begin{lstlisting}[language=bash]
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-
-moodlebox@moodlebox:~ $
-\end{lstlisting}
-\end{verification}
-\fi
 
 \subsection{Raspberry Pi OS upgrade}
 
@@ -423,34 +380,6 @@ $ sudo nmcli radio wifi on
 
 In order to make MoodleBox services discoverable on the network, we create the file \lstinline{/etc/avahi/services/moodlebox.service}, with following content.
 \lstinputlisting[language=xml]{files/moodlebox.service.xml}
-
-\iffalse
-\subsection{Routing configuration}
-
-We configure now the routing, so that the wireless clients can browse the Internet when MoodleBox is connected to an Internet router (via ethernet or wireless).
-
-We edit the file \lstinline{/etc/sysctl.conf}, uncommenting or adding the line
-\begin{lstlisting}[language=bash]
-net.ipv4.ip_forward=1
-\end{lstlisting}
-
-The installation of the package \lstinline{iptables-persistent} enables routing rules to survive MoodleBox reboot or shutdown.
-\begin{lstlisting}[language=bash]
-$ sudo apt install -y iptables-persistent
-\end{lstlisting}
-
-We can now define the routing rules:
-\begin{lstlisting}[language=bash]
-$ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-$ sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
-$ sudo iptables -A FORWARD -i eth0 -o uap0 \
-    -m state --state RELATED,ESTABLISHED -j ACCEPT
-$ sudo iptables -A FORWARD -i wlan0 -o uap0 \
-    -m state --state RELATED,ESTABLISHED -j ACCEPT
-$ sudo iptables -A FORWARD -i uap0 -o eth0 -j ACCEPT
-$ sudo iptables -A FORWARD -i uap0 -o wlan0 -j ACCEPT
-\end{lstlisting}
-\fi
 
 And we reboot.
 \begin{lstlisting}[language=bash]
@@ -698,12 +627,6 @@ MAILTO=""
 * * * * * nice -n10 /usr/bin/php /var/www/moodle/admin/cli/cron.php
 \end{lstlisting}
 
-\iffalse
-\begin{verification}
-Visit Moodle administration via \emph{Site administration > Server > Scheduled tasks}, check that the scheduled tasks are launched regularly.
-\end{verification}
-\fi
-
 \section{MoodleBox plugin}
 
 MoodleBox plugin\footnote{MoodleBox plugin source code is available at \url{https://github.com/moodlebox/moodle-tool_moodlebox}.} provides monitoring of the MoodleBox as well as managing several of its settings, such as password change, date and time setting, wireless access settings, etc.
@@ -853,13 +776,6 @@ We check the box \emph{Enable web services for mobile devices} and save the chan
 
 For MoodleBox, which is not intended to be published on the Internet, the warning\footnote{Text of the warning: \textsl{It is recommended to enable HTTPS with a valid certificate. The Moodle app will always try to use a secured connection first}.} about the SSL certificate can be safely ignored.
 
-\iffalse
-\begin{verification}
-From a smartphone connected to the MoodleBox network via Wi-Fi, launch the Moodle mobile app and connect to the platform using the URL \url{http://moodlebox.home}, with the administrator account.
-No errors should be notified, and the dashboard should be displayed on the smartphone screen.
-\end{verification}
-\fi
-
 \subsection{Install MathJax locally}
 
 By default, Moodle loads the MathJax library from the Internet.
@@ -915,14 +831,6 @@ $ sudo chmod -R 664 /var/www/moodle/adminer.php
 
 To manage the database with \textsl{AdminNeo}, the interface should be accessed at \url{http://moodlebox.home/adminer.php}.
 To log in, use the credentials set at the MariaDB installation, section~\ref{ssec-mariadb}.
-
-\iffalse
-\begin{verification}
-Browse to URL \url{http://moodlebox.home/adminer.php}.
-The Adminer interface should be displayed.
-To log in, use usual credentials: by default, username \emph{moodlebox} and password \emph{Moodlebox4\$}.
-\end{verification}
-\fi
 
 \section{Installation of \texttt{rpi-clone}}
 
@@ -989,15 +897,6 @@ We enter \emph{Redis cache} for the store name and \emph{127.0.0.1:6379} in the 
 
 Finally, we map the Application and Session stores to this new cache instance, by clicking on \emph{Edit mappings} in the \emph{Stores used when no mapping is present} section, at the very bottom of the page.
 We map there Application and Session to \emph{Redis cache}.
-
-\iffalse
-\begin{figure}[!ht]
-\begin{minipage}[b]{\linewidth}
-\centering
-\includegraphics[width=8.5cm]{cache-mappings.png}
-\end{minipage}
-\end{figure}
-\fi
 
 \subsection{MariaDB optimisation}\label{ssec-mariadb-optimisation}
 
