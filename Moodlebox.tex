@@ -975,19 +975,19 @@ Let's install Redis and its PHP module.
 $ sudo apt install -y redis php-redis
 \end{lstlisting}
 
+A reboot of the MoodleBox is now needed to be able to configure the Moodle cache.
+
 \subsection{Moodle cache configuration}\label{ssec-cache}
 
-After a reboot of the MoodleBox, the Moodle cache can be configured.
-
 Log in to Moodle with the administrator account, then visit \textsl{Site Administration > Plugins > Caching > Configuration}.
-We create one new Redis cache store, by clicking on \emph{Add Instance} in the \emph{Installed cache stores} section (at the top of the page).
+We create a new Redis cache store by clicking on \emph{Add Instance} in the \emph{Installed cache stores} section (at the top of the page).
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=7cm]{cache-redis.png}
+\includegraphics[width=14cm]{cache-redis.png}
 \end{figure}
 
-Store name: \emph{Redis cache}, Server: \emph{127.0.0.1:6379}, and we save the changes.
+We enter \emph{Redis cache} for the store name and \emph{127.0.0.1:6379} in the first line of the Server(s) field, then save the changes, without touching others settings.
 
 Finally, we map the Application and Session stores to this new cache instance, by clicking on \emph{Edit mappings} in the \emph{Stores used when no mapping is present} section, at the very bottom of the page.
 We map there Application and Session to \emph{Redis cache}.
