@@ -122,7 +122,7 @@ The server is configured to accept clients from the official Moodle app.\footnot
 The \textsl{cron} service is launched every minute.
 \item When a USB sticks are inserted into the MoodleBox, their files are available to users in Moodle's \textsl{USB Drives} repository.
 \item Ability to upload files via SFTP directly to the MoodleBox; these files are then available to users in Moodle's \textsl{SFTP Documents} repository.
-\item AdminNeo, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
+\item Adminer, a full-featured database management tool, is installed (\url{http://moodlebox.home/adminer.php}).
 \end{itemize}
 
 \subsection{What MoodleBox doesn't do}
@@ -150,7 +150,7 @@ Plug then your (good quality!) microSD card with at least 8~GB capacity in your 
 Now click \textbf{Edit Settings} button to open OS customisation.
 On the \textbf{General} tab, set a hostname, a username and a password.
 MoodleBox uses \emph{moodlebox} as a hostname, and the username \emph{moodlebox} and the password \emph{Moodlebox4\$}.
-Leave as is all other settings.
+Leave as is all other settings.\label{page-credentials}
 
 On the \textbf{Service} tab, check the box next to \textbf{Enable SSH} and choose the password authentication, then click \textbf{Save} button.
 Next, click \textbf{Yes} to apply OS customisation settings when you write the image to the storage device.
@@ -273,7 +273,7 @@ This is done by copying the following file to \lstinline{/etc/init.d/fix_hostnam
 
 From now on, to connect to the Raspberry Pi (via SSH or SFTP), we'll use the address \lstinline{moodlebox.local}.
 
-Let's reboot and log in to the MoodleBox with the default credentials set up page~\pageref{ssec-new-account}.
+Let's reboot and log in to the MoodleBox with the credentials defined when copying the microSD card (see page~\pageref{page-credentials}).
 
 \iffalse
 \subsection{Raspberry Pi firmware upgrade (optional)}
@@ -557,7 +557,7 @@ $ sudo apt install -y mariadb-server
 \end{lstlisting}
 
 In order to allow flexible access to all the databases, a new database user with all privileges is created in MariaDB.
-For this installation, we set the credentials as earlier (see page~\pageref{ssec-new-account}), for consistency.
+For this installation, we set the credentials as earlier (see page~\pageref{page-credentials}), for consistency.
 
 \begin{lstlisting}[language=bash]
 $ sudo mysql
@@ -803,18 +803,16 @@ having logged in to Moodle as an administrator, visit \emph{Site administration 
 
 Select \emph{Enabled and visible} in the row \emph{File system} to enable this repository.
 \begin{figure}[!ht]
-\begin{minipage}[b]{\linewidth}\centering
-\includegraphics[width=13cm]{repo-filesystem-usb-1.png}
-\end{minipage}
+\centering
+\includegraphics[width=14cm]{repo-filesystem-usb-1.png}
 \end{figure}
 
 Click on \emph{Save}.
 Then, on the same row, click on \emph{Settings}, then on \emph{Create a repository instance}.
 Finally select \emph{usb} from the drop-down menu, and enter \emph{USB Drives} in the mandatory \emph{Name} field.
 \begin{figure}[!ht]
-\begin{minipage}[b]{\linewidth}\centering
-\includegraphics[width=13cm]{repo-filesystem-usb-2.png}
-\end{minipage}
+\centering
+\includegraphics[width=14cm]{repo-filesystem-usb-2.png}
 \end{figure}
 
 \subsection{SFTP upload}
