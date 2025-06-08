@@ -410,6 +410,14 @@ $ sudo systemctl stop nodogsplash.service
 $ sudo systemctl disable nodogsplash.service
 \end{lstlisting}
 
+\subsection{Support USB tethering}
+
+USB tethering is supported out of the box, except for iOS devices.
+Installing \lstinline{usbmuxd} enables tethering for such devices.
+\begin{lstlisting}[language=bash]
+$ sudo apt install -y usbmuxd
+\end{lstlisting}
+
 \section{Installation of the LEMP stack}
 
 The LEMP software stack is a group of software that can be used to serve dynamic web pages and web applications.%
@@ -677,6 +685,8 @@ and add following line to the crontab
 \end{lstlisting}
 
 Lastly, we copy these lines at the end of \lstinline{/etc/sudoers.d/020_www-data-nopasswd} (or create it if it's not there):
+
+\filbreak
 \lstinputlisting[language=bash]{files/020_www-data-nopasswd}
 
 Rebooting is necessary after these steps!
