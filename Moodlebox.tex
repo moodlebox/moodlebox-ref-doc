@@ -68,8 +68,8 @@
 
 \begin{document}
 
-\title{MoodleBox building reference\\Version 4.10.0-dev%
-  \footnote{This work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.}%
+\title{MoodleBox building reference\\Version 4.10.0%
+  \footnote{\url{https://doi.org/10.5281/zenodo.15763860}.}%
 }
 \date{\today} %% \footnote{Version \gitAbbrevHash, \gitAuthorDate}
 \author{Nicolas Martignoni%
@@ -107,7 +107,8 @@ Although the MoodleBox works fine on other Raspberry Pi models, a Raspberry Pi M
 \begin{itemize}
 \item Configurable routed wireless access point, with optional captive portal.
 \item Internet router: MoodleBox acts as a router and gives its clients access to the Internet, when it is connected via ethernet or wireless LAN to an Internet-connected network.
-\item DHCP server for wireless clients.
+\item Smartphone USB tethering: when connected via USB to a smartphone, MoodleBox can share the Internet connection provided by the smartphone to its wireless connected clients.
+\item DHCP server for wireless connected clients.
 \item Raspberry Pi Connect:\footnote{\url{https://www.raspberrypi.com/documentation/services/connect.html}.} MoodleBox can be managed from anywhere in the world, when it is connected via ethernet or wireless LAN to an Internet-connected network.
 \item Moodle server (\url{http://moodlebox.home/}).
 This is a fully standard Moodle installation.
@@ -135,6 +136,14 @@ The \textsl{cron} service is launched every minute.
 \subsection{Acknowledgements}
 
 MoodleBox uses some of the great ideas from its first proof of concept by Christian Westphal\footnote{Christian Westphal, Académie de Strasbourg, author of "Enseigner en ligne avec Moodle", see \url{https://moodle.org/user/view.php?id=1378197&course=20}.}, for which he deserves special thanks.
+
+\subsection{License}
+
+The present work is licensed under a \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution - Non Commercial - Share Alike  4.0 International} license.
+
+The \href{https://github.com/moodlebox/moodlebox}{MoodleBox source code} is licensed under a \href{https://www.gnu.org/licenses/agpl-3.0.en.html}{GNU Affero General Public License v3.0}.
+
+The \href{https://github.com/moodlebox/moodle-tool_moodlebox}{MoodleBox plugin for Moodle source code} is licensed under a \href{https://www.gnu.org/licenses/gpl-3.0.en.html}{GNU General Public License v3.0}.
 
 \section{Preparation of the Raspberry Pi}
 
