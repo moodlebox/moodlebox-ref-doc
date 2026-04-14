@@ -1,4 +1,5 @@
-# MoodleBox default web server configuration
+# MoodleBox Moodle web server configuration
+# Created for MoodleBox
 #
 server {
 	listen 80 default_server;
@@ -10,7 +11,7 @@ server {
 	# ssl_certificate /etc/nginx/ssl/moodlebox.pem;
 	# ssl_certificate_key /etc/nginx/ssl/moodlebox.key;
 
-	root /var/www/moodle;
+	root /var/www/moodle/public;
 
 	error_page 404 /error/index.php;
 	error_page 403 =404 /error/index.php;
@@ -25,7 +26,7 @@ server {
 	}
 
 	location / {
-		try_files $uri $uri/ =404;
+		try_files $uri $uri/ /r.php;
 	}
 
 	location /dataroot/ {
@@ -37,7 +38,7 @@ server {
 		include fastcgi_params;
 		fastcgi_split_path_info	^(.+\.php)(/.+)$;
 		fastcgi_read_timeout	300;
-		fastcgi_pass	unix:/var/run/php/php8.2-fpm.sock;
+		fastcgi_pass	unix:/var/run/php/php8.4-fpm.sock;
 		fastcgi_index	index.php;
 		fastcgi_param	PATH_INFO	$fastcgi_path_info;
 		fastcgi_param	SCRIPT_FILENAME	$document_root$fastcgi_script_name;

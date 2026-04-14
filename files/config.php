@@ -25,6 +25,7 @@ $CFG->admin     = 'admin';
 $CFG->backuptempdir = '/var/www/moodledata/backup';
 $CFG->xsendfile = 'X-Accel-Redirect';
 $CFG->xsendfilealiases = array('/dataroot/' => $CFG->dataroot);
+$CFG->routerconfigured = true;
 $CFG->customfiletypes = array(
   (object)array(
     'extension' => 'crt',
