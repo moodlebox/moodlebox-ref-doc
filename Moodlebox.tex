@@ -1,14 +1,14 @@
-% !TEX encoding = UTF-8 Unicode
-% !TEX program = lualatexmk
-% !TEX pdfSinglePage
+%!TEX encoding = UTF-8 Unicode
+%!TEX program = lualatexmk
+%!TEX spellcheck = en-GB
 \documentclass[12pt]{article}
 %% Versioning info
 %\usepackage[draft]{gitinfo2}
-%% Polices OTF
+%% OTF Fonts
 \usepackage[libertine,libaltvw,liby,vvarbb]{newtxmath}
 \usepackage[ttscale=.875]{libertine}
 %\setmainfont{Lucida Grande}
-%% Gestion des langues
+%% Language management
 \usepackage{polyglossia}
 \setdefaultlanguage{english}
 \usepackage[autostyle]{csquotes}
@@ -20,24 +20,15 @@
 \urlstyle{same}
 \usepackage[shortlabels]{enumitem}
 \setlist[enumerate,1]{label=\arabic*.,ref=\arabic*,leftmargin=*}
-%\setlist[itemize,1]{label=--,topsep=0pt,itemsep=0pt,leftmargin=*}
 \setlist[itemize,1]{topsep=0pt,itemsep=0pt,leftmargin=1em}
 \setlist[itemize,2]{topsep=0pt,itemsep=0pt}
-%% Framed boxes
-\usepackage[framemethod=tikz]{mdframed}
-\global\mdfdefinestyle{verif}{%
-  %linecolor=blue,middlelinewidth=2pt,
-  roundcorner=5pt,
-  frametitlebackgroundcolor=yellow!50!white,
-}
-\newmdenv[style=verif,frametitle=Check]{verification}
-%% Format de page
+%% Page format
 \usepackage{geometry}
 \geometry{a4paper}
 \geometry{top=25mm, bottom=30mm}
 \geometry{outer=22.5mm, inner=25mm}
 \geometry{foot=15mm, head=15pt}
-%% Paragraphes sans indentation, légèrement espacés
+%% Suppress indentation and increase slightly the space between paragraphs
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{3pt plus2pt minus1pt}
 %%
